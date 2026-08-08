@@ -1,10 +1,16 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Scripts,
+  createRootRoute,
+  useRouterState,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/site/footer'
 import { SiteHeader } from '#/components/site/header'
+import { cn } from '@/lib/utils'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -31,18 +37,32 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const isHome = pathname === '/'
+
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={cn('dark', isHome && 'h-full overflow-hidden')}>
       <head>
         <HeadContent />
       </head>
 
-      <body className="min-h-screen">
-        <main className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 min-h-screen flex flex-col">
-          <SiteHeader />
+      <body className={cn('min-h-screen', isHome && 'h-full overflow-hidden')}>
+        <main
+          className={cn(
+            'flex w-full flex-col',
+            isHome ? 'h-full overflow-hidden' : 'min-h-screen',
+          )}
+        >
+          {/* Home renders its own header inside the snap layout */}
+          {!isHome && <SiteHeader />}
 
           <div className="w-full min-w-0 flex-1">{children}</div>
-          <SiteFooter />
+
+          {!isHome && (
+            <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
+              <SiteFooter />
+            </div>
+          )}
         </main>
 
         <TanStackDevtools

@@ -40,7 +40,7 @@ const focusAreas: FocusArea[] = [
 export function AboutSection() {
   return (
     <main className="flex-1">
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+      <section className="w-full py-20 sm:py-28">
         {/* ─── Mission: stated once, directly, left-aligned ─── */}
         <div className="max-w-2xl">
           <p className="font-mono text-xs tracking-widest text-emerald-400/90">MISSION</p>

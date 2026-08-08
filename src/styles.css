@@ -63,17 +63,18 @@ body {
 .dark {
   /* Broadcast Navy — dark mode (livescore, stats) */
   --background: oklch(0.18 0.04 260);
-  --foreground: oklch(0.95 0.01 250);
+  /* Soft off-white (less glare than pure white on navy) */
+  --foreground: oklch(0.88 0.015 250);
   --card: oklch(0.22 0.04 260);
-  --card-foreground: oklch(0.95 0.01 250);
+  --card-foreground: oklch(0.88 0.015 250);
   --popover: oklch(0.22 0.04 260);
-  --popover-foreground: oklch(0.95 0.01 250);
-  --primary: oklch(0.99 0 0);
+  --popover-foreground: oklch(0.88 0.015 250);
+  --primary: oklch(0.96 0.01 250);
   --primary-foreground: oklch(0.22 0.06 260);
   --secondary: oklch(0.26 0.04 260);
-  --secondary-foreground: oklch(0.95 0.01 250);
+  --secondary-foreground: oklch(0.88 0.015 250);
   --muted: oklch(0.26 0.035 260);
-  --muted-foreground: oklch(0.68 0.02 250);
+  --muted-foreground: oklch(0.66 0.02 250);
   --accent: oklch(0.3 0.06 145);
   --accent-foreground: oklch(0.82 0.12 145);
   --destructive: oklch(0.62 0.2 25);
@@ -89,8 +90,8 @@ body {
   --chart-4: oklch(0.75 0.08 85);
   --chart-5: oklch(0.55 0.06 260);
   --sidebar: oklch(0.16 0.04 260);
-  --sidebar-foreground: oklch(0.95 0.01 250);
-  --sidebar-primary: oklch(0.99 0 0);
+  --sidebar-foreground: oklch(0.88 0.015 250);
+  --sidebar-primary: oklch(0.96 0.01 250);
   --sidebar-primary-foreground: oklch(0.22 0.06 260);
   --sidebar-accent: oklch(0.26 0.04 260);
   --sidebar-accent-foreground: oklch(0.82 0.12 145);
@@ -164,5 +165,52 @@ body {
   h5,
   h6 {
     @apply font-heading;
+  }
+}
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-motion {
+    animation: none !important;
   }
 }

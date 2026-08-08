@@ -1,7 +1,7 @@
 // src/components/landing/blogs.tsx
-import * as React from "react"
-import { Link } from "@tanstack/react-router"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { Link } from '@tanstack/react-router'
+import { cn } from '@/lib/utils'
 
 interface Story {
   id: string
@@ -21,16 +21,16 @@ function mapApiArticleToStory(raw: any): Story {
   return {
     id: String(raw.id),
     title: raw.title,
-    author: raw.author?.name ?? raw.author ?? "Tisini Team",
-    date: new Date(raw.publishedAt ?? raw.date).toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
+    author: raw.author?.name ?? raw.author ?? 'Tisini Team',
+    date: new Date(raw.publishedAt ?? raw.date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
     }),
-    image: raw.coverImage ?? raw.image ?? "",
+    image: raw.coverImage ?? raw.image ?? '',
     href: `/blog/${raw.slug ?? raw.id}`,
     featured: Boolean(raw.featured),
-    badge: raw.featured ? "Trending" : undefined,
+    badge: raw.featured ? 'Trending' : undefined,
   }
 }
 
@@ -49,7 +49,10 @@ function useArticles(endpoint: string) {
         const list = Array.isArray(data) ? data : data.articles
         if (!cancelled) setStories(list.map(mapApiArticleToStory))
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load stories")
+        if (!cancelled)
+          setError(
+            err instanceof Error ? err.message : 'Failed to load stories',
+          )
       }
     }
 
@@ -63,14 +66,16 @@ function useArticles(endpoint: string) {
 }
 
 function dispatchTag(index: number) {
-  return `DISPATCH ${String(index + 1).padStart(3, "0")}`
+  return `DISPATCH ${String(index + 1).padStart(3, '0')}`
 }
 
 function StoryImage({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = React.useState(false)
 
   if (failed || !src) {
-    return <div className="h-full w-full bg-gradient-to-br from-primary/15 via-background to-background" />
+    return (
+      <div className="h-full w-full bg-gradient-to-br from-primary/15 via-background to-background" />
+    )
   }
 
   return (
@@ -84,14 +89,22 @@ function StoryImage({ src, alt }: { src: string; alt: string }) {
   )
 }
 
-function StoryCard({ story, index, className }: { story: Story; index: number; className?: string }) {
+function StoryCard({
+  story,
+  index,
+  className,
+}: {
+  story: Story
+  index: number
+  className?: string
+}) {
   return (
     <Link
       to={story.href}
       className={cn(
-        "group relative block shrink-0 overflow-hidden rounded-xl border border-primary/10",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
-        className
+        'group relative block shrink-0 overflow-hidden rounded-xl border border-primary/10',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+        className,
       )}
     >
       <StoryImage src={story.image} alt="" />
@@ -105,7 +118,9 @@ function StoryCard({ story, index, className }: { story: Story; index: number; c
         <p className="font-mono text-[11px] tracking-wide text-emerald-400/90">
           {dispatchTag(index)} — {story.date}
         </p>
-        <h3 className="mt-2 text-sm font-bold leading-snug text-white sm:text-base">{story.title}</h3>
+        <h3 className="mt-2 text-sm font-bold leading-snug text-white sm:text-base">
+          {story.title}
+        </h3>
         <p className="mt-1 text-xs text-white/60">{story.author}</p>
       </div>
     </Link>
@@ -114,10 +129,16 @@ function StoryCard({ story, index, className }: { story: Story; index: number; c
 
 // Same aspect ratios as the real cards, so the row doesn't jump when data arrives.
 function StorySkeleton({ className }: { className?: string }) {
-  return <div className={cn("animate-pulse rounded-xl bg-white/5", className)} />
+  return (
+    <div className={cn('animate-pulse rounded-xl bg-white/5', className)} />
+  )
 }
 
-export function BlogsSection({ endpoint = "/api/articles" }: { endpoint?: string }) {
+export function ArticlesSection({
+  endpoint = '/api/articles',
+}: {
+  endpoint?: string
+}) {
   const { stories, error } = useArticles(endpoint)
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
@@ -134,25 +155,35 @@ export function BlogsSection({ endpoint = "/api/articles" }: { endpoint?: string
   React.useEffect(() => {
     const el = scrollRef.current
     if (!el) return
-    el.addEventListener("scroll", checkScroll, { passive: true })
+    el.addEventListener('scroll', checkScroll, { passive: true })
     checkScroll()
-    return () => el.removeEventListener("scroll", checkScroll)
+    return () => el.removeEventListener('scroll', checkScroll)
   }, [checkScroll, stories])
 
-  const scrollBy = (direction: "left" | "right") => {
+  const scrollBy = (direction: 'left' | 'right') => {
     const el = scrollRef.current
     if (!el) return
     const amount = el.clientWidth * 0.8
-    el.scrollBy({ left: direction === "left" ? -amount : amount, behavior: "smooth" })
+    el.scrollBy({
+      left: direction === 'left' ? -amount : amount,
+      behavior: 'smooth',
+    })
   }
 
   const header = (
     <div className="mb-8 flex items-end justify-between">
       <div>
-        <h2 className="font-mono text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Latest Stories</h2>
-        <p className="mt-2 text-muted-foreground">Sports analysis, data insights, and African football coverage.</p>
+        <h2 className="font-mono text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          Latest Stories
+        </h2>
+        <p className="mt-2 text-muted-foreground">
+          Sports analysis, data insights, and African football coverage.
+        </p>
       </div>
-      <a href="/blogs" className="hidden font-mono text-sm font-medium text-primary hover:text-primary/80 sm:block">
+      <a
+        href="/articles"
+        className="hidden font-mono text-sm font-medium text-primary hover:text-primary/80 sm:block"
+      >
         View all →
       </a>
     </div>
@@ -176,7 +207,10 @@ export function BlogsSection({ endpoint = "/api/articles" }: { endpoint?: string
         <StorySkeleton className="mb-4 aspect-[21/9] w-full sm:aspect-[2.5/1]" />
         <div className="flex gap-4 overflow-hidden pt-2">
           {[1, 2, 3, 4].map((i) => (
-            <StorySkeleton key={i} className="aspect-[4/5] w-[85vw] shrink-0 sm:w-[300px] md:w-[340px]" />
+            <StorySkeleton
+              key={i}
+              className="aspect-[4/5] w-[85vw] shrink-0 sm:w-[300px] md:w-[340px]"
+            />
           ))}
         </div>
       </div>
@@ -201,33 +235,59 @@ export function BlogsSection({ endpoint = "/api/articles" }: { endpoint?: string
     <div className="w-full">
       {header}
 
-      <StoryCard story={featured} index={0} className="mb-4 aspect-[21/9] w-full sm:aspect-[2.5/1]" />
+      <StoryCard
+        story={featured}
+        index={0}
+        className="mb-4 aspect-[21/9] w-full sm:aspect-[2.5/1]"
+      />
 
       <div className="relative">
         <button
-          onClick={() => scrollBy("left")}
+          onClick={() => scrollBy('left')}
           aria-label="Scroll to previous stories"
           className={cn(
-            "absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
-            canScrollLeft ? "opacity-100" : "pointer-events-none opacity-0"
+            'absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+            canScrollLeft ? 'opacity-100' : 'pointer-events-none opacity-0',
           )}
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
         </button>
         <button
-          onClick={() => scrollBy("right")}
+          onClick={() => scrollBy('right')}
           aria-label="Scroll to more stories"
           className={cn(
-            "absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",
-            canScrollRight ? "opacity-100" : "pointer-events-none opacity-0"
+            'absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+            canScrollRight ? 'opacity-100' : 'pointer-events-none opacity-0',
           )}
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </button>
 
@@ -236,7 +296,7 @@ export function BlogsSection({ endpoint = "/api/articles" }: { endpoint?: string
           role="region"
           aria-label="More stories, scrollable"
           tabIndex={0}
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 pt-2 [-webkit-overflow-scrolling:touch] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [&::-webkit-scrollbar]:hidden"
         >
           {grid.map((story, i) => (
@@ -249,19 +309,26 @@ export function BlogsSection({ endpoint = "/api/articles" }: { endpoint?: string
           ))}
 
           <a
-            href="/blogs"
+            href="/articles"
             className="flex w-[85vw] shrink-0 snap-start items-center justify-center rounded-xl border border-dashed border-primary/20 bg-primary/5 transition-colors hover:bg-primary/10 sm:w-[200px] aspect-[4/5]"
           >
             <div className="text-center">
-              <p className="font-mono text-lg font-semibold text-primary">View All</p>
-              <p className="mt-1 text-sm text-muted-foreground">{stories.length}+ stories</p>
+              <p className="font-mono text-lg font-semibold text-primary">
+                View All
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {stories.length}+ stories
+              </p>
             </div>
           </a>
         </div>
       </div>
 
       <div className="mt-4 text-center sm:hidden">
-        <a href="/blogs" className="font-mono text-sm font-medium text-primary">
+        <a
+          href="/articles"
+          className="font-mono text-sm font-medium text-primary"
+        >
           View all stories →
         </a>
       </div>

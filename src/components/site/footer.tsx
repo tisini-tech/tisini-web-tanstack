@@ -60,7 +60,7 @@ export const SiteFooter = () => {
 
   return (
     <footer className="border-t border-white/10 bg-background/50 py-6 text-center">
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="w-full">
         <div className="flex flex-col items-center justify-between gap-6 py-4 lg:flex-row">
           <Link to="/">
             <img src="/tisini-logo.png" alt="Tisini" className="h-12 w-20 object-contain" width={80} height={48} />

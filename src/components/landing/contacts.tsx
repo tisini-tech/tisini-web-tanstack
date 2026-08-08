@@ -75,7 +75,7 @@ export function ContactsSection() {
 
   return (
     <main className="flex-1">
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+      <section className="w-full py-20 sm:py-28">
         <div className="grid gap-16 lg:grid-cols-5 lg:gap-12">
           {/* ─── Left: statement, not a hedge ─── */}
           <div className="lg:col-span-2">
