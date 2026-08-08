@@ -1,75 +1,12 @@
-// src/components/landing/blogs.tsx
 import * as React from 'react'
 import { Link } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
-interface Story {
-  id: string
-  title: string
-  author: string
-  date: string
-  image: string
-  href: string
-  featured?: boolean
-  badge?: string
-}
+import { cn, formatDate } from '@/lib/utils'
+import type { Article } from '#/lib/types'
+import { articlesQueryOptions } from '#/data/articles'
 
-// Adjust this to whatever your endpoint actually returns. Keeping the
-// mapping in one place means the rest of the file never has to know
-// what the API's field names look like.
-function mapApiArticleToStory(raw: any): Story {
-  return {
-    id: String(raw.id),
-    title: raw.title,
-    author: raw.author?.name ?? raw.author ?? 'Tisini Team',
-    date: new Date(raw.publishedAt ?? raw.date).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    }),
-    image: raw.coverImage ?? raw.image ?? '',
-    href: `/blog/${raw.slug ?? raw.id}`,
-    featured: Boolean(raw.featured),
-    badge: raw.featured ? 'Trending' : undefined,
-  }
-}
-
-function useArticles(endpoint: string) {
-  const [stories, setStories] = React.useState<Story[] | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
-
-  React.useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      try {
-        const res = await fetch(endpoint)
-        if (!res.ok) throw new Error(`Request failed with ${res.status}`)
-        const data = await res.json()
-        const list = Array.isArray(data) ? data : data.articles
-        if (!cancelled) setStories(list.map(mapApiArticleToStory))
-      } catch (err) {
-        if (!cancelled)
-          setError(
-            err instanceof Error ? err.message : 'Failed to load stories',
-          )
-      }
-    }
-
-    load()
-    return () => {
-      cancelled = true
-    }
-  }, [endpoint])
-
-  return { stories, error }
-}
-
-function dispatchTag(index: number) {
-  return `DISPATCH ${String(index + 1).padStart(3, '0')}`
-}
-
-function StoryImage({ src, alt }: { src: string; alt: string }) {
+function ArticleImage({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = React.useState(false)
 
   if (failed || !src) {
@@ -89,57 +26,72 @@ function StoryImage({ src, alt }: { src: string; alt: string }) {
   )
 }
 
-function StoryCard({
-  story,
-  index,
+function ArticleCard({
+  article,
   className,
 }: {
-  story: Story
-  index: number
+  article: Article
   className?: string
 }) {
+  const date = formatDate(article.published_at ?? article.created_at)
+  const author = article.author?.username ?? 'Tisini Team'
+  const badge = article.category?.name
+
   return (
     <Link
-      to={story.href}
+      to={'/articles/$slug' as any}
+      params={{ slug: article.slug } as any}
       className={cn(
         'group relative block shrink-0 overflow-hidden rounded-xl border border-primary/10',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
         className,
       )}
     >
-      <StoryImage src={story.image} alt="" />
+      <ArticleImage src={article.featured_image} alt="" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-      {story.badge && (
-        <div className="absolute right-3 top-3 rounded-md bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground shadow-lg">
-          {story.badge}
+      {badge && (
+        <div className="absolute top-3 right-3 rounded-md bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground shadow-lg">
+          {badge}
         </div>
       )}
-      <div className="absolute bottom-0 left-0 right-0 p-4">
-        <p className="font-mono text-[11px] tracking-wide text-emerald-400/90">
-          {dispatchTag(index)} — {story.date}
-        </p>
-        <h3 className="mt-2 text-sm font-bold leading-snug text-white sm:text-base">
-          {story.title}
+      <div className="absolute inset-x-0 bottom-0 p-4">
+        {date && (
+          <p className="font-mono text-[11px] tracking-wide text-emerald-400/90">
+            {date}
+          </p>
+        )}
+        <h3 className="mt-2 text-sm leading-snug font-bold text-white sm:text-base">
+          {article.title}
         </h3>
-        <p className="mt-1 text-xs text-white/60">{story.author}</p>
+        <p className="mt-1 text-xs text-white/60">{author}</p>
       </div>
     </Link>
   )
 }
 
-// Same aspect ratios as the real cards, so the row doesn't jump when data arrives.
-function StorySkeleton({ className }: { className?: string }) {
+function ArticlesSkeleton() {
   return (
-    <div className={cn('animate-pulse rounded-xl bg-white/5', className)} />
+    <div className="w-full">
+      <div className="mb-8">
+        <div className="h-9 w-56 animate-pulse rounded bg-white/5" />
+        <div className="mt-3 h-5 w-80 max-w-full animate-pulse rounded bg-white/5" />
+      </div>
+      <div className="mb-4 aspect-[21/9] w-full animate-pulse rounded-xl bg-white/5 sm:aspect-[2.5/1]" />
+      <div className="flex gap-4 overflow-hidden pt-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="aspect-[4/5] w-[85vw] shrink-0 animate-pulse rounded-xl bg-white/5 sm:w-[300px] md:w-[340px]"
+          />
+        ))}
+      </div>
+    </div>
   )
 }
 
-export function ArticlesSection({
-  endpoint = '/api/articles',
-}: {
-  endpoint?: string
-}) {
-  const { stories, error } = useArticles(endpoint)
+function ArticlesContent() {
+  const { data } = useSuspenseQuery(articlesQueryOptions())
+  const articles = data.results
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = React.useState(false)
@@ -158,7 +110,7 @@ export function ArticlesSection({
     el.addEventListener('scroll', checkScroll, { passive: true })
     checkScroll()
     return () => el.removeEventListener('scroll', checkScroll)
-  }, [checkScroll, stories])
+  }, [checkScroll, articles])
 
   const scrollBy = (direction: 'left' | 'right') => {
     const el = scrollRef.current
@@ -174,164 +126,145 @@ export function ArticlesSection({
     <div className="mb-8 flex items-end justify-between">
       <div>
         <h2 className="font-mono text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Latest Stories
+          Latest Articles
         </h2>
         <p className="mt-2 text-muted-foreground">
-          Sports analysis, data insights, and African football coverage.
+          Match reports, analysis, and coverage from across African football.
         </p>
       </div>
-      <a
-        href="/articles"
+      <Link
+        to={'/articles' as any}
         className="hidden font-mono text-sm font-medium text-primary hover:text-primary/80 sm:block"
       >
         View all →
-      </a>
+      </Link>
     </div>
   )
 
-  if (error) {
-    return (
-      <div className="w-full">
-        {header}
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-6 text-sm text-red-400">
-          Couldn't load stories right now. {error}
-        </div>
-      </div>
-    )
-  }
-
-  if (!stories) {
-    return (
-      <div className="w-full">
-        {header}
-        <StorySkeleton className="mb-4 aspect-[21/9] w-full sm:aspect-[2.5/1]" />
-        <div className="flex gap-4 overflow-hidden pt-2">
-          {[1, 2, 3, 4].map((i) => (
-            <StorySkeleton
-              key={i}
-              className="aspect-[4/5] w-[85vw] shrink-0 sm:w-[300px] md:w-[340px]"
-            />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  const featured = stories.find((s) => s.featured) ?? stories[0]
-  const grid = stories.filter((s) => s.id !== featured.id)
-
-  if (stories.length === 0) {
+  if (articles.length === 0) {
     return (
       <div className="w-full">
         {header}
         <div className="rounded-xl border border-dashed border-primary/20 bg-primary/5 p-10 text-center text-muted-foreground">
-          No stories yet — check back soon.
+          No articles yet — check back soon.
         </div>
       </div>
     )
   }
+
+  const featured = articles[0]
+  const grid = articles.slice(1)
 
   return (
     <div className="w-full">
       {header}
 
-      <StoryCard
-        story={featured}
-        index={0}
+      <ArticleCard
+        article={featured}
         className="mb-4 aspect-[21/9] w-full sm:aspect-[2.5/1]"
       />
 
-      <div className="relative">
-        <button
-          onClick={() => scrollBy('left')}
-          aria-label="Scroll to previous stories"
-          className={cn(
-            'absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-            canScrollLeft ? 'opacity-100' : 'pointer-events-none opacity-0',
-          )}
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+      {grid.length > 0 && (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => scrollBy('left')}
+            aria-label="Scroll to previous articles"
+            className={cn(
+              'absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+              canScrollLeft ? 'opacity-100' : 'pointer-events-none opacity-0',
+            )}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <button
-          onClick={() => scrollBy('right')}
-          aria-label="Scroll to more stories"
-          className={cn(
-            'absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-            canScrollRight ? 'opacity-100' : 'pointer-events-none opacity-0',
-          )}
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollBy('right')}
+            aria-label="Scroll to more articles"
+            className={cn(
+              'absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-opacity',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+              canScrollRight ? 'opacity-100' : 'pointer-events-none opacity-0',
+            )}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
 
-        <div
-          ref={scrollRef}
-          role="region"
-          aria-label="More stories, scrollable"
-          tabIndex={0}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 pt-2 [-webkit-overflow-scrolling:touch] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [&::-webkit-scrollbar]:hidden"
-        >
-          {grid.map((story, i) => (
-            <StoryCard
-              key={story.id}
-              story={story}
-              index={i + 1}
-              className="aspect-[4/5] w-[85vw] snap-start sm:w-[300px] md:w-[340px]"
-            />
-          ))}
-
-          <a
-            href="/articles"
-            className="flex w-[85vw] shrink-0 snap-start items-center justify-center rounded-xl border border-dashed border-primary/20 bg-primary/5 transition-colors hover:bg-primary/10 sm:w-[200px] aspect-[4/5]"
+          <div
+            ref={scrollRef}
+            role="region"
+            aria-label="More articles, scrollable"
+            tabIndex={0}
+            className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pt-2 pb-4 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="text-center">
-              <p className="font-mono text-lg font-semibold text-primary">
-                View All
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {stories.length}+ stories
-              </p>
-            </div>
-          </a>
+            {grid.map((article) => (
+              <ArticleCard
+                key={article.id}
+                article={article}
+                className="aspect-[4/5] w-[85vw] snap-start sm:w-[300px] md:w-[340px]"
+              />
+            ))}
+
+            <Link
+              to={'/articles' as any}
+              className="flex aspect-[4/5] w-[85vw] shrink-0 snap-start items-center justify-center rounded-xl border border-dashed border-primary/20 bg-primary/5 transition-colors hover:bg-primary/10 sm:w-[200px]"
+            >
+              <div className="text-center">
+                <p className="font-mono text-lg font-semibold text-primary">
+                  View All
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {data.count}+ articles
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="mt-4 text-center sm:hidden">
-        <a
-          href="/articles"
+        <Link
+          to={'/articles' as any}
           className="font-mono text-sm font-medium text-primary"
         >
-          View all stories →
-        </a>
+          View all articles →
+        </Link>
       </div>
     </div>
+  )
+}
+
+export function ArticlesSection() {
+  return (
+    <React.Suspense fallback={<ArticlesSkeleton />}>
+      <ArticlesContent />
+    </React.Suspense>
   )
 }

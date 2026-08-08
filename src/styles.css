@@ -214,3 +214,99 @@ body {
     animation: none !important;
   }
 }
+
+/* Article HTML body (CMS / TipTap output) */
+.article-body {
+  @apply text-[1.05rem] leading-[1.8] text-foreground/90;
+}
+
+.article-body > *:first-child {
+  @apply mt-0;
+}
+
+.article-body p {
+  @apply mb-5;
+}
+
+.article-body h2 {
+  @apply font-heading mt-10 mb-4 text-2xl font-bold tracking-tight text-foreground;
+}
+
+.article-body h3 {
+  @apply font-heading mt-8 mb-3 text-xl font-semibold tracking-tight text-foreground;
+}
+
+.article-body h4 {
+  @apply font-heading mt-6 mb-2 text-lg font-semibold text-foreground;
+}
+
+.article-body a {
+  @apply text-emerald-300 underline underline-offset-2 transition-colors hover:text-emerald-200;
+}
+
+.article-body strong,
+.article-body b {
+  @apply font-semibold text-foreground;
+}
+
+.article-body em,
+.article-body i {
+  @apply italic;
+}
+
+.article-body ul {
+  @apply mb-5 list-disc space-y-2 pl-6;
+}
+
+.article-body ol {
+  @apply mb-5 list-decimal space-y-2 pl-6;
+}
+
+.article-body blockquote {
+  @apply my-6 border-l-2 border-emerald-400/50 pl-4 text-muted-foreground italic;
+}
+
+.article-body img {
+  @apply my-8 h-auto w-full rounded-xl border border-white/10;
+}
+
+.article-body figure {
+  @apply my-8;
+}
+
+.article-body figcaption {
+  @apply mt-2 text-center font-mono text-xs text-muted-foreground;
+}
+
+.article-body hr {
+  @apply my-10 border-white/10;
+}
+
+.article-body pre {
+  @apply my-6 overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-4 font-mono text-sm;
+}
+
+.article-body code {
+  @apply rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.9em];
+}
+
+.article-body pre code {
+  @apply bg-transparent p-0;
+}
+
+.article-body iframe {
+  @apply my-8 aspect-video w-full rounded-xl border border-white/10;
+}
+
+.article-body table {
+  @apply my-6 w-full border-collapse text-sm;
+}
+
+.article-body th,
+.article-body td {
+  @apply border border-white/10 px-3 py-2 text-left;
+}
+
+.article-body th {
+  @apply bg-white/[0.04] font-heading font-semibold;
+}

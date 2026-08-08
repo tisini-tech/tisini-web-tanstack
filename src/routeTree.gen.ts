@@ -10,33 +10,78 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
+import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
+import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesArticleSlugIndexRoute =
+  ArticlesArticleSlugIndexRouteImport.update({
+    id: '/articles/$articleSlug/',
+    path: '/articles/$articleSlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ArticlesCategoriesCategorySlugRoute =
+  ArticlesCategoriesCategorySlugRouteImport.update({
+    id: '/articles/categories/$categorySlug',
+    path: '/articles/categories/$categorySlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
+  '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesIndexRoute
+  '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
+  '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
+  '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/articles/'
+    | '/articles/categories/$categorySlug'
+    | '/articles/$articleSlug/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/articles'
+    | '/articles/categories/$categorySlug'
+    | '/articles/$articleSlug'
+  id:
+    | '__root__'
+    | '/'
+    | '/articles/'
+    | '/articles/categories/$categorySlug'
+    | '/articles/$articleSlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
+  ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
+  ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +93,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/$articleSlug/': {
+      id: '/articles/$articleSlug/'
+      path: '/articles/$articleSlug'
+      fullPath: '/articles/$articleSlug/'
+      preLoaderRoute: typeof ArticlesArticleSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/categories/$categorySlug': {
+      id: '/articles/categories/$categorySlug'
+      path: '/articles/categories/$categorySlug'
+      fullPath: '/articles/categories/$categorySlug'
+      preLoaderRoute: typeof ArticlesCategoriesCategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
+  ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
+  ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

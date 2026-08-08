@@ -7,8 +7,12 @@ import { AboutSection } from '#/components/landing/about'
 import { ArticlesSection } from '#/components/landing/articles'
 import { ContactsSection } from '#/components/landing/contacts'
 import { cn } from '@/lib/utils'
+import { articlesQueryOptions } from '#/data/articles'
 
 export const Route = createFileRoute('/')({
+  loader: async ({ context }) => {
+    await context.queryClient.prefetchQuery(articlesQueryOptions())
+  },
   component: Home,
 })
 
