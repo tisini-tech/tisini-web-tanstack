@@ -4,22 +4,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { SiteHeader } from '@/components/site/header'
 import { HeroSection } from '#/components/landing/hero'
 import { AboutSection } from '#/components/landing/about'
-import { ArticlesSection } from '#/components/landing/articles'
+import { ProductsSection } from '#/components/landing/products'
 import { ContactsSection } from '#/components/landing/contacts'
 import { cn } from '@/lib/utils'
-import { articlesQueryOptions } from '#/data/articles'
 
 export const Route = createFileRoute('/')({
-  loader: async ({ context }) => {
-    await context.queryClient.prefetchQuery(articlesQueryOptions())
-  },
   component: Home,
 })
 
 const slides = [
   { id: 'hero', label: 'Home', component: HeroSection },
-  { id: 'articles', label: 'Articles', component: ArticlesSection },
   { id: 'about', label: 'About', component: AboutSection },
+  { id: 'products', label: 'Products', component: ProductsSection },
   { id: 'contacts', label: 'Contact', component: ContactsSection },
 ] as const
 
@@ -48,6 +44,13 @@ function Home() {
     const el = sectionRefs.current.get(id)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
+  React.useEffect(() => {
+    const hash = window.location.hash.replace(/^#/, '')
+    if (!hash) return
+    // Wait a tick so section refs are populated
+    requestAnimationFrame(() => scrollTo(hash))
+  }, [])
 
   return (
     <div className="relative h-screen w-full overflow-x-hidden bg-background">

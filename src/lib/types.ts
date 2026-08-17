@@ -40,3 +40,5 @@ export interface ArticleOverview {
   latest: Article[]
   categories: Record<string, Article[]>
 }
+
+export type FixtureDate = string

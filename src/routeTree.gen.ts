@@ -9,21 +9,46 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
+import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
 import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
 import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
 
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LivescoresRouteRoute = LivescoresRouteRouteImport.update({
+  id: '/livescores',
+  path: '/livescores',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LivescoresIndexRoute = LivescoresIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LivescoresRouteRoute,
 } as any)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/articles/',
   path: '/articles/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LivescoresFixtureTypeIndexRoute =
+  LivescoresFixtureTypeIndexRouteImport.update({
+    id: '/$fixtureType/',
+    path: '/$fixtureType/',
+    getParentRoute: () => LivescoresRouteRoute,
+  } as any)
 const ArticlesArticleSlugIndexRoute =
   ArticlesArticleSlugIndexRouteImport.update({
     id: '/articles/$articleSlug/',
@@ -39,46 +64,70 @@ const ArticlesCategoriesCategorySlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/livescores': typeof LivescoresRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/livescores/': typeof LivescoresIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
+  '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/articles': typeof ArticlesIndexRoute
+  '/livescores': typeof LivescoresIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
+  '/livescores/$fixtureType': typeof LivescoresFixtureTypeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/livescores': typeof LivescoresRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/livescores/': typeof LivescoresIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
+  '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/livescores'
+    | '/about'
     | '/articles/'
+    | '/livescores/'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug/'
+    | '/livescores/$fixtureType/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/articles'
+    | '/livescores'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug'
+    | '/livescores/$fixtureType'
   id:
     | '__root__'
     | '/'
+    | '/livescores'
+    | '/about'
     | '/articles/'
+    | '/livescores/'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug/'
+    | '/livescores/$fixtureType/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LivescoresRouteRoute: typeof LivescoresRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
@@ -86,6 +135,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/livescores': {
+      id: '/livescores'
+      path: '/livescores'
+      fullPath: '/livescores'
+      preLoaderRoute: typeof LivescoresRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -93,12 +156,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/livescores/': {
+      id: '/livescores/'
+      path: '/'
+      fullPath: '/livescores/'
+      preLoaderRoute: typeof LivescoresIndexRouteImport
+      parentRoute: typeof LivescoresRouteRoute
+    }
     '/articles/': {
       id: '/articles/'
       path: '/articles'
       fullPath: '/articles/'
       preLoaderRoute: typeof ArticlesIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/livescores/$fixtureType/': {
+      id: '/livescores/$fixtureType/'
+      path: '/$fixtureType'
+      fullPath: '/livescores/$fixtureType/'
+      preLoaderRoute: typeof LivescoresFixtureTypeIndexRouteImport
+      parentRoute: typeof LivescoresRouteRoute
     }
     '/articles/$articleSlug/': {
       id: '/articles/$articleSlug/'
@@ -117,8 +194,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface LivescoresRouteRouteChildren {
+  LivescoresIndexRoute: typeof LivescoresIndexRoute
+  LivescoresFixtureTypeIndexRoute: typeof LivescoresFixtureTypeIndexRoute
+}
+
+const LivescoresRouteRouteChildren: LivescoresRouteRouteChildren = {
+  LivescoresIndexRoute: LivescoresIndexRoute,
+  LivescoresFixtureTypeIndexRoute: LivescoresFixtureTypeIndexRoute,
+}
+
+const LivescoresRouteRouteWithChildren = LivescoresRouteRoute._addFileChildren(
+  LivescoresRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LivescoresRouteRoute: LivescoresRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,

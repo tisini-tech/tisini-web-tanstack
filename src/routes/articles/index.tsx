@@ -12,6 +12,16 @@ export const Route = createFileRoute('/articles/')({
     await context.queryClient.ensureQueryData(articlesOverviewQueryOptions())
   },
   component: ArticlesOverviewPage,
+  head: () => ({
+    meta: [
+      { title: 'Articles | Tisini' },
+      {
+        name: 'description',
+        content:
+          'African sports news, match recaps, features and analysis from Tisini — Football, Rugby, and more.',
+      },
+    ],
+  }),
 })
 
 function ArticlesOverviewPage() {

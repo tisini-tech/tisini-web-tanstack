@@ -4,10 +4,17 @@ import { Link, useLocation } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { id: 'hero', href: '/', label: 'Home' },
-  { id: 'articles', href: '/articles', label: 'Articles' },
-  { id: 'about', href: '/about', label: 'About' },
-  { id: 'contacts', href: '/contact', label: 'Contact' },
+  { id: 'hero', href: '/', label: 'Home', scrollOnHome: true },
+  { id: 'about', href: '/about', label: 'About', scrollOnHome: true },
+  { id: 'products', href: '/', label: 'Products', scrollOnHome: true },
+  { id: 'articles', href: '/articles', label: 'Articles', scrollOnHome: false },
+  {
+    id: 'livescores',
+    href: '/livescores',
+    label: 'Livescores',
+    scrollOnHome: false,
+  },
+  { id: 'contacts', href: '/contact', label: 'Contact', scrollOnHome: true },
 ] as const
 
 interface SiteHeaderProps {
@@ -24,8 +31,14 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
     setMenuOpen(false)
   }, [pathname])
 
-  const isLinkActive = (link: (typeof navLinks)[number]) =>
-    isHome && activeSection ? activeSection === link.id : pathname === link.href
+  const isLinkActive = (link: (typeof navLinks)[number]) => {
+    if (link.id === 'articles') return pathname.startsWith('/articles')
+    if (link.id === 'about' && pathname === '/about') return true
+    if (isHome && activeSection && link.scrollOnHome) {
+      return activeSection === link.id
+    }
+    return pathname === link.href
+  }
 
   const linkClasses = (isActive: boolean) =>
     cn(
@@ -35,6 +48,42 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
         ? 'bg-primary/20 text-primary'
         : 'text-foreground/70 hover:bg-white/10 hover:text-foreground',
     )
+
+  const renderNavItem = (
+    link: (typeof navLinks)[number],
+    className: string,
+  ) => {
+    const isActive = isLinkActive(link)
+    const classes = cn(className, linkClasses(isActive))
+
+    if (isHome && onNavigate && link.scrollOnHome) {
+      return (
+        <button
+          key={link.id}
+          onClick={() => onNavigate(link.id)}
+          aria-current={isActive ? 'page' : undefined}
+          className={classes}
+        >
+          {link.label}
+        </button>
+      )
+    }
+
+    const to = link.href as any
+    const hash = link.id === 'products' && !isHome ? 'products' : undefined
+
+    return (
+      <Link
+        key={link.id}
+        to={to}
+        hash={hash}
+        aria-current={isActive ? 'page' : undefined}
+        className={classes}
+      >
+        {link.label}
+      </Link>
+    )
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-background/55 backdrop-blur-md">
@@ -67,33 +116,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
         )}
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
-          {navLinks.map((link) => {
-            const isActive = isLinkActive(link)
-
-            if (isHome && onNavigate) {
-              return (
-                <button
-                  key={link.id}
-                  onClick={() => onNavigate(link.id)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={linkClasses(isActive)}
-                >
-                  {link.label}
-                </button>
-              )
-            }
-
-            return (
-              <Link
-                key={link.id}
-                to={link.href as any}
-                aria-current={isActive ? 'page' : undefined}
-                className={linkClasses(isActive)}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
+          {navLinks.map((link) => renderNavItem(link, ''))}
         </nav>
 
         <div className="hidden md:block">
@@ -144,43 +167,12 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
           className="border-t border-white/10 bg-background/95 backdrop-blur-md md:hidden"
         >
           <nav className="flex flex-col gap-1 p-4" aria-label="Mobile">
-            {navLinks.map((link) => {
-              const isActive = isLinkActive(link)
-
-              if (isHome && onNavigate) {
-                return (
-                  <button
-                    key={link.id}
-                    onClick={() => onNavigate(link.id)}
-                    aria-current={isActive ? 'page' : undefined}
-                    className={cn(
-                      'rounded-lg px-3 py-3 text-left text-sm font-medium transition-colors',
-                      isActive
-                        ? 'bg-primary/20 text-primary'
-                        : 'text-foreground/80 hover:bg-white/10 hover:text-foreground',
-                    )}
-                  >
-                    {link.label}
-                  </button>
-                )
-              }
-
-              return (
-                <Link
-                  key={link.id}
-                  to={link.href as any}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={cn(
-                    'rounded-lg px-3 py-3 text-left text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-primary/20 text-primary'
-                      : 'text-foreground/80 hover:bg-white/10 hover:text-foreground',
-                  )}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
+            {navLinks.map((link) =>
+              renderNavItem(
+                link,
+                'rounded-lg px-3 py-3 text-left text-sm font-medium',
+              ),
+            )}
             <div className="mt-2 border-t border-white/10 pt-3">
               <Link
                 to={'/login' as any}

@@ -15,8 +15,8 @@ const linkColumns = [
     heading: "Explore",
     links: [
       { label: "Home", to: "/" },
+      { label: "Articles", to: "/articles" },
       { label: "Livescore", to: "/livescore" },
-      { label: "Matches", to: "/matches" },
       { label: "Tano Bora", to: "/tano-bora" },
     ],
   },
@@ -24,7 +24,6 @@ const linkColumns = [
     heading: "Company",
     links: [
       { label: "About", to: "/about" },
-      { label: "Blogs", to: "/blogs" },
       { label: "Contact", to: "/contact" },
     ],
   },
