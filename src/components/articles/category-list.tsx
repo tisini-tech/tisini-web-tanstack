@@ -24,22 +24,22 @@ export function CategoryList({
       <CategoryHeader category={category} />
       <ul
         className={cn(
-          'border-t border-white/10',
+          'border-t border-border',
           columns === 2
             ? 'grid gap-x-8 sm:grid-cols-2'
-            : 'divide-y divide-white/10',
+            : 'divide-y divide-border',
         )}
       >
         {items.map((article) => (
           <li
             key={article.id}
-            className={columns === 2 ? 'border-t border-white/10' : undefined}
+            className={columns === 2 ? 'border-t border-border' : undefined}
           >
             <Link
               to={`/articles/${article.slug}` as any}
               className="group flex items-baseline justify-between gap-4 py-3"
             >
-              <h3 className="font-heading line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-emerald-300">
+              <h3 className="font-heading line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-accent-foreground">
                 {article.title}
               </h3>
               <time className="shrink-0 text-xs text-muted-foreground">

@@ -23,24 +23,24 @@ body {
 
 :root {
   /* Broadcast Navy — light mode (landing, blog) */
-  --background: oklch(0.99 0.005 250);
-  --foreground: oklch(0.2 0.04 260);
+  --background: oklch(0.985 0.004 250);
+  --foreground: oklch(0.22 0.04 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.04 260);
+  --card-foreground: oklch(0.22 0.04 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.04 260);
-  --primary: oklch(0.28 0.08 260);
+  --popover-foreground: oklch(0.22 0.04 260);
+  --primary: oklch(0.52 0.14 145);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.96 0.012 260);
   --secondary-foreground: oklch(0.28 0.08 260);
-  --muted: oklch(0.96 0.008 250);
-  --muted-foreground: oklch(0.5 0.03 260);
+  --muted: oklch(0.955 0.008 250);
+  --muted-foreground: oklch(0.45 0.03 260);
   --accent: oklch(0.94 0.04 145);
-  --accent-foreground: oklch(0.32 0.1 145);
+  --accent-foreground: oklch(0.42 0.12 145);
   --destructive: oklch(0.55 0.22 25);
-  --border: oklch(0.9 0.015 260);
-  --input: oklch(0.9 0.015 260);
-  --ring: oklch(0.45 0.06 260);
+  --border: oklch(0.87 0.018 260);
+  --input: oklch(0.87 0.018 260);
+  --ring: oklch(0.52 0.14 145);
   --live: oklch(0.55 0.22 25);
   --pitch: oklch(0.52 0.14 145);
   --win: oklch(0.52 0.14 145);
@@ -241,7 +241,7 @@ body {
 }
 
 .article-body a {
-  @apply text-emerald-300 underline underline-offset-2 transition-colors hover:text-emerald-200;
+  @apply text-accent-foreground underline underline-offset-2 transition-colors hover:text-accent-foreground/80;
 }
 
 .article-body strong,
@@ -267,7 +267,7 @@ body {
 }
 
 .article-body img {
-  @apply my-8 h-auto w-full rounded-xl border border-white/10;
+  @apply my-8 h-auto w-full rounded-xl border border-border;
 }
 
 .article-body figure {
@@ -279,11 +279,11 @@ body {
 }
 
 .article-body hr {
-  @apply my-10 border-white/10;
+  @apply my-10 border-border;
 }
 
 .article-body pre {
-  @apply my-6 overflow-x-auto rounded-lg border border-white/10 bg-black/30 p-4 font-mono text-sm;
+  @apply my-6 overflow-x-auto rounded-lg border border-border bg-black/30 p-4 font-mono text-sm;
 }
 
 .article-body code {
@@ -295,7 +295,7 @@ body {
 }
 
 .article-body iframe {
-  @apply my-8 aspect-video w-full rounded-xl border border-white/10;
+  @apply my-8 aspect-video w-full rounded-xl border border-border;
 }
 
 .article-body table {
@@ -304,9 +304,9 @@ body {
 
 .article-body th,
 .article-body td {
-  @apply border border-white/10 px-3 py-2 text-left;
+  @apply border border-border px-3 py-2 text-left;
 }
 
 .article-body th {
-  @apply bg-white/[0.04] font-heading font-semibold;
+  @apply bg-muted/40 font-heading font-semibold;
 }

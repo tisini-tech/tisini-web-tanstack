@@ -97,18 +97,18 @@ export default function SocialsWidget() {
     <div className="w-full">
       <div className="border-t-2 border-emerald-400/80">
         <div className="flex items-center justify-between py-3">
-          <h2 className="font-heading text-sm font-bold tracking-wide text-emerald-300 uppercase sm:text-base">
+          <h2 className="font-heading text-sm font-bold tracking-wide text-accent-foreground uppercase sm:text-base">
             Stay Connected
           </h2>
         </div>
       </div>
 
-      <div className="grid gap-4 border-t border-white/10 pt-4 sm:grid-cols-2 sm:items-stretch sm:gap-5">
+      <div className="grid gap-4 border-t border-border pt-4 sm:grid-cols-2 sm:items-stretch sm:gap-5">
         <a
           href="https://play.google.com/store/apps/details?id=com.tisini.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="block overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-opacity hover:opacity-95"
+          className="block overflow-hidden rounded-xl border border-border bg-muted/30 transition-opacity hover:opacity-95"
         >
           <img
             src="https://i.postimg.cc/7YHmZGt2/tisini-App.gif"

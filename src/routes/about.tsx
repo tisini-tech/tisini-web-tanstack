@@ -48,11 +48,11 @@ function AboutPage() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-[800px] px-4 pt-24 pb-20 sm:px-6">
         <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
-          <Link to="/" className="transition-colors hover:text-emerald-300">
+          <Link to="/" className="transition-colors hover:text-accent-foreground">
             Home
           </Link>
           <span className="text-white/20">/</span>
-          <span className="text-emerald-300">About</span>
+          <span className="text-accent-foreground">About</span>
         </nav>
 
         <p className="font-mono text-xs tracking-[0.2em] text-emerald-400/80 uppercase">
@@ -82,7 +82,7 @@ function AboutPage() {
           </p>
         </div>
 
-        <section className="mt-16 border-t border-white/10 pt-10">
+        <section className="mt-16 border-t border-border pt-10">
           <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
             How the story unfolded
           </p>
@@ -90,9 +90,9 @@ function AboutPage() {
             {chapters.map((chapter) => (
               <div
                 key={chapter.name}
-                className="grid gap-2 border-t border-white/10 py-6 sm:grid-cols-4 sm:gap-8"
+                className="grid gap-2 border-t border-border py-6 sm:grid-cols-4 sm:gap-8"
               >
-                <dt className="font-heading text-sm font-semibold tracking-wide text-emerald-300 uppercase sm:col-span-1">
+                <dt className="font-heading text-sm font-semibold tracking-wide text-accent-foreground uppercase sm:col-span-1">
                   {chapter.name}
                 </dt>
                 <dd className="text-base leading-relaxed text-muted-foreground sm:col-span-3">
@@ -103,7 +103,7 @@ function AboutPage() {
           </dl>
         </section>
 
-        <section className="mt-10 grid divide-y divide-white/10 border-t border-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <section className="mt-10 grid divide-y divide-border border-t border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {stats.map((stat) => (
             <div key={stat.label} className="py-8 text-center sm:py-10">
               <div className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
@@ -116,10 +116,10 @@ function AboutPage() {
           ))}
         </section>
 
-        <div className="mt-14 flex flex-wrap gap-3 border-t border-white/10 pt-10">
+        <div className="mt-14 flex flex-wrap gap-3 border-t border-border pt-10">
           <Link
             to="/articles"
-            className="inline-flex items-center rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-5 py-2.5 font-mono text-sm tracking-wide text-emerald-300 uppercase transition-colors hover:bg-emerald-400/20"
+            className="inline-flex items-center rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-5 py-2.5 font-mono text-sm tracking-wide text-accent-foreground uppercase transition-colors hover:bg-emerald-400/20"
           >
             Read articles
           </Link>

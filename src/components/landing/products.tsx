@@ -43,7 +43,7 @@ export function ProductsSection() {
     <main className="flex flex-1 items-center justify-center">
       <section className="w-full py-16 sm:py-20">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-xs tracking-widest text-emerald-400/90 uppercase sm:text-sm">
+          <p className="font-mono text-xs tracking-widest text-pitch uppercase dark:text-emerald-400/90 sm:text-sm">
             What we build
           </p>
           <h2 className="font-heading mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -55,11 +55,11 @@ export function ProductsSection() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-0 border-t border-white/10 sm:grid-cols-2">
+        <div className="mt-12 grid gap-0 border-t border-border sm:grid-cols-2">
           {buckets.map((bucket) => (
             <div
               key={bucket.name}
-              className="border-b border-white/10 px-1 py-8 sm:px-6 sm:odd:border-r lg:px-8"
+              className="border-b border-border px-1 py-8 sm:px-6 sm:odd:border-r lg:px-8"
             >
               <h3 className="font-heading text-lg font-semibold tracking-tight text-foreground sm:text-xl">
                 {bucket.name}
@@ -67,14 +67,14 @@ export function ProductsSection() {
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
                 {bucket.summary}
               </p>
-              <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] tracking-wide text-emerald-300/80 uppercase">
+              <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] tracking-wide text-accent-foreground/80 uppercase">
                 {bucket.items.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
               <Link
                 to={bucket.cta.to as any}
-                className="mt-5 inline-flex text-sm text-emerald-300 transition-colors hover:text-emerald-200"
+                className="mt-5 inline-flex text-sm text-accent-foreground transition-colors hover:text-accent-foreground/80"
               >
                 {bucket.cta.label} →
               </Link>

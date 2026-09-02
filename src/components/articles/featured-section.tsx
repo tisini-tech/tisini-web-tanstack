@@ -33,7 +33,7 @@ const FeaturedArticle = ({ article }: { article: Article }) => {
   const date = formatDate(article.published_at || article.created_at)
 
   return (
-    <div className="min-h-[280px] flex-1 overflow-hidden rounded-xl border border-white/10 md:min-h-0">
+    <div className="min-h-[280px] flex-1 overflow-hidden rounded-xl border border-border md:min-h-0">
       <Link
         to={`/articles/${article.slug}` as any}
         className="group relative flex h-full min-h-[280px] md:min-h-full"
@@ -53,7 +53,7 @@ const FeaturedArticle = ({ article }: { article: Article }) => {
           {date && (
             <p className="mb-2 text-sm text-muted-foreground">{date}</p>
           )}
-          <h3 className="font-heading line-clamp-3 text-xl font-bold text-foreground transition-colors group-hover:text-emerald-300 sm:text-2xl">
+          <h3 className="font-heading line-clamp-3 text-xl font-bold text-foreground transition-colors group-hover:text-accent-foreground sm:text-2xl">
             {article.title}
           </h3>
         </div>
@@ -65,14 +65,14 @@ const FeaturedArticle = ({ article }: { article: Article }) => {
 const ArticleCard = ({ article }: { article?: Article }) => {
   if (!article) {
     return (
-      <div className="min-h-[140px] flex-1 rounded-xl border border-dashed border-white/10 bg-white/[0.02]" />
+      <div className="min-h-[140px] flex-1 rounded-xl border border-dashed border-border bg-muted/20" />
     )
   }
 
   const date = formatDate(article.published_at || article.created_at)
 
   return (
-    <div className="min-h-[140px] flex-1 overflow-hidden rounded-xl border border-white/10">
+    <div className="min-h-[140px] flex-1 overflow-hidden rounded-xl border border-border">
       <Link
         to={`/articles/${article.slug}` as any}
         className="group relative flex h-full min-h-[140px]"
@@ -88,7 +88,7 @@ const ArticleCard = ({ article }: { article?: Article }) => {
           {date && (
             <p className="mb-1 text-xs text-muted-foreground">{date}</p>
           )}
-          <h3 className="font-heading line-clamp-3 text-sm font-bold text-foreground transition-colors group-hover:text-emerald-300">
+          <h3 className="font-heading line-clamp-3 text-sm font-bold text-foreground transition-colors group-hover:text-accent-foreground">
             {article.title}
           </h3>
         </div>

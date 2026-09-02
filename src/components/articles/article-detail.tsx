@@ -23,7 +23,7 @@ export default function ArticleDetail({ article }: { article: Article }) {
         <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
           <Link
             to="/articles"
-            className="transition-colors hover:text-emerald-300"
+            className="transition-colors hover:text-accent-foreground"
           >
             Articles
           </Link>
@@ -35,7 +35,7 @@ export default function ArticleDetail({ article }: { article: Article }) {
                 params={{
                   categorySlug: category.slug || category.name,
                 }}
-                className="transition-colors hover:text-emerald-300"
+                className="transition-colors hover:text-accent-foreground"
               >
                 {category.name}
               </Link>
@@ -49,7 +49,7 @@ export default function ArticleDetail({ article }: { article: Article }) {
             params={{
               categorySlug: category.slug || category.name,
             }}
-            className="font-mono text-xs tracking-[0.2em] text-emerald-400/90 uppercase transition-colors hover:text-emerald-300"
+            className="font-mono text-xs tracking-[0.2em] text-emerald-400/90 uppercase transition-colors hover:text-accent-foreground"
           >
             {category.name}
           </Link>
@@ -72,7 +72,7 @@ export default function ArticleDetail({ article }: { article: Article }) {
         </div>
 
         {article.featured_image && (
-          <div className="mt-8 overflow-hidden rounded-xl border border-white/10">
+          <div className="mt-8 overflow-hidden rounded-xl border border-border">
             <ArticleImage
               src={article.featured_image}
               alt={article.title}
@@ -99,11 +99,11 @@ export default function ArticleDetail({ article }: { article: Article }) {
         )}
 
         {article.keywords && article.keywords.length > 0 && (
-          <ul className="mt-14 flex flex-wrap gap-2 border-t border-white/10 pt-8">
+          <ul className="mt-14 flex flex-wrap gap-2 border-t border-border pt-8">
             {article.keywords.map((keyword) => (
               <li
                 key={keyword}
-                className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] tracking-wide text-muted-foreground uppercase"
+                className="rounded-md border border-border bg-muted/30 px-2.5 py-1 font-mono text-[11px] tracking-wide text-muted-foreground uppercase"
               >
                 {keyword}
               </li>

@@ -22,7 +22,7 @@ const CategoryGrid = ({ category, categorySlug, articles }: GridProps) => {
 
       {gridArticles.length > 0 && (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+          <div className="grid grid-cols-2 gap-4 border-t border-border pt-4">
             {gridArticles[0] && (
               <ArticleThumbCard article={gridArticles[0]} />
             )}
@@ -32,7 +32,7 @@ const CategoryGrid = ({ category, categorySlug, articles }: GridProps) => {
           </div>
 
           {(gridArticles[2] || gridArticles[3]) && (
-            <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+            <div className="grid grid-cols-2 gap-4 border-t border-border pt-4">
               {gridArticles[2] && (
                 <ArticleThumbCard article={gridArticles[2]} />
               )}

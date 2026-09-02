@@ -71,7 +71,7 @@ export function ContactsSection() {
   }
 
   const inputBase =
-    "w-full border-b border-white/15 bg-transparent px-0 py-3 text-sm text-white placeholder:text-gray-500 transition-colors focus:border-emerald-500 focus:outline-none"
+    'w-full border-b border-border bg-transparent px-0 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-pitch focus:outline-none dark:focus:border-emerald-500'
 
   return (
     <main className="flex-1">
@@ -79,36 +79,36 @@ export function ContactsSection() {
         <div className="grid gap-16 lg:grid-cols-5 lg:gap-12">
           {/* ─── Left: statement, not a hedge ─── */}
           <div className="lg:col-span-2">
-            <p className="font-mono text-xs tracking-widest text-emerald-400/90">GET IN TOUCH</p>
-            <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
+            <p className="font-mono text-xs tracking-widest text-pitch dark:text-emerald-400/90">GET IN TOUCH</p>
+            <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl">
               Tell us what you need.
             </h1>
-            <p className="mt-6 max-w-sm text-base leading-7 text-gray-400">
+            <p className="mt-6 max-w-sm text-base leading-7 text-muted-foreground">
               A real person reads every message. No ticket queue, no auto-reply loop — you'll hear back within a
               day.
             </p>
 
-            <ul className="mt-12 space-y-6 border-t border-white/10 pt-8">
+            <ul className="mt-12 space-y-6 border-t border-border pt-8">
               {contactMethods.map((method) => (
                 <li key={method.label} className="flex items-baseline justify-between gap-4">
-                  <span className="font-mono text-xs tracking-wide text-gray-500">{method.label.toUpperCase()}</span>
+                  <span className="font-mono text-xs tracking-wide text-muted-foreground">{method.label.toUpperCase()}</span>
                   {method.href ? (
                     <a
                       href={method.href}
-                      className="text-right text-sm font-medium text-white transition-colors hover:text-emerald-400"
+                      className="text-right text-sm font-medium text-foreground transition-colors hover:text-accent-foreground"
                     >
                       {method.value}
                     </a>
                   ) : (
-                    <span className="text-right text-sm font-medium text-white">{method.value}</span>
+                    <span className="text-right text-sm font-medium text-foreground">{method.value}</span>
                   )}
                 </li>
               ))}
             </ul>
 
-            <div className="mt-12 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              <span className="text-xs font-medium text-emerald-300">Avg. reply time: under 24 hours</span>
+            <div className="mt-12 inline-flex items-center gap-2 rounded-full border border-pitch/20 bg-pitch/10 px-4 py-2 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+              <span className="h-1.5 w-1.5 rounded-full bg-pitch dark:bg-emerald-400" />
+              <span className="text-xs font-medium text-accent-foreground">Avg. reply time: under 24 hours</span>
             </div>
           </div>
 
@@ -117,7 +117,7 @@ export function ContactsSection() {
             <form onSubmit={handleSubmit} className="space-y-8" noValidate>
               <div className="grid gap-8 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="mb-1.5 block text-xs font-medium tracking-wide text-gray-500">
+                  <label htmlFor="name" className="mb-1.5 block text-xs font-medium tracking-wide text-muted-foreground">
                     FULL NAME
                   </label>
                   <input
@@ -133,7 +133,7 @@ export function ContactsSection() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="mb-1.5 block text-xs font-medium tracking-wide text-gray-500">
+                  <label htmlFor="email" className="mb-1.5 block text-xs font-medium tracking-wide text-muted-foreground">
                     EMAIL ADDRESS
                   </label>
                   <input
@@ -151,7 +151,7 @@ export function ContactsSection() {
               </div>
 
               <div>
-                <label htmlFor="subject" className="mb-1.5 block text-xs font-medium tracking-wide text-gray-500">
+                <label htmlFor="subject" className="mb-1.5 block text-xs font-medium tracking-wide text-muted-foreground">
                   SUBJECT
                 </label>
                 <select
@@ -160,7 +160,7 @@ export function ContactsSection() {
                   required
                   value={form.subject}
                   onChange={handleChange}
-                  className={cn(inputBase, "appearance-none bg-[#0f172a]")}
+                  className={cn(inputBase, 'appearance-none bg-transparent')}
                 >
                   <option value="" disabled>
                     Select a topic
@@ -173,7 +173,7 @@ export function ContactsSection() {
               </div>
 
               <div>
-                <label htmlFor="message" className="mb-1.5 block text-xs font-medium tracking-wide text-gray-500">
+                <label htmlFor="message" className="mb-1.5 block text-xs font-medium tracking-wide text-muted-foreground">
                   MESSAGE
                 </label>
                 <textarea
@@ -207,7 +207,7 @@ export function ContactsSection() {
                 aria-busy={status === "loading"}
                 className={cn(
                   "inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-sm font-semibold text-white transition-colors",
-                  "hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-900",
+                  "hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-background",
                   status === "loading" && "cursor-not-allowed opacity-70"
                 )}
               >

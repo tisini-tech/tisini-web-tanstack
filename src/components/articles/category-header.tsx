@@ -17,7 +17,7 @@ const CategoryHeader = ({
   return (
     <div className="border-t-2 border-emerald-400/80">
       <div className="flex items-center justify-between py-3">
-        <span className="font-heading text-sm font-bold tracking-wide text-emerald-300 uppercase sm:text-base">
+        <span className="font-heading text-sm font-bold tracking-wide text-accent-foreground uppercase sm:text-base">
           {category}
         </span>
 
@@ -25,7 +25,7 @@ const CategoryHeader = ({
           <Link
             to="/articles/categories/$categorySlug"
             params={{ categorySlug: categorySlug ?? category }}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-emerald-300 sm:text-sm"
+            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-accent-foreground sm:text-sm"
           >
             <span>View All</span>
             <CircleArrowRight className="h-4 w-4" />

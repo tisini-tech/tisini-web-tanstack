@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { SiteHeader } from '@/components/site/header'
+import { SiteFooter } from '#/components/site/footer'
 import { HeroSection } from '#/components/landing/hero'
 import { AboutSection } from '#/components/landing/about'
 import { ProductsSection } from '#/components/landing/products'
@@ -71,12 +72,7 @@ function Home() {
       <SiteHeader activeSection={activeSection} onNavigate={scrollTo} />
 
       {/* ─── Carousel / Snap Scroll ─── */}
-      <div
-        className={cn(
-          'relative z-10 h-full snap-y snap-proximity overflow-y-auto scroll-smooth',
-          '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
-        )}
-      >
+      <div className="relative z-10 h-full snap-y snap-proximity overflow-y-auto scroll-smooth">
         {slides.map(({ id, component: Section }) => (
           <section
             key={id}
@@ -99,7 +95,14 @@ function Home() {
             </div>
           </section>
         ))}
-        <div id="footer" className="relative z-10 snap-start"></div>
+        <section
+          id="footer"
+          className="relative z-10 snap-start px-4 pt-8 sm:px-6"
+        >
+          <div className="mx-auto w-full max-w-[1440px]">
+            <SiteFooter />
+          </div>
+        </section>
       </div>
 
       {/* ─── Section navigator (desktop) ─── */}
@@ -107,7 +110,7 @@ function Home() {
         aria-label="Page sections"
         className="fixed top-1/2 right-4 z-50 hidden -translate-y-1/2 md:block lg:right-6"
       >
-        <div className="flex flex-col items-end gap-1 rounded-full border border-white/10 bg-background/60 p-2 shadow-[0_8px_30px_rgba(0,0,0,0.35)] backdrop-blur-md">
+        <div className="flex flex-col items-end gap-1 rounded-full border border-border bg-background/80 p-2 shadow-md shadow-black/8 backdrop-blur-md dark:bg-background/60 dark:shadow-[0_8px_30px_rgba(0,0,0,0.35)]">
           {slides.map((s) => {
             const isActive = activeSection === s.id
             return (
@@ -120,20 +123,20 @@ function Home() {
                 className={cn(
                   'group relative flex h-8 w-8 items-center justify-center rounded-full transition-colors',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60',
-                  isActive ? 'bg-emerald-500/15' : 'hover:bg-white/5',
+                  isActive ? 'bg-pitch/15 dark:bg-emerald-500/15' : 'hover:bg-muted/50 dark:hover:bg-muted/30',
                 )}
               >
                 <span
                   className={cn(
                     'rounded-full transition-all duration-300',
                     isActive
-                      ? 'h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.7)]'
-                      : 'h-1.5 w-1.5 bg-white/35 group-hover:bg-white/70',
+                      ? 'h-2.5 w-2.5 bg-pitch shadow-sm dark:bg-emerald-400 dark:shadow-[0_0_12px_rgba(52,211,153,0.7)]'
+                      : 'h-1.5 w-1.5 bg-muted-foreground/40 group-hover:bg-muted-foreground/70 dark:bg-white/35 dark:group-hover:bg-white/70',
                   )}
                 />
                 <span
                   className={cn(
-                    'pointer-events-none absolute right-full mr-3 rounded-md border border-white/10 bg-background/95 px-2.5 py-1',
+                    'pointer-events-none absolute right-full mr-3 rounded-md border border-border bg-background/95 px-2.5 py-1',
                     'text-xs font-medium whitespace-nowrap text-foreground/90 opacity-0 shadow-lg backdrop-blur-sm transition-all',
                     'translate-x-1 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100',
                   )}

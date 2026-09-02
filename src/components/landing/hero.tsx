@@ -137,7 +137,7 @@ export function HeroSection() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.12]"
         style={{
           backgroundImage:
             "url('/abstract-technology-background-blue-2_J29O.png')",
@@ -149,18 +149,18 @@ export function HeroSection() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute top-10 left-1/4 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
-        <div className="absolute right-0 bottom-24 h-80 w-80 rounded-full bg-sky-500/10 blur-3xl" />
+        <div className="absolute top-10 left-1/4 h-72 w-72 rounded-full bg-emerald-500/5 blur-3xl dark:bg-emerald-500/10" />
+        <div className="absolute right-0 bottom-24 h-80 w-80 rounded-full bg-sky-500/5 blur-3xl dark:bg-sky-500/10" />
       </div>
 
       {/* pt-16 clears the fixed header; bg above stays full-bleed */}
       <div className="relative mx-auto flex w-full max-w-[1440px] flex-1 flex-col justify-center px-4 pt-16 pb-10 sm:px-6 sm:pb-12 lg:pb-14">
         {/* Stable brand frame */}
         <div className="mx-auto mb-8 max-w-3xl text-center lg:mx-0 lg:max-w-none lg:text-left">
-          <div className="mb-5 inline-flex items-center rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 shadow-[0_0_24px_rgba(16,185,129,0.15)] backdrop-blur-sm">
+          <div className="mb-5 inline-flex items-center rounded-full border border-pitch/25 bg-pitch/10 px-3 py-1 text-xs font-medium text-accent-foreground shadow-sm backdrop-blur-sm dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:shadow-[0_0_24px_rgba(16,185,129,0.15)]">
             <span
               aria-hidden="true"
-              className="mr-2 flex h-2 w-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+              className="mr-2 flex h-2 w-2 animate-pulse rounded-full bg-pitch shadow-sm dark:bg-emerald-400 dark:shadow-[0_0_8px_rgba(52,211,153,0.8)]"
             />
             Tech platform for African impact
           </div>
@@ -204,8 +204,8 @@ export function HeroSection() {
                   'relative overflow-hidden rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-300',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
                   selected
-                    ? 'bg-white/10 text-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]'
-                    : 'bg-white/[0.03] text-foreground/65 hover:bg-white/10 hover:text-foreground',
+                    ? 'border border-border bg-card text-foreground shadow-sm dark:border-transparent dark:bg-white/10 dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]'
+                    : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground dark:bg-muted/30 dark:text-foreground/65',
                 )}
               >
                 <span className="relative z-10">{focus.label}</span>
@@ -247,7 +247,7 @@ export function HeroSection() {
               !reduceMotion && 'animate-[hero-fade-up_500ms_ease-out]',
             )}
           >
-            <p className="text-xs font-semibold tracking-widest text-emerald-400 uppercase">
+            <p className="text-xs font-semibold tracking-widest text-pitch uppercase dark:text-emerald-400">
               {active.eyebrow}
             </p>
             <h2 className="font-heading mt-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -262,7 +262,8 @@ export function HeroSection() {
                 to={active.primaryCta.to as any}
                 className={cn(
                   'inline-flex w-full items-center justify-center rounded-lg px-8 py-3.5 text-sm font-semibold sm:w-auto',
-                  'bg-primary text-primary-foreground shadow-[0_8px_30px_rgba(255,255,255,0.12)] transition-all hover:-translate-y-0.5 hover:bg-primary/90',
+                  'bg-primary text-primary-foreground shadow-md shadow-pitch/20 transition-all hover:-translate-y-0.5 hover:bg-primary/90',
+                  'dark:shadow-[0_8px_30px_rgba(255,255,255,0.12)]',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
                 )}
               >
@@ -287,8 +288,8 @@ export function HeroSection() {
                 <Link
                   to={active.secondaryCta.to as any}
                   className={cn(
-                    'inline-flex w-full items-center justify-center rounded-lg border border-white/15 bg-white/5 px-8 py-3.5 text-sm font-semibold backdrop-blur-sm sm:w-auto',
-                    'text-primary transition-all hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/10',
+                    'inline-flex w-full items-center justify-center rounded-lg border border-border bg-card px-8 py-3.5 text-sm font-semibold shadow-sm sm:w-auto',
+                    'text-foreground transition-all hover:-translate-y-0.5 hover:bg-muted dark:border-white/15 dark:bg-white/5 dark:text-primary dark:backdrop-blur-sm dark:hover:border-white/25',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
                   )}
                 >
@@ -306,8 +307,8 @@ export function HeroSection() {
                   className={cn(
                     'h-1.5 overflow-hidden rounded-full transition-all duration-300',
                     index === activeIndex
-                      ? 'w-8 bg-white/15'
-                      : 'w-1.5 bg-primary/30 hover:bg-primary/50',
+                      ? 'w-8 bg-pitch/50 dark:bg-white/15'
+                      : 'w-1.5 bg-muted-foreground/35 hover:bg-muted-foreground/55 dark:bg-primary/30 dark:hover:bg-primary/50',
                   )}
                   aria-label={`Go to ${focus.label}`}
                 >
@@ -344,15 +345,15 @@ export function HeroSection() {
       </div>
 
       {/* Stable company stats bar — full bleed, content constrained */}
-      <div className="relative border-t border-white/10 bg-gradient-to-r from-white/[0.04] via-white/[0.07] to-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+      <div className="relative border-t border-border bg-card/95 shadow-sm dark:bg-gradient-to-r dark:from-muted/40 dark:via-muted/60 dark:to-muted/40 dark:shadow-[inset_0_1px_0_var(--border)]">
         <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-7 sm:px-6 sm:py-8 lg:flex-row lg:items-center lg:gap-10">
-          <div className="relative shrink-0 lg:max-w-[16rem] lg:border-r lg:border-white/15 lg:pr-10">
-            <p className="font-heading text-xl font-bold tracking-tight text-emerald-300/90 sm:text-2xl lg:leading-snug">
+          <div className="relative shrink-0 lg:max-w-[16rem] lg:border-r lg:border-border lg:pr-10 dark:lg:border-white/15">
+            <p className="font-heading text-xl font-bold tracking-tight text-accent-foreground/90 sm:text-2xl lg:leading-snug">
               Trusted technology for Africa
             </p>
           </div>
 
-          <div className="grid flex-1 grid-cols-2 gap-y-6 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-white/10">
+          <div className="grid flex-1 grid-cols-2 gap-y-6 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-border">
             {companyStats.map((stat, i) => (
               <div
                 key={stat.label}
@@ -369,7 +370,7 @@ export function HeroSection() {
                       }
                 }
               >
-                <span className="font-heading text-2xl font-bold tracking-tight text-emerald-300 sm:text-3xl">
+                <span className="font-heading text-2xl font-bold tracking-tight text-accent-foreground sm:text-3xl">
                   {stat.value}
                 </span>
                 <span className="mt-1 text-xs tracking-wide text-muted-foreground uppercase">
@@ -410,13 +411,14 @@ function FocusVisual({
 
       <div
         className={cn(
-          'absolute -bottom-5 -left-5 rounded-xl border border-emerald-400/25 bg-emerald-500/15 p-4 shadow-[0_12px_40px_rgba(16,185,129,0.25)] backdrop-blur-md',
+          'absolute -bottom-5 -left-5 rounded-xl border border-pitch/25 bg-pitch/10 p-4 shadow-lg backdrop-blur-md',
+          'dark:border-emerald-400/25 dark:bg-emerald-500/15 dark:shadow-[0_12px_40px_rgba(16,185,129,0.25)]',
           !reduceMotion &&
             'animate-[hero-float_4.5s_ease-in-out_infinite_reverse]',
         )}
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/25 text-emerald-300 shadow-[inset_0_0_0_1px_rgba(52,211,153,0.25)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-pitch/20 text-accent-foreground shadow-sm dark:bg-emerald-500/25 dark:shadow-[inset_0_0_0_1px_rgba(52,211,153,0.25)]">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -432,8 +434,8 @@ function FocusVisual({
             </svg>
           </div>
           <div>
-            <p className="text-xs text-emerald-200/70">{focus.metric.label}</p>
-            <p className="text-lg font-bold text-emerald-300">
+            <p className="text-xs text-muted-foreground dark:text-emerald-200/70">{focus.metric.label}</p>
+            <p className="text-lg font-bold text-accent-foreground">
               {focus.metric.value}
             </p>
           </div>
@@ -445,14 +447,14 @@ function FocusVisual({
 
 function SportsVisual() {
   return (
-    <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.03] p-2 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm">
-      <div className="overflow-hidden rounded-xl border border-white/5 bg-background/90 shadow-inner">
-        <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.03] px-5 py-3">
+    <div className="relative rounded-2xl border border-border bg-card p-2 shadow-lg shadow-black/5 dark:border-border dark:bg-gradient-to-b dark:from-muted/60 dark:to-muted/30 dark:shadow-lg dark:backdrop-blur-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm dark:border-white/5 dark:bg-background/90 dark:shadow-inner">
+        <div className="flex items-center justify-between border-b border-border bg-muted/50 px-5 py-3 dark:border-white/5 dark:bg-muted/30">
           <span className="text-xs font-medium text-muted-foreground">
             {liveMatch.competition}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-pitch/10 px-2.5 py-1 text-xs font-semibold text-accent-foreground dark:bg-emerald-500/15 dark:shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-pitch dark:bg-emerald-400" />
             LIVE {liveMatch.minute}
           </span>
         </div>
@@ -460,7 +462,7 @@ function SportsVisual() {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col items-center gap-2">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 shadow-inner ring-1 ring-white/10" />
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 shadow-inner ring-1 ring-border dark:from-primary/40 dark:to-primary/10 dark:ring-white/10" />
               <span className="text-xs text-muted-foreground">
                 {liveMatch.home.name}
               </span>
@@ -471,7 +473,7 @@ function SportsVisual() {
               <span>{liveMatch.away.score}</span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 shadow-inner ring-1 ring-white/10" />
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 shadow-inner ring-1 ring-border dark:from-primary/40 dark:to-primary/10 dark:ring-white/10" />
               <span className="text-xs text-muted-foreground">
                 {liveMatch.away.name}
               </span>
@@ -484,9 +486,9 @@ function SportsVisual() {
               <span>Possession</span>
               <span>{liveMatch.possession.away}%</span>
             </div>
-            <div className="flex h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="flex h-1.5 overflow-hidden rounded-full bg-muted dark:bg-white/10">
               <div
-                className="bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.6)] transition-[width] duration-700"
+                className="bg-pitch shadow-sm transition-[width] duration-700 dark:bg-emerald-400 dark:shadow-[0_0_12px_rgba(52,211,153,0.6)]"
                 style={{ width: `${liveMatch.possession.home}%` }}
               />
               <div
@@ -496,14 +498,14 @@ function SportsVisual() {
             </div>
           </div>
 
-          <div className="mt-6 space-y-1.5 border-t border-white/5 pt-4">
+          <div className="mt-6 space-y-1.5 border-t border-border pt-4 dark:border-white/5">
             {tableSnippet.map((row) => (
               <div key={row.pos} className="flex items-center gap-3 text-sm">
                 <span className="w-4 text-xs text-muted-foreground">
                   {row.pos}
                 </span>
                 <span className="flex-1 text-foreground/90">{row.team}</span>
-                <span className="font-semibold text-emerald-300">
+                <span className="font-semibold text-accent-foreground">
                   {row.pts} pts
                 </span>
               </div>
@@ -526,13 +528,13 @@ function GenericFocusCard({ focus }: { focus: Focus }) {
   const items = lines[focus.id as Exclude<FocusId, 'sports'>]
 
   return (
-    <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.03] p-2 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm">
-      <div className="overflow-hidden rounded-xl border border-white/5 bg-background/90 p-6 shadow-inner">
+    <div className="relative rounded-2xl border border-border bg-card p-2 shadow-lg shadow-black/5 dark:border-border dark:bg-gradient-to-b dark:from-muted/60 dark:to-muted/30 dark:shadow-lg dark:backdrop-blur-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-card p-6 shadow-sm dark:border-white/5 dark:bg-background/90 dark:shadow-inner">
         <div className="mb-5 flex items-center justify-between">
           <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {focus.eyebrow}
           </span>
-          <span className="rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300">
+          <span className="rounded-full bg-pitch/10 px-2.5 py-1 text-xs font-semibold text-accent-foreground dark:bg-emerald-500/15">
             {focus.label}
           </span>
         </div>
@@ -545,10 +547,10 @@ function GenericFocusCard({ focus }: { focus: Focus }) {
           {items.map((item, i) => (
             <li
               key={item}
-              className="flex items-center gap-3 rounded-lg border border-white/8 bg-white/[0.04] px-4 py-3 text-sm text-foreground/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+              className="flex items-center gap-3 rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-foreground/85 shadow-sm dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
               style={{ animationDelay: `${120 + i * 80}ms` }}
             >
-              <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
+              <span className="h-2 w-2 shrink-0 rounded-full bg-pitch shadow-sm dark:bg-emerald-400 dark:shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
               {item}
             </li>
           ))}

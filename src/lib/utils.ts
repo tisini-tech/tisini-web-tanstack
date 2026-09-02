@@ -15,12 +15,32 @@ export function formatDate(iso: string) {
   })
 }
 
-/** Resolve absolute or relative media paths from the API. */
+/** Returns a usable image URL, or '' when the value is not a valid media path. */
 export function resolveMediaUrl(url?: string | null) {
   if (!url) return ''
-  if (/^https?:\/\//i.test(url) || url.startsWith('data:')) return url
-  if (url.startsWith('//')) return `https:${url}`
+  const trimmed = url.trim()
+  if (!trimmed) return ''
 
-  const origin = 'https://manage.tisini.africa'
-  return `${origin}${url.startsWith('/') ? '' : '/'}${url}`
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith('data:')) return trimmed
+  if (trimmed.startsWith('//')) return `https:${trimmed}`
+
+  // S3 / CDN host without protocol, e.g. bucket.s3.region.amazonaws.com/key
+  if (
+    /^[a-z0-9.-]+\.amazonaws\.com/i.test(trimmed) ||
+    /\.s3\.[a-z0-9-]+\.amazonaws\.com/i.test(trimmed)
+  ) {
+    return `https://${trimmed.replace(/^\/+/, '')}`
+  }
+
+  // Relative paths or filenames from the main API
+  if (
+    trimmed.startsWith('/') ||
+    trimmed.includes('/media/') ||
+    /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(trimmed)
+  ) {
+    const origin = 'https://manage.tisini.africa'
+    return `${origin}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`
+  }
+
+  return ''
 }

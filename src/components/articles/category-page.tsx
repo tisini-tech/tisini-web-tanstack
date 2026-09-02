@@ -41,12 +41,12 @@ export default function CategoryPage({
         <nav className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
           <Link
             to="/articles"
-            className="transition-colors hover:text-emerald-300"
+            className="transition-colors hover:text-accent-foreground"
           >
             Articles
           </Link>
           <span className="text-white/20">/</span>
-          <span className="text-emerald-300">{categoryName}</span>
+          <span className="text-accent-foreground">{categoryName}</span>
         </nav>
 
         <header className="mb-10 max-w-3xl">
@@ -69,7 +69,7 @@ export default function CategoryPage({
         </header>
 
         {!articles.length ? (
-          <div className="rounded-xl border border-white/10 bg-card/40 px-6 py-16 text-center">
+          <div className="rounded-xl border border-border bg-card/40 px-6 py-16 text-center">
             <p className="font-heading text-lg font-semibold text-foreground">
               No articles yet
             </p>
@@ -78,7 +78,7 @@ export default function CategoryPage({
             </p>
             <Link
               to="/articles"
-              className="mt-6 inline-flex text-sm text-emerald-300 transition-colors hover:text-emerald-200"
+              className="mt-6 inline-flex text-sm text-accent-foreground transition-colors hover:text-accent-foreground/80"
             >
               Back to articles
             </Link>
@@ -97,7 +97,7 @@ export default function CategoryPage({
                   type="button"
                   onClick={onLoadMore}
                   disabled={isFetchingNextPage}
-                  className="rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-6 py-2.5 font-mono text-sm tracking-wide text-emerald-300 uppercase transition-colors hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-6 py-2.5 font-mono text-sm tracking-wide text-accent-foreground uppercase transition-colors hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isFetchingNextPage ? 'Loading…' : 'Load more'}
                 </button>

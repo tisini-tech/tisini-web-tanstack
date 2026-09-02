@@ -1,13 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { DEFAULT_FIXTURE_TYPE } from '@/lib/scores'
 
 export const Route = createFileRoute('/livescores/')({
-  component: RouteComponent,
+  beforeLoad: () => {
+    throw redirect({
+      to: '/livescores/$fixtureType',
+      params: { fixtureType: DEFAULT_FIXTURE_TYPE },
+      replace: true,
+    })
+  },
 })
-
-function RouteComponent() {
-  return (
-    <div className="p-6 text-sm text-muted-foreground">
-      Select a sport or league to view livescores.
-    </div>
-  )
-}

@@ -1,6 +1,7 @@
 // src/components/site/header.tsx
 import * as React from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
+import { ModeToggle } from '#/components/site/mode-toggle'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -33,6 +34,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
 
   const isLinkActive = (link: (typeof navLinks)[number]) => {
     if (link.id === 'articles') return pathname.startsWith('/articles')
+    if (link.id === 'livescores') return pathname.startsWith('/livescores')
     if (link.id === 'about' && pathname === '/about') return true
     if (isHome && activeSection && link.scrollOnHome) {
       return activeSection === link.id
@@ -46,7 +48,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
       isActive
         ? 'bg-primary/20 text-primary'
-        : 'text-foreground/70 hover:bg-white/10 hover:text-foreground',
+        : 'text-foreground/70 hover:bg-muted hover:text-foreground',
     )
 
   const renderNavItem = (
@@ -86,7 +88,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-background/55 backdrop-blur-md">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/55 backdrop-blur-md">
       {/* Fixed escapes the parent shell — re-apply the same max-width + padding as main */}
       <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-4 sm:px-6">
         {isHome && onNavigate ? (
@@ -119,18 +121,21 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
           {navLinks.map((link) => renderNavItem(link, ''))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-2 md:flex">
+          <ModeToggle />
           <Link
             to={'/login' as any}
-            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-foreground"
           >
             Sign In
           </Link>
         </div>
 
-        <button
-          className="rounded-lg p-2 transition-colors hover:bg-white/10 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-          onClick={() => setMenuOpen((open) => !open)}
+        <div className="flex items-center gap-2 md:hidden">
+          <ModeToggle />
+          <button
+            className="rounded-lg p-2 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            onClick={() => setMenuOpen((open) => !open)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
@@ -159,12 +164,13 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
             )}
           </svg>
         </button>
+        </div>
       </div>
 
       {menuOpen && (
         <div
           id="mobile-nav"
-          className="border-t border-white/10 bg-background/95 backdrop-blur-md md:hidden"
+          className="border-t border-border bg-background/95 backdrop-blur-md md:hidden"
         >
           <nav className="flex flex-col gap-1 p-4" aria-label="Mobile">
             {navLinks.map((link) =>
@@ -173,10 +179,10 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
                 'rounded-lg px-3 py-3 text-left text-sm font-medium',
               ),
             )}
-            <div className="mt-2 border-t border-white/10 pt-3">
+            <div className="mt-2 border-t border-border pt-3">
               <Link
                 to={'/login' as any}
-                className="block rounded-lg bg-emerald-500 px-3 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-emerald-600"
+                className="rounded-lg bg-emerald-500 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-emerald-600"
               >
                 Sign In
               </Link>

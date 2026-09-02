@@ -62,7 +62,7 @@ function ArticlesOverview() {
 
       <div className="mx-auto hidden w-full max-w-[1440px] px-4 sm:px-6 md:block">
         <Link
-          className="mt-2 block overflow-hidden rounded-xl border border-white/10"
+          className="mt-2 block overflow-hidden rounded-xl border border-border"
           to={'/quiz/GN88FDHhWw7n' as any}
         >
           <img
@@ -91,7 +91,7 @@ function ArticlesOverview() {
 
       <div className="mx-auto mt-10 hidden w-full max-w-[1440px] px-4 sm:px-6 md:block">
         <Link
-          className="block overflow-hidden rounded-xl border border-white/10"
+          className="block overflow-hidden rounded-xl border border-border"
           to={'/tanobora' as any}
         >
           <img
@@ -117,7 +117,7 @@ function ArticlesOverview() {
           />
         </div>
 
-        <div className="mt-10 grid gap-10 border-t border-white/10 pt-8 md:grid-cols-2 md:gap-8 lg:gap-12">
+        <div className="mt-10 grid gap-10 border-t border-border pt-8 md:grid-cols-2 md:gap-8 lg:gap-12">
           <CategoryColumn
             category="Stats Recap"
             categorySlug="Stats-Recap"

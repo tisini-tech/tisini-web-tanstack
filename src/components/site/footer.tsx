@@ -58,7 +58,7 @@ export const SiteFooter = () => {
   }
 
   return (
-    <footer className="border-t border-white/10 bg-background/50 py-6 text-center">
+    <footer className="border-t border-border bg-background/50 py-6 text-center">
       <div className="w-full">
         <div className="flex flex-col items-center justify-between gap-6 py-4 lg:flex-row">
           <Link to="/">
@@ -98,7 +98,7 @@ export const SiteFooter = () => {
           {status === "error" && <span className="text-red-400">Something went wrong. Try again.</span>}
         </p>
 
-        <div className="my-6 border-t border-white/10" />
+        <div className="my-6 border-t border-border" />
 
         <div className="grid grid-cols-2 gap-8 text-left sm:grid-cols-3">
           {linkColumns.map((column) => (

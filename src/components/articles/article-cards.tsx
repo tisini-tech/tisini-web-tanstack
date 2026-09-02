@@ -16,7 +16,7 @@ export function ArticleLeadCard({
     <Link
       to={`/articles/${article.slug}` as any}
       className={cn(
-        'group relative block overflow-hidden rounded-xl border border-white/10',
+        'group relative block overflow-hidden rounded-xl border border-border',
         className,
       )}
     >
@@ -33,7 +33,7 @@ export function ArticleLeadCard({
         <p className="mb-1 text-xs text-muted-foreground">
           {formatDate(article.published_at || article.created_at)}
         </p>
-        <h3 className="font-heading line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-emerald-300 sm:text-base">
+        <h3 className="font-heading line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-accent-foreground sm:text-base">
           {article.title}
         </h3>
       </div>
@@ -47,7 +47,7 @@ export function ArticleRowCard({ article }: { article: Article }) {
       to={`/articles/${article.slug}` as any}
       className="group flex items-center gap-3 py-3.5 sm:gap-4"
     >
-      <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-white/10 sm:h-20 sm:w-28">
+      <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-border sm:h-20 sm:w-28">
         <ArticleImage
           src={article.featured_image}
           alt={article.title}
@@ -59,7 +59,7 @@ export function ArticleRowCard({ article }: { article: Article }) {
         <p className="text-xs text-muted-foreground">
           {formatDate(article.published_at || article.created_at)}
         </p>
-        <h3 className="font-heading mt-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-emerald-300">
+        <h3 className="font-heading mt-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-accent-foreground">
           {article.title}
         </h3>
       </div>
@@ -73,7 +73,7 @@ export function ArticleThumbCard({ article }: { article: Article }) {
       to={`/articles/${article.slug}` as any}
       className="group flex flex-col gap-2"
     >
-      <div className="aspect-[4/3] overflow-hidden rounded-lg border border-white/10 sm:aspect-[16/10]">
+      <div className="aspect-[4/3] overflow-hidden rounded-lg border border-border sm:aspect-[16/10]">
         <ArticleImage
           src={article.featured_image}
           alt={article.title}
@@ -85,7 +85,7 @@ export function ArticleThumbCard({ article }: { article: Article }) {
         {formatDate(article.published_at || article.created_at)}
       </p>
 
-      <h3 className="font-heading line-clamp-3 text-xs font-semibold text-foreground transition-colors group-hover:text-emerald-300 sm:text-sm">
+      <h3 className="font-heading line-clamp-3 text-xs font-semibold text-foreground transition-colors group-hover:text-accent-foreground sm:text-sm">
         {article.title}
       </h3>
     </Link>

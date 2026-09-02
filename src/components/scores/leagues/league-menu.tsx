@@ -1,12 +1,19 @@
-import { useRouter } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
+import { buildLeagueSlug, getDefaultSeasonId } from '@/lib/leagues'
+import { cn } from '@/lib/utils'
 
 const LeaguesMenu = () => {
-  const router = useRouter()
+  const activeLeagueId = useRouterState({
+    select: (s) => {
+      const match = s.location.pathname.match(/^\/livescores\/leagues\/([^/]+)/)
+      return match?.[1] ?? null
+    },
+  })
 
   return (
     <section className="p-3 sm:p-4">
       <div className="border-b border-emerald-400/40 pb-3">
-        <h3 className="font-heading text-sm font-bold tracking-wide text-emerald-300 uppercase">
+        <h3 className="font-heading text-sm font-bold tracking-wide text-accent-foreground uppercase">
           Leagues
         </h3>
       </div>
@@ -21,21 +28,24 @@ const LeaguesMenu = () => {
 
               <div className="space-y-1">
                 {sports.map((value) => {
-                  const url = value.name.split(' ').join('-').toLowerCase()
+                  const slug = buildLeagueSlug(key, value)
+                  const active = activeLeagueId === slug
 
                   return (
-                    <button
+                    <Link
                       key={value.id}
-                      type="button"
-                      className="w-full rounded-lg border border-transparent px-3 py-2.5 text-left text-sm font-medium text-foreground/90 transition-colors hover:border-white/10 hover:bg-white/[0.04] hover:text-emerald-300"
-                      onClick={() => {
-                        router.navigate({
-                          to: `/livescores/${key}-${url}-${value.id}`,
-                        })
-                      }}
+                      to="/livescores/leagues/$leagueId"
+                      params={{ leagueId: slug }}
+                      search={{ season: getDefaultSeasonId(value) }}
+                      className={cn(
+                        'block w-full rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition-colors',
+                        active
+                          ? 'border-emerald-400/40 bg-emerald-500/15 text-accent-foreground'
+                          : 'border-transparent text-foreground/90 hover:border-border hover:bg-muted/40 hover:text-accent-foreground',
+                      )}
                     >
                       {value.name}
-                    </button>
+                    </Link>
                   )
                 })}
               </div>

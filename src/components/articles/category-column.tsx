@@ -32,7 +32,7 @@ const CategoryColumn = ({
       />
 
       {rows.length > 0 && (
-        <div className="divide-y divide-white/10 border-t border-white/10">
+        <div className="divide-y divide-border border-t border-border">
           {rows.map((article) => (
             <ArticleRowCard key={article.id} article={article} />
           ))}
