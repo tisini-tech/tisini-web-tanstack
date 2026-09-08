@@ -27,7 +27,7 @@ type SubmitStatus = "idle" | "loading" | "success" | "error"
 
 const contactMethods = [
   { label: "Email", value: "info@tisini.africa", href: "mailto:info@tisini.africa" },
-  { label: "Phone", value: "+254 721 724 572", href: "tel:+254721724572" },
+  { label: "Phone", value: "+254 791 047878", href: "tel:+254791047878" },
   { label: "Location", value: "Nairobi, Kenya", href: undefined },
 ]
 
