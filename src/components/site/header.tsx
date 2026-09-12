@@ -101,7 +101,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
             <img
               src="/tisini-logo.png"
               alt="Tisini"
-              className="h-12 w-20 object-contain"
+              className="h-12 w-20 object-contain dark:invert"
               width={80}
               height={48}
             />
@@ -111,7 +111,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
             <img
               src="/tisini-logo.png"
               alt="Tisini"
-              className="h-12 w-20 object-contain"
+              className="h-12 w-20 object-contain dark:invert"
               width={80}
               height={48}
             />

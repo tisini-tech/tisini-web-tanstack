@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
+import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StreamsIndexRouteImport } from './routes/streams/index'
 import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
@@ -18,6 +19,7 @@ import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
 import { Route as StreamsFixTypeRouteRouteImport } from './routes/streams/$fixType/route'
 import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
+import { Route as GlossaryFixtypeIndexRouteImport } from './routes/glossary/$fixtype/index'
 import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
 import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
 import { Route as LivescoresLeaguesLeagueIdRouteRouteImport } from './routes/livescores/leagues/$leagueId/route'
@@ -45,6 +47,11 @@ const LivescoresRouteRoute = LivescoresRouteRouteImport.update({
   path: '/livescores',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GlossaryRouteRoute = GlossaryRouteRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,9 +68,9 @@ const LivescoresIndexRoute = LivescoresIndexRouteImport.update({
   getParentRoute: () => LivescoresRouteRoute,
 } as any)
 const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
-  id: '/glossary/',
-  path: '/glossary/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => GlossaryRouteRoute,
 } as any)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/articles/',
@@ -81,6 +88,11 @@ const LivescoresFixtureTypeIndexRoute =
     path: '/$fixtureType/',
     getParentRoute: () => LivescoresRouteRoute,
   } as any)
+const GlossaryFixtypeIndexRoute = GlossaryFixtypeIndexRouteImport.update({
+  id: '/$fixtype/',
+  path: '/$fixtype/',
+  getParentRoute: () => GlossaryRouteRoute,
+} as any)
 const ArticlesArticleSlugIndexRoute =
   ArticlesArticleSlugIndexRouteImport.update({
     id: '/articles/$articleSlug/',
@@ -180,6 +192,7 @@ const StreamsFixTypeFixturesFixIdLineupsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/glossary': typeof GlossaryRouteRouteWithChildren
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
@@ -191,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
+  '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
@@ -215,6 +229,7 @@ export interface FileRoutesByTo {
   '/streams': typeof StreamsIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
+  '/glossary/$fixtype': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType': typeof LivescoresFixtureTypeIndexRoute
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
@@ -231,6 +246,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/glossary': typeof GlossaryRouteRouteWithChildren
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
@@ -242,6 +258,7 @@ export interface FileRoutesById {
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
+  '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
@@ -260,6 +277,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/glossary'
     | '/livescores'
     | '/about'
     | '/streams/$fixType'
@@ -271,6 +289,7 @@ export interface FileRouteTypes {
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug/'
+    | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
     | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
@@ -295,6 +314,7 @@ export interface FileRouteTypes {
     | '/streams'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug'
+    | '/glossary/$fixtype'
     | '/livescores/$fixtureType'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
@@ -310,6 +330,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/glossary'
     | '/livescores'
     | '/about'
     | '/streams/$fixType'
@@ -321,6 +342,7 @@ export interface FileRouteTypes {
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug/'
+    | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
     | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
@@ -338,11 +360,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GlossaryRouteRoute: typeof GlossaryRouteRouteWithChildren
   LivescoresRouteRoute: typeof LivescoresRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   StreamsFixTypeRouteRoute: typeof StreamsFixTypeRouteRouteWithChildren
   ArticlesIndexRoute: typeof ArticlesIndexRoute
-  GlossaryIndexRoute: typeof GlossaryIndexRoute
   StreamsIndexRoute: typeof StreamsIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
@@ -362,6 +384,13 @@ declare module '@tanstack/react-router' {
       path: '/livescores'
       fullPath: '/livescores'
       preLoaderRoute: typeof LivescoresRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -387,10 +416,10 @@ declare module '@tanstack/react-router' {
     }
     '/glossary/': {
       id: '/glossary/'
-      path: '/glossary'
+      path: '/'
       fullPath: '/glossary/'
       preLoaderRoute: typeof GlossaryIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof GlossaryRouteRoute
     }
     '/articles/': {
       id: '/articles/'
@@ -412,6 +441,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/livescores/$fixtureType/'
       preLoaderRoute: typeof LivescoresFixtureTypeIndexRouteImport
       parentRoute: typeof LivescoresRouteRoute
+    }
+    '/glossary/$fixtype/': {
+      id: '/glossary/$fixtype/'
+      path: '/$fixtype'
+      fullPath: '/glossary/$fixtype/'
+      preLoaderRoute: typeof GlossaryFixtypeIndexRouteImport
+      parentRoute: typeof GlossaryRouteRoute
     }
     '/articles/$articleSlug/': {
       id: '/articles/$articleSlug/'
@@ -528,6 +564,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface GlossaryRouteRouteChildren {
+  GlossaryIndexRoute: typeof GlossaryIndexRoute
+  GlossaryFixtypeIndexRoute: typeof GlossaryFixtypeIndexRoute
+}
+
+const GlossaryRouteRouteChildren: GlossaryRouteRouteChildren = {
+  GlossaryIndexRoute: GlossaryIndexRoute,
+  GlossaryFixtypeIndexRoute: GlossaryFixtypeIndexRoute,
+}
+
+const GlossaryRouteRouteWithChildren = GlossaryRouteRoute._addFileChildren(
+  GlossaryRouteRouteChildren,
+)
+
 interface LivescoresFixtureTypeFixtureIdRouteRouteChildren {
   LivescoresFixtureTypeFixtureIdLineupsRoute: typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   LivescoresFixtureTypeFixtureIdOverviewRoute: typeof LivescoresFixtureTypeFixtureIdOverviewRoute
@@ -629,11 +679,11 @@ const StreamsFixTypeRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GlossaryRouteRoute: GlossaryRouteRouteWithChildren,
   LivescoresRouteRoute: LivescoresRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   StreamsFixTypeRouteRoute: StreamsFixTypeRouteRouteWithChildren,
   ArticlesIndexRoute: ArticlesIndexRoute,
-  GlossaryIndexRoute: GlossaryIndexRoute,
   StreamsIndexRoute: StreamsIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
