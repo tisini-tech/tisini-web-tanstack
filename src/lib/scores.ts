@@ -6,12 +6,7 @@ export type FixtureType = (typeof FIXTURE_TYPES)[number]
 
 export const DEFAULT_FIXTURE_TYPE: FixtureType = 'football'
 
-const RUGBY_FIXTURE_TYPES = new Set([
-  'rugby',
-  'rugby7',
-  'rugby10',
-  'rugby15',
-])
+const RUGBY_FIXTURE_TYPES = new Set(['rugby', 'rugby7', 'rugby10', 'rugby15'])
 
 export function isRugbyFixtureType(value: string | null | undefined): boolean {
   if (!value) return false
@@ -53,7 +48,9 @@ export function normalizeFixtureDate(value: unknown): string | undefined {
     return undefined
   }
 
-  const raw = String(value).trim().replace(/^["']+|["']+$/g, '')
+  const raw = String(value)
+    .trim()
+    .replace(/^["']+|["']+$/g, '')
   if (raw === '[object Object]') return undefined
   if (!raw) return undefined
 
@@ -91,11 +88,17 @@ export function extractFixtureDatesPayload(value: unknown): unknown[] {
   if (Array.isArray(value)) return value
 
   if (value && typeof value === 'object') {
-    if ('dates' in value && Array.isArray((value as { dates: unknown }).dates)) {
+    if (
+      'dates' in value &&
+      Array.isArray((value as { dates: unknown }).dates)
+    ) {
       return (value as { dates: unknown[] }).dates
     }
 
-    if ('items' in value && Array.isArray((value as { items: unknown }).items)) {
+    if (
+      'items' in value &&
+      Array.isArray((value as { items: unknown }).items)
+    ) {
       return (value as { items: unknown[] }).items
     }
   }
@@ -141,10 +144,13 @@ export type MatchStatusInput = {
 
 export function isInactiveMatchStatus(status: string) {
   return (
-    status === 'postponed' ||
-    status === 'cancelled' ||
-    status === 'abandoned'
+    status === 'postponed' || status === 'cancelled' || status === 'abandoned'
   )
+}
+
+/** Match is in progress (incl. HT) — suitable for live refetch. */
+export function isLiveFixtureStatus(status: string) {
+  return status === 'started' || status === 'HT'
 }
 
 export function matchStatusLabel(fixture: MatchStatusInput): string {

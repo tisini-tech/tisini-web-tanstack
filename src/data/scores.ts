@@ -1,6 +1,10 @@
 import { apiService } from '#/lib/api'
 import { normalizeSeasonId } from '#/lib/leagues'
-import { normalizeFixtureDates, extractFixtureDatesPayload } from '@/lib/scores'
+import {
+  extractFixtureDatesPayload,
+  isLiveFixtureStatus,
+  normalizeFixtureDates,
+} from '#/lib/scores'
 import { createServerFn } from '@tanstack/react-start'
 import { queryOptions } from '@tanstack/react-query'
 
@@ -67,6 +71,14 @@ export const fixtureDetailsQueryOptions = (fixtureId: string) =>
   queryOptions({
     queryKey: ['scores', 'fixture-details', fixtureId],
     queryFn: () => getFixtureDetails({ data: { fixtureId } }),
+    refetchInterval(query) {
+      const status = query.state.data?.fixture.game_status
+      return status && isLiveFixtureStatus(status) ? 1_000 : false
+    },
+    refetchOnWindowFocus(query) {
+      const status = query.state.data?.fixture.game_status
+      return Boolean(status && isLiveFixtureStatus(status))
+    },
   })
 
 export const getFixtureLineups = createServerFn({ method: 'GET' })

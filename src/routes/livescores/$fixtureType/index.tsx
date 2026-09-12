@@ -13,7 +13,7 @@ import {
   resolveFixtureDate,
 } from '#/lib/scores'
 
-type LivescoresFixtureSearch = {
+export type LivescoresFixtureSearch = {
   date?: string
 }
 

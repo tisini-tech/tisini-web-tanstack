@@ -198,9 +198,25 @@ export interface FixtureLineup {
   rating: number
 }
 
+export interface FixtureLineupPosition {
+  line: string
+  role: string
+  slot: number
+  label: string
+  number: number | null
+}
+
+export interface Formation {
+  id: number
+  name: string
+  positions_order: FixtureLineupPosition[]
+}
+
 export interface FixtureLineups {
   home: FixtureLineup[]
   away: FixtureLineup[]
+  home_formation: Formation | null
+  away_formation: Formation | null
 }
 
 export type SubEvent = {

@@ -12,19 +12,28 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StreamsIndexRouteImport } from './routes/streams/index'
 import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
+import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
+import { Route as StreamsFixTypeRouteRouteImport } from './routes/streams/$fixType/route'
 import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
 import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
 import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
 import { Route as LivescoresLeaguesLeagueIdRouteRouteImport } from './routes/livescores/leagues/$leagueId/route'
 import { Route as LivescoresFixtureTypeFixtureIdRouteRouteImport } from './routes/livescores/$fixtureType/$fixtureId/route'
+import { Route as StreamsFixTypeFixturesIndexRouteImport } from './routes/streams/$fixType/fixtures/index'
 import { Route as LivescoresLeaguesLeagueIdIndexRouteImport } from './routes/livescores/leagues/$leagueId/index'
 import { Route as LivescoresFixtureTypeFixtureIdIndexRouteImport } from './routes/livescores/$fixtureType/$fixtureId/index'
 import { Route as LivescoresLeaguesLeagueIdStandingsRouteImport } from './routes/livescores/leagues/$leagueId/standings'
 import { Route as LivescoresLeaguesLeagueIdScorersRouteImport } from './routes/livescores/leagues/$leagueId/scorers'
 import { Route as LivescoresFixtureTypeFixtureIdOverviewRouteImport } from './routes/livescores/$fixtureType/$fixtureId/overview'
 import { Route as LivescoresFixtureTypeFixtureIdLineupsRouteImport } from './routes/livescores/$fixtureType/$fixtureId/lineups'
+import { Route as StreamsFixTypeFixturesFixIdRouteRouteImport } from './routes/streams/$fixType/fixtures/$fixId/route'
+import { Route as StreamsFixTypeFixturesFixIdIndexRouteImport } from './routes/streams/$fixType/fixtures/$fixId/index'
+import { Route as StreamsFixTypeFixturesFixIdStatsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/stats'
+import { Route as StreamsFixTypeFixturesFixIdLowerThirdRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lower-third'
+import { Route as StreamsFixTypeFixturesFixIdLineupsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lineups'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -41,14 +50,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StreamsIndexRoute = StreamsIndexRouteImport.update({
+  id: '/streams/',
+  path: '/streams/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LivescoresIndexRoute = LivescoresIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LivescoresRouteRoute,
 } as any)
+const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
+  id: '/glossary/',
+  path: '/glossary/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/articles/',
   path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreamsFixTypeRouteRoute = StreamsFixTypeRouteRouteImport.update({
+  id: '/streams/$fixType',
+  path: '/streams/$fixType',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LivescoresFixtureTypeIndexRoute =
@@ -80,6 +104,12 @@ const LivescoresFixtureTypeFixtureIdRouteRoute =
     id: '/$fixtureType/$fixtureId',
     path: '/$fixtureType/$fixtureId',
     getParentRoute: () => LivescoresRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesIndexRoute =
+  StreamsFixTypeFixturesIndexRouteImport.update({
+    id: '/fixtures/',
+    path: '/fixtures/',
+    getParentRoute: () => StreamsFixTypeRouteRoute,
   } as any)
 const LivescoresLeaguesLeagueIdIndexRoute =
   LivescoresLeaguesLeagueIdIndexRouteImport.update({
@@ -117,30 +147,72 @@ const LivescoresFixtureTypeFixtureIdLineupsRoute =
     path: '/lineups',
     getParentRoute: () => LivescoresFixtureTypeFixtureIdRouteRoute,
   } as any)
+const StreamsFixTypeFixturesFixIdRouteRoute =
+  StreamsFixTypeFixturesFixIdRouteRouteImport.update({
+    id: '/fixtures/$fixId',
+    path: '/fixtures/$fixId',
+    getParentRoute: () => StreamsFixTypeRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesFixIdIndexRoute =
+  StreamsFixTypeFixturesFixIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesFixIdStatsRoute =
+  StreamsFixTypeFixturesFixIdStatsRouteImport.update({
+    id: '/stats',
+    path: '/stats',
+    getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesFixIdLowerThirdRoute =
+  StreamsFixTypeFixturesFixIdLowerThirdRouteImport.update({
+    id: '/lower-third',
+    path: '/lower-third',
+    getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesFixIdLineupsRoute =
+  StreamsFixTypeFixturesFixIdLineupsRouteImport.update({
+    id: '/lineups',
+    path: '/lineups',
+    getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
   '/articles/': typeof ArticlesIndexRoute
+  '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
+  '/streams/': typeof StreamsIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
+  '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/scorers': typeof LivescoresLeaguesLeagueIdScorersRoute
   '/livescores/leagues/$leagueId/standings': typeof LivescoresLeaguesLeagueIdStandingsRoute
   '/livescores/$fixtureType/$fixtureId/': typeof LivescoresFixtureTypeFixtureIdIndexRoute
   '/livescores/leagues/$leagueId/': typeof LivescoresLeaguesLeagueIdIndexRoute
+  '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
+  '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
+  '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
+  '/streams/$fixType/fixtures/$fixId/': typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
   '/articles': typeof ArticlesIndexRoute
+  '/glossary': typeof GlossaryIndexRoute
   '/livescores': typeof LivescoresIndexRoute
+  '/streams': typeof StreamsIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
   '/livescores/$fixtureType': typeof LivescoresFixtureTypeIndexRoute
@@ -150,25 +222,39 @@ export interface FileRoutesByTo {
   '/livescores/leagues/$leagueId/standings': typeof LivescoresLeaguesLeagueIdStandingsRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdIndexRoute
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdIndexRoute
+  '/streams/$fixType/fixtures': typeof StreamsFixTypeFixturesIndexRoute
+  '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
+  '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
+  '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
   '/articles/': typeof ArticlesIndexRoute
+  '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
+  '/streams/': typeof StreamsIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
+  '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/scorers': typeof LivescoresLeaguesLeagueIdScorersRoute
   '/livescores/leagues/$leagueId/standings': typeof LivescoresLeaguesLeagueIdStandingsRoute
   '/livescores/$fixtureType/$fixtureId/': typeof LivescoresFixtureTypeFixtureIdIndexRoute
   '/livescores/leagues/$leagueId/': typeof LivescoresLeaguesLeagueIdIndexRoute
+  '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
+  '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
+  '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
+  '/streams/$fixType/fixtures/$fixId/': typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -176,25 +262,37 @@ export interface FileRouteTypes {
     | '/'
     | '/livescores'
     | '/about'
+    | '/streams/$fixType'
     | '/articles/'
+    | '/glossary/'
     | '/livescores/'
+    | '/streams/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug/'
     | '/livescores/$fixtureType/'
+    | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/scorers'
     | '/livescores/leagues/$leagueId/standings'
     | '/livescores/$fixtureType/$fixtureId/'
     | '/livescores/leagues/$leagueId/'
+    | '/streams/$fixType/fixtures/'
+    | '/streams/$fixType/fixtures/$fixId/lineups'
+    | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/stats'
+    | '/streams/$fixType/fixtures/$fixId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/streams/$fixType'
     | '/articles'
+    | '/glossary'
     | '/livescores'
+    | '/streams'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug'
     | '/livescores/$fixtureType'
@@ -204,31 +302,48 @@ export interface FileRouteTypes {
     | '/livescores/leagues/$leagueId/standings'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
+    | '/streams/$fixType/fixtures'
+    | '/streams/$fixType/fixtures/$fixId/lineups'
+    | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/stats'
+    | '/streams/$fixType/fixtures/$fixId'
   id:
     | '__root__'
     | '/'
     | '/livescores'
     | '/about'
+    | '/streams/$fixType'
     | '/articles/'
+    | '/glossary/'
     | '/livescores/'
+    | '/streams/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug/'
     | '/livescores/$fixtureType/'
+    | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/scorers'
     | '/livescores/leagues/$leagueId/standings'
     | '/livescores/$fixtureType/$fixtureId/'
     | '/livescores/leagues/$leagueId/'
+    | '/streams/$fixType/fixtures/'
+    | '/streams/$fixType/fixtures/$fixId/lineups'
+    | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/stats'
+    | '/streams/$fixType/fixtures/$fixId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LivescoresRouteRoute: typeof LivescoresRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  StreamsFixTypeRouteRoute: typeof StreamsFixTypeRouteRouteWithChildren
   ArticlesIndexRoute: typeof ArticlesIndexRoute
+  GlossaryIndexRoute: typeof GlossaryIndexRoute
+  StreamsIndexRoute: typeof StreamsIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
 }
@@ -256,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/streams/': {
+      id: '/streams/'
+      path: '/streams'
+      fullPath: '/streams/'
+      preLoaderRoute: typeof StreamsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/livescores/': {
       id: '/livescores/'
       path: '/'
@@ -263,11 +385,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivescoresIndexRouteImport
       parentRoute: typeof LivescoresRouteRoute
     }
+    '/glossary/': {
+      id: '/glossary/'
+      path: '/glossary'
+      fullPath: '/glossary/'
+      preLoaderRoute: typeof GlossaryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles/': {
       id: '/articles/'
       path: '/articles'
       fullPath: '/articles/'
       preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streams/$fixType': {
+      id: '/streams/$fixType'
+      path: '/streams/$fixType'
+      fullPath: '/streams/$fixType'
+      preLoaderRoute: typeof StreamsFixTypeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/livescores/$fixtureType/': {
@@ -304,6 +440,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/livescores/$fixtureType/$fixtureId'
       preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdRouteRouteImport
       parentRoute: typeof LivescoresRouteRoute
+    }
+    '/streams/$fixType/fixtures/': {
+      id: '/streams/$fixType/fixtures/'
+      path: '/fixtures'
+      fullPath: '/streams/$fixType/fixtures/'
+      preLoaderRoute: typeof StreamsFixTypeFixturesIndexRouteImport
+      parentRoute: typeof StreamsFixTypeRouteRoute
     }
     '/livescores/leagues/$leagueId/': {
       id: '/livescores/leagues/$leagueId/'
@@ -346,6 +489,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/livescores/$fixtureType/$fixtureId/lineups'
       preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdLineupsRouteImport
       parentRoute: typeof LivescoresFixtureTypeFixtureIdRouteRoute
+    }
+    '/streams/$fixType/fixtures/$fixId': {
+      id: '/streams/$fixType/fixtures/$fixId'
+      path: '/fixtures/$fixId'
+      fullPath: '/streams/$fixType/fixtures/$fixId'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdRouteRouteImport
+      parentRoute: typeof StreamsFixTypeRouteRoute
+    }
+    '/streams/$fixType/fixtures/$fixId/': {
+      id: '/streams/$fixType/fixtures/$fixId/'
+      path: '/'
+      fullPath: '/streams/$fixType/fixtures/$fixId/'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdIndexRouteImport
+      parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
+    }
+    '/streams/$fixType/fixtures/$fixId/stats': {
+      id: '/streams/$fixType/fixtures/$fixId/stats'
+      path: '/stats'
+      fullPath: '/streams/$fixType/fixtures/$fixId/stats'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdStatsRouteImport
+      parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
+    }
+    '/streams/$fixType/fixtures/$fixId/lower-third': {
+      id: '/streams/$fixType/fixtures/$fixId/lower-third'
+      path: '/lower-third'
+      fullPath: '/streams/$fixType/fixtures/$fixId/lower-third'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdLowerThirdRouteImport
+      parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
+    }
+    '/streams/$fixType/fixtures/$fixId/lineups': {
+      id: '/streams/$fixType/fixtures/$fixId/lineups'
+      path: '/lineups'
+      fullPath: '/streams/$fixType/fixtures/$fixId/lineups'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdLineupsRouteImport
+      parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
     }
   }
 }
@@ -411,11 +589,52 @@ const LivescoresRouteRouteWithChildren = LivescoresRouteRoute._addFileChildren(
   LivescoresRouteRouteChildren,
 )
 
+interface StreamsFixTypeFixturesFixIdRouteRouteChildren {
+  StreamsFixTypeFixturesFixIdLineupsRoute: typeof StreamsFixTypeFixturesFixIdLineupsRoute
+  StreamsFixTypeFixturesFixIdLowerThirdRoute: typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  StreamsFixTypeFixturesFixIdStatsRoute: typeof StreamsFixTypeFixturesFixIdStatsRoute
+  StreamsFixTypeFixturesFixIdIndexRoute: typeof StreamsFixTypeFixturesFixIdIndexRoute
+}
+
+const StreamsFixTypeFixturesFixIdRouteRouteChildren: StreamsFixTypeFixturesFixIdRouteRouteChildren =
+  {
+    StreamsFixTypeFixturesFixIdLineupsRoute:
+      StreamsFixTypeFixturesFixIdLineupsRoute,
+    StreamsFixTypeFixturesFixIdLowerThirdRoute:
+      StreamsFixTypeFixturesFixIdLowerThirdRoute,
+    StreamsFixTypeFixturesFixIdStatsRoute:
+      StreamsFixTypeFixturesFixIdStatsRoute,
+    StreamsFixTypeFixturesFixIdIndexRoute:
+      StreamsFixTypeFixturesFixIdIndexRoute,
+  }
+
+const StreamsFixTypeFixturesFixIdRouteRouteWithChildren =
+  StreamsFixTypeFixturesFixIdRouteRoute._addFileChildren(
+    StreamsFixTypeFixturesFixIdRouteRouteChildren,
+  )
+
+interface StreamsFixTypeRouteRouteChildren {
+  StreamsFixTypeFixturesFixIdRouteRoute: typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
+  StreamsFixTypeFixturesIndexRoute: typeof StreamsFixTypeFixturesIndexRoute
+}
+
+const StreamsFixTypeRouteRouteChildren: StreamsFixTypeRouteRouteChildren = {
+  StreamsFixTypeFixturesFixIdRouteRoute:
+    StreamsFixTypeFixturesFixIdRouteRouteWithChildren,
+  StreamsFixTypeFixturesIndexRoute: StreamsFixTypeFixturesIndexRoute,
+}
+
+const StreamsFixTypeRouteRouteWithChildren =
+  StreamsFixTypeRouteRoute._addFileChildren(StreamsFixTypeRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LivescoresRouteRoute: LivescoresRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  StreamsFixTypeRouteRoute: StreamsFixTypeRouteRouteWithChildren,
   ArticlesIndexRoute: ArticlesIndexRoute,
+  GlossaryIndexRoute: GlossaryIndexRoute,
+  StreamsIndexRoute: StreamsIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
 }

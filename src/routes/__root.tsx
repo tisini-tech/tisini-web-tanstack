@@ -7,6 +7,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
 import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/site/footer'
@@ -45,48 +46,65 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function RootDocument({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const isHome = pathname === '/'
+  // Overlay / OBS-style pages — no site chrome
+  const isStream = pathname.startsWith('/streams')
+  const hideChrome = isHome || isStream
+  const lockViewport = isHome || isStream
+
+  // Don't set className on <html> via React — that overwrites theme dark/light classes.
+  // Toggle layout classes with classList instead.
+  useEffect(() => {
+    const root = document.documentElement
+    if (lockViewport) {
+      root.classList.add('h-full', 'overflow-hidden')
+    } else {
+      root.classList.remove('h-full', 'overflow-hidden')
+    }
+  }, [lockViewport])
 
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn(isHome && 'h-full overflow-hidden')}
-    >
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
 
-      <body className={cn('min-h-screen', isHome && 'h-full overflow-hidden')}>
+      <body
+        className={cn('min-h-screen', lockViewport && 'h-full overflow-hidden')}
+      >
         <ThemeProvider defaultTheme="system" storageKey="theme">
           <main
             className={cn(
               'flex w-full flex-col',
-              isHome ? 'h-full overflow-hidden' : 'min-h-screen',
+              lockViewport ? 'h-full overflow-hidden' : 'min-h-screen',
             )}
           >
-            {/* Home renders its own header inside the snap layout */}
-            {!isHome && <SiteHeader />}
+            {/* Home / streams render without the global site chrome */}
+            {!hideChrome && <SiteHeader />}
 
-            <div className="w-full min-w-0 flex-1">{children}</div>
+            <div className="flex w-full min-w-0 flex-1 flex-col">
+              {children}
+            </div>
 
-            {!isHome && (
+            {!hideChrome && (
               <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
                 <SiteFooter />
               </div>
             )}
           </main>
 
-          <TanStackDevtools
-            config={{
-              position: 'bottom-right',
-            }}
-            plugins={[
-              {
-                name: 'Tanstack Router',
-                render: <TanStackRouterDevtoolsPanel />,
-              },
-            ]}
-          />
+          {!isStream && (
+            <TanStackDevtools
+              config={{
+                position: 'bottom-right',
+              }}
+              plugins={[
+                {
+                  name: 'Tanstack Router',
+                  render: <TanStackRouterDevtoolsPanel />,
+                },
+              ]}
+            />
+          )}
         </ThemeProvider>
         <Scripts />
       </body>
