@@ -19,18 +19,67 @@ type LeagueSearch = {
   season?: string
 }
 
+function capitalize(value: string) {
+  if (!value) return value
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
 export const Route = createFileRoute('/livescores/leagues/$leagueId')({
   validateSearch: (search: Record<string, unknown>): LeagueSearch => ({
     season: normalizeSeasonId(search.season),
   }),
-  loader: ({ params }) => {
+  loaderDeps: ({ search: { season } }) => ({ season }),
+  loader: ({ params, deps }) => {
     const { id, sport, league } = parseLeagueSlug(params.leagueId)
+    const defaultSeason = league ? getDefaultSeasonId(league) : ''
+    const seasonId = deps.season ?? defaultSeason
+    const seasonEntry = league ? findSeasonEntry(league, seasonId) : undefined
+    const seasonLabel = seasonEntry?.season?.trim() ?? ''
 
     return {
       league,
       tournId: id,
       sport,
-      defaultSeason: league ? getDefaultSeasonId(league) : '',
+      defaultSeason,
+      seasonId,
+      seasonLabel,
+    }
+  },
+  head: ({ loaderData }) => {
+    const leagueName = loaderData?.league?.name?.trim()
+    const seasonLabel = loaderData?.seasonLabel?.trim()
+    const sport = capitalize(loaderData?.sport ?? '')
+
+    if (!leagueName) {
+      return {
+        meta: [
+          { title: 'League | Tisini' },
+          {
+            name: 'description',
+            content:
+              'League results, standings and top scorers for African sport on Tisini.',
+          },
+        ],
+      }
+    }
+
+    const title = seasonLabel
+      ? `${leagueName} ${seasonLabel} | Tisini`
+      : `${leagueName} | Tisini`
+
+    const description = seasonLabel
+      ? `Results, standings and top scorers for ${leagueName} (${seasonLabel})${
+          sport ? ` — ${sport}` : ''
+        } on Tisini.`
+      : `Results, standings and top scorers for ${leagueName}${
+          sport ? ` — ${sport}` : ''
+        } on Tisini.`
+
+    return {
+      meta: [
+        { title },
+        { name: 'description', content: description },
+      ],
     }
   },
   component: RouteComponent,

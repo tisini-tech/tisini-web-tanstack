@@ -11,7 +11,7 @@ import {
   useRouterState,
 } from '@tanstack/react-router'
 import { TeamLogo } from '@/components/scores/team-logo'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
 export const Route = createFileRoute('/livescores/$fixtureType/$fixtureId')({
   loader: async ({ params }) => {
@@ -24,6 +24,52 @@ export const Route = createFileRoute('/livescores/$fixtureType/$fixtureId')({
     })
 
     return { fixtureDetails, fixtureLineups }
+  },
+  head: ({ loaderData }) => {
+    const fixture = loaderData?.fixtureDetails?.fixture
+    if (!fixture) {
+      return {
+        meta: [
+          { title: 'Match | Tisini' },
+          {
+            name: 'description',
+            content: 'Live scores, stats and lineups on Tisini.',
+          },
+        ],
+      }
+    }
+
+    const home = fixture.team1_name.trim()
+    const away = fixture.team2_name.trim()
+    const league = fixture.league?.trim()
+    const date = formatDate(fixture.game_date.split(' ')[0] || fixture.game_date)
+    const notStarted = fixture.game_status === 'notstarted'
+    const inactive = isInactiveMatchStatus(fixture.game_status)
+
+    const matchTitle =
+      notStarted || inactive
+        ? `${home} vs ${away}`
+        : `${home} ${fixture.home_score}–${fixture.away_score} ${away}`
+
+    const title = [matchTitle, league, 'Tisini'].filter(Boolean).join(' | ')
+
+    let description = notStarted
+      ? `${home} vs ${away}${date ? ` on ${date}` : ''}${
+          fixture.matchtime ? ` at ${fixture.matchtime}` : ''
+        }`
+      : `${home} ${fixture.home_score}–${fixture.away_score} ${away}${
+          date ? ` on ${date}` : ''
+        }`
+
+    if (league) description += ` in ${league}`
+    description += '. Live score, stats and lineups on Tisini.'
+
+    return {
+      meta: [
+        { title },
+        { name: 'description', content: description },
+      ],
+    }
   },
   component: RouteComponent,
 })
