@@ -29,7 +29,7 @@ const linkColumns = [
   },
   {
     heading: "Legal",
-    links: [{ label: "Privacy Policy", to: "/privacy" }],
+    links: [{ label: "Privacy Policy", to: "/privacy-policy" }],
   },
 ] as const
 

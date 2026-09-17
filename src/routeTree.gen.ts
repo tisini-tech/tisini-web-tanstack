@@ -14,6 +14,7 @@ import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
 import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StreamsIndexRouteImport } from './routes/streams/index'
+import { Route as PrivacyPolicyIndexRouteImport } from './routes/privacy-policy/index'
 import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
 import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
@@ -60,6 +61,11 @@ const IndexRoute = IndexRouteImport.update({
 const StreamsIndexRoute = StreamsIndexRouteImport.update({
   id: '/streams/',
   path: '/streams/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyIndexRoute = PrivacyPolicyIndexRouteImport.update({
+  id: '/privacy-policy/',
+  path: '/privacy-policy/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LivescoresIndexRoute = LivescoresIndexRouteImport.update({
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/articles/': typeof ArticlesIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
+  '/privacy-policy/': typeof PrivacyPolicyIndexRoute
   '/streams/': typeof StreamsIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/articles': typeof ArticlesIndexRoute
   '/glossary': typeof GlossaryIndexRoute
   '/livescores': typeof LivescoresIndexRoute
+  '/privacy-policy': typeof PrivacyPolicyIndexRoute
   '/streams': typeof StreamsIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
@@ -253,6 +261,7 @@ export interface FileRoutesById {
   '/articles/': typeof ArticlesIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
+  '/privacy-policy/': typeof PrivacyPolicyIndexRoute
   '/streams/': typeof StreamsIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/articles/'
     | '/glossary/'
     | '/livescores/'
+    | '/privacy-policy/'
     | '/streams/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
@@ -311,6 +321,7 @@ export interface FileRouteTypes {
     | '/articles'
     | '/glossary'
     | '/livescores'
+    | '/privacy-policy'
     | '/streams'
     | '/articles/categories/$categorySlug'
     | '/articles/$articleSlug'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/articles/'
     | '/glossary/'
     | '/livescores/'
+    | '/privacy-policy/'
     | '/streams/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
@@ -365,6 +377,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   StreamsFixTypeRouteRoute: typeof StreamsFixTypeRouteRouteWithChildren
   ArticlesIndexRoute: typeof ArticlesIndexRoute
+  PrivacyPolicyIndexRoute: typeof PrivacyPolicyIndexRoute
   StreamsIndexRoute: typeof StreamsIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
@@ -405,6 +418,13 @@ declare module '@tanstack/react-router' {
       path: '/streams'
       fullPath: '/streams/'
       preLoaderRoute: typeof StreamsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy/': {
+      id: '/privacy-policy/'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy/'
+      preLoaderRoute: typeof PrivacyPolicyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/livescores/': {
@@ -684,6 +704,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   StreamsFixTypeRouteRoute: StreamsFixTypeRouteRouteWithChildren,
   ArticlesIndexRoute: ArticlesIndexRoute,
+  PrivacyPolicyIndexRoute: PrivacyPolicyIndexRoute,
   StreamsIndexRoute: StreamsIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
