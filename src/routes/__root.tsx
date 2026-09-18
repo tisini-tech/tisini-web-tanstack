@@ -14,6 +14,7 @@ import { SiteFooter } from '#/components/site/footer'
 import { SiteHeader } from '#/components/site/header'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '#/providers/theme-provider'
+import { Toaster } from 'sonner'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -38,6 +39,28 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        href: '/favicon.ico',
+        sizes: 'any',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: '/favicon-32x32.png',
+        sizes: '32x32',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: '/favicon-16x16.png',
+        sizes: '16x16',
+      },
+      {
+        rel: 'apple-touch-icon',
+        href: '/apple-touch-icon.png',
+        sizes: '180x180',
+      },
     ],
   }),
   shellComponent: RootDocument,
@@ -48,8 +71,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const isHome = pathname === '/'
   // Overlay / OBS-style pages — no site chrome
   const isStream = pathname.startsWith('/streams')
-  const hideChrome = isHome || isStream
-  const lockViewport = isHome || isStream
+  const isAuth =
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname === '/forgot-password' ||
+    pathname === '/reset-password' ||
+    pathname === '/verify'
+  const hideChrome = isHome || isStream || isAuth
+  const lockViewport = isHome || isStream || isAuth
 
   // Don't set className on <html> via React — that overwrites theme dark/light classes.
   // Toggle layout classes with classList instead.
@@ -81,16 +110,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             {/* Home / streams render without the global site chrome */}
             {!hideChrome && <SiteHeader />}
 
-            <div className="flex w-full min-w-0 flex-1 flex-col">
+            <div
+              className={cn(
+                'flex w-full min-w-0 flex-1 flex-col',
+                !hideChrome && 'page-shell pt-20 pb-10',
+              )}
+            >
               {children}
             </div>
 
             {!hideChrome && (
-              <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
+              <div className="page-shell">
                 <SiteFooter />
               </div>
             )}
           </main>
+
+          <Toaster position="top-center" />
 
           {!isStream && (
             <TanStackDevtools

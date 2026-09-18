@@ -206,10 +206,30 @@ export interface FixtureLineupPosition {
   number: number | null
 }
 
+export interface FormationRow {
+  line: string
+  role: string
+  slot: number
+  label: string
+  number: number | null
+}
+
 export interface Formation {
   id: number
   name: string
-  positions_order: FixtureLineupPosition[]
+  description: string
+  match_type: number
+  columns_per_row: number[]
+  /** Pitch bands (goal → attack); each band is ordered left→right slots. */
+  rows: FormationRow[][]
+}
+
+export interface TeamCoach {
+  id: number
+  name: string
+  date_of_birth: string | null
+  photo_url: string | null
+  nationality: string | null
 }
 
 export interface FixtureLineups {
@@ -217,6 +237,8 @@ export interface FixtureLineups {
   away: FixtureLineup[]
   home_formation: Formation | null
   away_formation: Formation | null
+  home_coach: TeamCoach | null
+  away_coach: TeamCoach | null
 }
 
 export type SubEvent = {
@@ -314,4 +336,78 @@ export type Standings = {
       ]
     },
   ]
+}
+
+export interface QuestionChoice {
+  id: number
+  question: number
+  text: string
+  team: number
+}
+
+export interface Question {
+  choices: QuestionChoice[]
+  id: number
+  question_set: number
+  answer_type: string
+  text: string
+  order: number
+  image_url: string | null
+  points: number
+  timer_seconds: number
+  is_required: boolean
+  team: number
+  metric: number
+  metric_detail: number
+}
+
+export interface EngParticipation {
+  has_played: boolean
+}
+
+export interface Engagement {
+  id: number
+  title: string
+  description: string
+  image_url: string | null
+  type: string
+  play_mode: string
+  status: string
+  starts_at: string
+  ends_at: string
+  is_public: boolean
+  is_payable: boolean
+  amount_payable: string
+  prize_description: string | null
+  company: number
+  match: number | null
+  questions?: Question[]
+}
+
+export interface EngSubmitResponse {
+  message: string
+  error: string
+}
+
+export interface EngUser {
+  id: number
+  username: string
+}
+
+export interface EngLeaderboard {
+  user: EngUser
+  id: number
+  question_set: number
+  score: number
+  time_used: number
+  has_paid: boolean
+  live_session: number
+  joined_at_question: number
+  completed_at: string | null
+}
+
+export interface Country {
+  id: number
+  name: string
+  iso_code2: string
 }

@@ -36,13 +36,15 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
-  const { fixId } = Route.useParams()
+  const { fixId, fixType } = Route.useParams()
   const { isHome = true } = Route.useSearch()
 
   const { data: lineups } = useSuspenseQuery(fixtureLineupsQueryOptions(fixId))
   const { data: details } = useSuspenseQuery(fixtureDetailsQueryOptions(fixId))
 
   const players = isHome ? (lineups.home ?? []) : (lineups.away ?? [])
+  const coach = isHome ? lineups.home_coach : lineups.away_coach
+  const formation = isHome ? lineups.home_formation : lineups.away_formation
   const teamName = isHome
     ? details.fixture.team1_name
     : details.fixture.team2_name
@@ -51,8 +53,6 @@ function RouteComponent() {
     : details.fixture.team2_logo
   const leagueName = details.fixture.league
 
-  console.log(lineups)
-
   return (
     <main className="h-screen w-screen overflow-hidden">
       <StreamTeamLineup
@@ -60,6 +60,9 @@ function RouteComponent() {
         players={players}
         teamLogo={teamLogo}
         leagueName={leagueName}
+        coach={coach}
+        formation={formation}
+        sport={fixType}
         // Placeholder until league logo is available from the API
         leagueLogo={null}
       />

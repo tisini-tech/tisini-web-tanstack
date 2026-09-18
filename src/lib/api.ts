@@ -3,7 +3,7 @@ import { useAppSession } from '@/lib/session'
 // Prevent multiple refresh requests at the same time
 let refreshPromise: Promise<string> | null = null
 
-export type ApiTarget = 'main' | 'scores'
+export type ApiTarget = 'main' | 'scores' | 'quiz'
 
 export type ApiRequestOptions = {
   /** Which backend. Default: `main` (`API_URL`). */
@@ -131,12 +131,7 @@ export async function apiFetch(
   })
 
   // Token refresh only applies to the main (session) API.
-  if (
-    target === 'main' &&
-    res.status === 401 &&
-    accessToken &&
-    !retried
-  ) {
+  if (target === 'main' && res.status === 401 && accessToken && !retried) {
     await refreshAccessToken()
     return apiFetch(path, init, opts, true)
   }
@@ -184,11 +179,7 @@ export const apiService = {
     opts: boolean | ApiRequestOptions = false,
   ) {
     return parseResponse<T>(
-      await apiFetch(
-        path,
-        { method: 'PUT', body: JSON.stringify(data) },
-        opts,
-      ),
+      await apiFetch(path, { method: 'PUT', body: JSON.stringify(data) }, opts),
     )
   },
 
@@ -207,8 +198,6 @@ export const apiService = {
   },
 
   async delete<T>(path: string, opts: boolean | ApiRequestOptions = false) {
-    return parseResponse<T>(
-      await apiFetch(path, { method: 'DELETE' }, opts),
-    )
+    return parseResponse<T>(await apiFetch(path, { method: 'DELETE' }, opts))
   },
 }

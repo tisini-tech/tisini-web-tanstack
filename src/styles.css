@@ -215,6 +215,20 @@ body {
   }
 }
 
+/* Shared page width — chrome pages (root applies .page-shell) */
+.page-shell {
+  @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6;
+}
+
+.page-shell-narrow {
+  @apply mx-auto w-full max-w-[800px];
+}
+
+/* Alias used by quiz screens */
+.sp-content-shell {
+  @apply mx-auto w-full max-w-[1440px];
+}
+
 /* Article HTML body (CMS / TipTap output) */
 .article-body {
   @apply text-[1.05rem] leading-[1.8] text-foreground/90;

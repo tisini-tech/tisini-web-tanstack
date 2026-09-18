@@ -24,7 +24,7 @@ const linkColumns = [
     heading: "Company",
     links: [
       { label: "About", to: "/about" },
-      { label: "Contact", to: "/contact" },
+      { label: "Contact", to: "/#contacts" },
     ],
   },
   {
@@ -120,7 +120,7 @@ export const SiteFooter = () => {
         <div className="mt-8 flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} Tisini —{" "}
-            <a href="/contact" className="ml-1 text-emerald-400 hover:underline">
+            <a href="/#contacts" className="ml-1 text-emerald-400 hover:underline">
               Contact Us
             </a>
           </p>

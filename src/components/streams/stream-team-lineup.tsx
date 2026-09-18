@@ -1,58 +1,25 @@
-import type { FixtureLineup } from '#/lib/types'
+import type { Formation, FixtureLineup, TeamCoach } from '#/lib/types'
+import {
+  allFormationPositions,
+  buildFormationBands,
+  getStartersByPosition,
+  getSubstitutes,
+  isSubstitute,
+  type FormationBand,
+} from '#/lib/formation'
 import { resolveMediaUrl } from '#/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState, type ReactNode } from 'react'
-
-/** Classic 4-4-2 by `lineupposition` (GK → attack). */
-export const FORMATION_442: number[][] = [
-  [1],
-  [2, 4, 5, 3],
-  [7, 6, 8, 11],
-  [9, 10],
-]
-
-const ROW_LABELS = ['Goalkeeper', 'Defence', 'Midfield', 'Forwards'] as const
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 
 /**
  * Story:
- * team → big GK → big defence → big midfield → big forwards → full XI + coach & subs
+ * team → spotlight each formation band → full XI + coach & subs
+ * (No formation → intro then coach/subs rail only.)
  */
-const T = {
-  intro: 0,
-  spotlight: 4_000,
-  spotlightEach: 4_250,
-  final: 4_000 + 4 * 4_250,
-} as const
+const INTRO_MS = 4_000
+const SPOTLIGHT_EACH_MS = 4_250
 
 type Phase = 'intro' | 'spotlight' | 'final'
-
-const PLACEHOLDER_COACH = {
-  name: 'José Mourinho',
-  title: 'Head Coach',
-  image: '/jose-mourinho.jpg',
-}
-
-export function isSubstitute(player: FixtureLineup) {
-  return (
-    player.lineupposition === 1000 ||
-    player.lineupposition == null ||
-    player.player_type === 'sub'
-  )
-}
-
-export function getStartersByPosition(players: FixtureLineup[]) {
-  const byPos = new Map<number, FixtureLineup>()
-  for (const player of players) {
-    if (isSubstitute(player)) continue
-    const pos = Number(player.lineupposition)
-    if (pos >= 1 && pos <= 11) byPos.set(pos, player)
-  }
-  return byPos
-}
-
-export function getSubstitutes(players: FixtureLineup[]) {
-  return players.filter(isSubstitute)
-}
 
 function displayName(fullName: string) {
   const parts = fullName.trim().split(/\s+/).filter(Boolean)
@@ -73,6 +40,11 @@ type StreamTeamLineupProps = {
   teamLogo?: string | null
   leagueLogo?: string | null
   leagueName?: string | null
+  coach?: TeamCoach | null
+  /** When null, pitch formation is skipped. */
+  formation?: Formation | null
+  /** Stream `$fixType` — drives band label dictionary (football vs rugby). */
+  sport?: string | null
 }
 
 const easeOut = [0.22, 1, 0.36, 1] as const
@@ -210,18 +182,56 @@ function PitchSurface({ children }: { children: ReactNode }) {
   )
 }
 
+function FormationEyebrow({
+  formationName,
+  starterCount,
+}: {
+  formationName?: string | null
+  starterCount: number
+}) {
+  const label = formationName?.trim()
+  return (
+    <p className="text-sm font-semibold tracking-[0.28em] text-[#7eb6ff] uppercase sm:text-base">
+      {label
+        ? `Starting ${starterCount} · ${label}`
+        : `Starting ${starterCount}`}
+    </p>
+  )
+}
+
 export function StreamTeamLineup({
   teamName,
   players,
   teamLogo,
   leagueLogo,
   leagueName,
+  coach,
+  formation = null,
+  sport = null,
 }: StreamTeamLineupProps) {
   const [playKey, setPlayKey] = useState(0)
   const [phase, setPhase] = useState<Phase>('intro')
   const [spotlightRow, setSpotlightRow] = useState<number | null>(null)
 
-  const starters = getStartersByPosition(players)
+  const bands: FormationBand[] = useMemo(
+    () => (formation ? buildFormationBands(formation, { sport }) : []),
+    [formation, sport],
+  )
+  const hasFormation = bands.length > 0
+  const formationPositions = useMemo(
+    () => allFormationPositions(bands),
+    [bands],
+  )
+  const starterCount = formationPositions.length
+
+  const starters = useMemo(
+    () =>
+      getStartersByPosition(
+        players,
+        hasFormation ? formationPositions : undefined,
+      ),
+    [players, hasFormation, formationPositions],
+  )
   const substitutes = getSubstitutes(players).slice(0, 14)
   const leagueLabel =
     leagueName && !/^\d+$/.test(leagueName.trim()) ? leagueName : null
@@ -229,8 +239,16 @@ export function StreamTeamLineup({
   const teamLogoSrc = resolveMediaUrl(teamLogo) || '/homeLogo.png'
   const leagueLogoSrc =
     resolveMediaUrl(leagueLogo) || '/league-logo-placeholder.svg'
+  const coachPhoto = resolveMediaUrl(coach?.photo_url)
+  const coachName = coach?.name?.trim() || 'Coach TBA'
+  const coachInitials = coachName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('')
 
-  const showPitch = phase === 'spotlight' || phase === 'final'
+  const showPitch = hasFormation && (phase === 'spotlight' || phase === 'final')
   const showRail = phase === 'final'
   const isSpotlight = phase === 'spotlight'
   const showFullXi = phase === 'final'
@@ -253,33 +271,47 @@ export function StreamTeamLineup({
     setSpotlightRow(null)
     const timers: number[] = []
 
+    if (!hasFormation) {
+      timers.push(
+        window.setTimeout(() => {
+          setPhase('final')
+        }, INTRO_MS),
+      )
+      return () => {
+        for (const id of timers) window.clearTimeout(id)
+      }
+    }
+
     timers.push(
       window.setTimeout(() => {
         setPhase('spotlight')
         setSpotlightRow(0)
-      }, T.spotlight),
+      }, INTRO_MS),
     )
 
-    for (let i = 1; i < ROW_LABELS.length; i++) {
+    for (let i = 1; i < bands.length; i++) {
       timers.push(
         window.setTimeout(
           () => setSpotlightRow(i),
-          T.spotlight + i * T.spotlightEach,
+          INTRO_MS + i * SPOTLIGHT_EACH_MS,
         ),
       )
     }
 
     timers.push(
-      window.setTimeout(() => {
-        setSpotlightRow(null)
-        setPhase('final')
-      }, T.final),
+      window.setTimeout(
+        () => {
+          setSpotlightRow(null)
+          setPhase('final')
+        },
+        INTRO_MS + bands.length * SPOTLIGHT_EACH_MS,
+      ),
     )
 
     return () => {
       for (const id of timers) window.clearTimeout(id)
     }
-  }, [playKey])
+  }, [playKey, hasFormation, bands.length])
 
   return (
     <div className="box-border flex h-screen w-screen items-stretch justify-stretch p-2 sm:p-3">
@@ -315,9 +347,13 @@ export function StreamTeamLineup({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: easeOut, delay: 0.12 }}
               >
-                <p className="text-sm font-semibold tracking-[0.28em] text-[#7eb6ff] uppercase sm:text-base">
-                  Starting XI · 4-4-2
-                </p>
+                <FormationEyebrow
+                  formationName={formation?.name}
+                  starterCount={
+                    starterCount ||
+                    players.filter((p) => !isSubstitute(p)).length
+                  }
+                />
                 <h1 className="mt-3 font-heading text-4xl font-extrabold tracking-wide text-white uppercase sm:text-5xl md:text-6xl lg:text-7xl">
                   {teamName}
                 </h1>
@@ -325,7 +361,40 @@ export function StreamTeamLineup({
             </motion.div>
           ) : null}
 
-          {/* 2–4. Pitch column + rail from top */}
+          {/* No formation: final rail only (coach + subs) */}
+          {!hasFormation && showRail ? (
+            <motion.div
+              key="no-formation-final"
+              className="flex h-full min-h-0 flex-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, ease: easeOut }}
+            >
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-6 px-8">
+                <img
+                  src={teamLogoSrc}
+                  alt={teamName}
+                  className="h-24 w-24 rounded-full bg-white object-contain p-2 shadow-xl sm:h-28 sm:w-28"
+                />
+                <h2 className="font-heading text-3xl font-extrabold text-white uppercase sm:text-4xl">
+                  {teamName}
+                </h2>
+                <p className="text-sm text-white/55">
+                  Formation not available for this side.
+                </p>
+              </div>
+              <CoachSubsRail
+                coachPhoto={coachPhoto}
+                coachName={coachName}
+                coachInitials={coachInitials}
+                coach={coach}
+                substitutes={substitutes}
+              />
+            </motion.div>
+          ) : null}
+
+          {/* Pitch column + rail */}
           {showPitch ? (
             <motion.div
               key="match-layout"
@@ -335,7 +404,6 @@ export function StreamTeamLineup({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4, ease: easeOut }}
             >
-              {/* Left: logos + pitch (header only spans this column) */}
               <div className="flex min-h-0 min-w-0 flex-1 flex-col">
                 <div className="flex shrink-0 items-center gap-6 border-b border-white/10 px-5 py-4 sm:gap-10 sm:px-8 sm:py-5">
                   <img
@@ -345,7 +413,9 @@ export function StreamTeamLineup({
                   />
                   <div className="min-w-0 flex-1 text-center">
                     <p className="text-xs font-semibold tracking-[0.22em] text-[#7eb6ff] uppercase sm:text-sm">
-                      Starting XI · 4-4-2
+                      {formation?.name?.trim()
+                        ? `Starting ${starterCount} · ${formation.name}`
+                        : `Starting ${starterCount}`}
                     </p>
                     <h2 className="truncate font-heading text-2xl font-extrabold text-white uppercase sm:text-3xl lg:text-4xl">
                       {teamName}
@@ -365,11 +435,10 @@ export function StreamTeamLineup({
                 >
                   <PitchSurface>
                     <div className="relative flex h-full min-h-0">
-                      {/* Big vertical unit label during spotlight */}
                       <AnimatePresence mode="wait">
                         {isSpotlight && spotlightRow !== null ? (
                           <motion.div
-                            key={ROW_LABELS[spotlightRow]}
+                            key={bands[spotlightRow]?.label ?? spotlightRow}
                             className="flex w-12 shrink-0 items-center justify-center border-r border-white/15 bg-[#023270]/35 sm:w-16 lg:w-20"
                             initial={{ opacity: 0, x: -12 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -377,7 +446,7 @@ export function StreamTeamLineup({
                             transition={{ duration: 0.35, ease: easeOut }}
                           >
                             <span className="font-heading text-3xl font-extrabold tracking-[0.28em] text-white uppercase sm:text-4xl lg:text-5xl [writing-mode:vertical-rl] rotate-180">
-                              {ROW_LABELS[spotlightRow]}
+                              {bands[spotlightRow]?.label}
                             </span>
                           </motion.div>
                         ) : null}
@@ -390,28 +459,27 @@ export function StreamTeamLineup({
                             : 'flex h-full flex-1 flex-col justify-between px-2 py-4 sm:px-4 sm:py-5 lg:py-6'
                         }
                       >
-                        {FORMATION_442.map((row, rowIndex) => {
+                        {bands.map((band, rowIndex) => {
                           const isActive = spotlightRow === rowIndex
-                          // Spotlight: only the active unit — no full XI underneath
                           if (isSpotlight && !isActive) return null
 
                           const spotlightFocus = isSpotlight && isActive
                           const chipSize: ChipSize = spotlightFocus
-                            ? row.length <= 2
+                            ? band.positions.length <= 2
                               ? 'hero'
                               : 'focus'
                             : 'normal'
 
                           return (
                             <div
-                              key={row.join('-')}
+                              key={`${band.label}-${rowIndex}`}
                               className={
                                 spotlightFocus
                                   ? 'relative z-20 flex w-full max-w-none items-center justify-evenly gap-2 px-1 sm:gap-3 sm:px-2'
                                   : 'relative flex w-full flex-1 items-center justify-evenly gap-1 sm:gap-2'
                               }
                             >
-                              {row.map((pos, posIndex) => {
+                              {band.positions.map((pos, posIndex) => {
                                 const player = starters.get(pos)
                                 if (!player) {
                                   return (
@@ -460,84 +528,16 @@ export function StreamTeamLineup({
                 </motion.div>
               </div>
 
-              {/* Rail from top of card — coach gets more presence */}
               <AnimatePresence>
                 {showRail ? (
-                  <motion.aside
+                  <CoachSubsRail
                     key="rail"
-                    className="flex h-full min-h-0 w-[18rem] shrink-0 flex-col border-l border-white/10 px-4 py-4 sm:w-[21rem] sm:px-5 sm:py-5 lg:w-[24rem] lg:px-6"
-                    initial={{ opacity: 0, x: 48, width: 0 }}
-                    animate={{ opacity: 1, x: 0, width: 'auto' }}
-                    exit={{ opacity: 0, x: 40 }}
-                    transition={{ duration: 0.65, ease: easeOut }}
-                  >
-                    <motion.div
-                      className="mb-5 flex shrink-0 flex-col items-center border-b border-white/10 pb-5 text-center"
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.15, duration: 0.4 }}
-                    >
-                      <img
-                        src={PLACEHOLDER_COACH.image}
-                        alt={PLACEHOLDER_COACH.name}
-                        className="h-36 w-36 rounded-2xl object-cover shadow-lg ring-2 ring-white/30 sm:h-40 sm:w-40 lg:h-44 lg:w-44"
-                      />
-                      <p className="mt-3 text-xs tracking-[0.18em] text-white/55 uppercase sm:text-sm">
-                        {PLACEHOLDER_COACH.title}
-                      </p>
-                      <p className="mt-1 text-xl font-bold text-white sm:text-2xl">
-                        {PLACEHOLDER_COACH.name}
-                      </p>
-                    </motion.div>
-
-                    <p className="mb-3 shrink-0 text-xs font-bold tracking-[0.18em] text-[#7eb6ff] uppercase sm:text-sm">
-                      Substitutes
-                    </p>
-
-                    <motion.ul
-                      className="min-h-0 flex-1 space-y-2 overflow-hidden pr-0.5"
-                      variants={rowEnter}
-                      initial="hidden"
-                      animate="show"
-                    >
-                      {substitutes.length === 0 ? (
-                        <li className="text-sm text-white/45">None listed</li>
-                      ) : (
-                        substitutes.map((player) => (
-                          <motion.li
-                            key={player.id}
-                            variants={chipVariants}
-                            title={player.pname}
-                          >
-                            <span className="inline-flex max-w-full items-center gap-2 rounded-full bg-[#1E6FD9] px-3.5 py-1.5 text-sm font-semibold text-white sm:text-base">
-                              <span className="tabular-nums text-yellow-200">
-                                {player.jersey_no}
-                              </span>
-                              <span className="truncate">
-                                {shortName(player.pname)}
-                              </span>
-                            </span>
-                          </motion.li>
-                        ))
-                      )}
-                    </motion.ul>
-
-                    <motion.div
-                      className="mt-3 flex shrink-0 flex-col items-center gap-1 border-t border-white/10 pt-3"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.4, duration: 0.4 }}
-                    >
-                      <span className="text-sm font-semibold text-white/80 italic">
-                        Insights by
-                      </span>
-                      <img
-                        src="/tisini-logo.png"
-                        alt="Tisini"
-                        className="h-10 w-auto object-contain sm:h-11"
-                      />
-                    </motion.div>
-                  </motion.aside>
+                    coachPhoto={coachPhoto}
+                    coachName={coachName}
+                    coachInitials={coachInitials}
+                    coach={coach}
+                    substitutes={substitutes}
+                  />
                 ) : null}
               </AnimatePresence>
             </motion.div>
@@ -547,3 +547,111 @@ export function StreamTeamLineup({
     </div>
   )
 }
+
+function CoachSubsRail({
+  coachPhoto,
+  coachName,
+  coachInitials,
+  coach,
+  substitutes,
+}: {
+  coachPhoto: string
+  coachName: string
+  coachInitials: string
+  coach?: TeamCoach | null
+  substitutes: FixtureLineup[]
+}) {
+  return (
+    <motion.aside
+      className="flex h-full min-h-0 w-[18rem] shrink-0 flex-col border-l border-white/10 px-4 py-4 sm:w-[21rem] sm:px-5 sm:py-5 lg:w-[24rem] lg:px-6"
+      initial={{ opacity: 0, x: 48, width: 0 }}
+      animate={{ opacity: 1, x: 0, width: 'auto' }}
+      exit={{ opacity: 0, x: 40 }}
+      transition={{ duration: 0.65, ease: easeOut }}
+    >
+      <motion.div
+        className="mb-5 flex shrink-0 flex-col items-center border-b border-white/10 pb-5 text-center"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15, duration: 0.4 }}
+      >
+        {coachPhoto ? (
+          <img
+            src={coachPhoto}
+            alt={coachName}
+            className="h-36 w-36 rounded-2xl object-cover shadow-lg ring-2 ring-white/30 sm:h-40 sm:w-40 lg:h-44 lg:w-44"
+          />
+        ) : (
+          <div
+            className="flex h-36 w-36 items-center justify-center rounded-2xl bg-[#0a1f4d] text-4xl font-bold text-white/80 shadow-lg ring-2 ring-white/30 sm:h-40 sm:w-40 sm:text-5xl lg:h-44 lg:w-44"
+            aria-label={coachName}
+          >
+            {coachInitials || '?'}
+          </div>
+        )}
+        <p className="mt-3 text-xs tracking-[0.18em] text-white/55 uppercase sm:text-sm">
+          Head Coach
+        </p>
+        <p className="mt-1 text-xl font-bold text-white sm:text-2xl">
+          {coachName}
+        </p>
+        {coach?.nationality ? (
+          <p className="mt-1 text-sm text-white/55">{coach.nationality}</p>
+        ) : null}
+      </motion.div>
+
+      <p className="mb-3 shrink-0 text-xs font-bold tracking-[0.18em] text-[#7eb6ff] uppercase sm:text-sm">
+        Substitutes
+      </p>
+
+      <motion.ul
+        className="min-h-0 flex-1 space-y-2 overflow-hidden pr-0.5"
+        variants={rowEnter}
+        initial="hidden"
+        animate="show"
+      >
+        {substitutes.length === 0 ? (
+          <li className="text-sm text-white/45">None listed</li>
+        ) : (
+          substitutes.map((player) => (
+            <motion.li
+              key={player.id}
+              variants={chipVariants}
+              title={player.pname}
+            >
+              <span className="inline-flex max-w-full items-center gap-2 rounded-full bg-[#1E6FD9] px-3.5 py-1.5 text-sm font-semibold text-white sm:text-base">
+                <span className="tabular-nums text-yellow-200">
+                  {player.jersey_no}
+                </span>
+                <span className="truncate">{shortName(player.pname)}</span>
+              </span>
+            </motion.li>
+          ))
+        )}
+      </motion.ul>
+
+      <motion.div
+        className="mt-3 flex shrink-0 flex-col items-center gap-1 border-t border-white/10 pt-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.4 }}
+      >
+        <span className="text-sm font-semibold text-white/80 italic">
+          Insights by
+        </span>
+        <img
+          src="/tisini-logo.png"
+          alt="Tisini"
+          className="h-10 w-auto object-contain sm:h-11"
+        />
+      </motion.div>
+    </motion.aside>
+  )
+}
+
+/** @deprecated Prefer `#/lib/formation` helpers. */
+export {
+  getStartersByPosition,
+  getSubstitutes,
+  isSubstitute,
+} from '#/lib/formation'

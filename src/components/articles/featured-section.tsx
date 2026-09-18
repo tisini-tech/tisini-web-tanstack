@@ -11,7 +11,7 @@ type FeaturedProps = {
 
 const FeaturedSection = ({ article, recentPosts }: FeaturedProps) => {
   return (
-    <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-3 px-4 pt-20 pb-8 sm:px-6 md:h-[min(70vh,720px)] md:flex-row">
+    <section className="flex w-full flex-col gap-3 pb-8 md:h-[min(70vh,720px)] md:flex-row">
       <FeaturedArticle article={article} />
 
       <div className="flex flex-1 flex-col gap-3 overflow-hidden">

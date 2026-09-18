@@ -28,9 +28,7 @@ function ArticlesOverviewPage() {
   return (
     <React.Suspense
       fallback={
-        <div className="mx-auto max-w-[1440px] px-4 pt-24 text-sm text-muted-foreground sm:px-6">
-          Loading articles…
-        </div>
+        <div className="text-sm text-muted-foreground">Loading articles…</div>
       }
     >
       <ArticlesOverview />
@@ -52,7 +50,7 @@ function ArticlesOverview() {
   const statsRecap = categories['Stats-Recap'] ?? []
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <div>
       {featuredArticle && (
         <FeaturedSection
           article={featuredArticle}
@@ -60,9 +58,9 @@ function ArticlesOverview() {
         />
       )}
 
-      <div className="mx-auto hidden w-full max-w-[1440px] px-4 sm:px-6 md:block">
+      <div className="mt-2 hidden md:block">
         <Link
-          className="mt-2 block overflow-hidden rounded-xl border border-border"
+          className="block overflow-hidden rounded-xl border border-border"
           to={'/quiz/GN88FDHhWw7n' as any}
         >
           <img
@@ -74,7 +72,7 @@ function ArticlesOverview() {
       </div>
 
       {/* Sports desk — two equal columns */}
-      <section className="mx-auto mt-10 w-full max-w-[1440px] px-4 sm:px-6">
+      <section className="mt-10">
         <div className="grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-12">
           <CategoryColumn
             category="Football"
@@ -89,7 +87,7 @@ function ArticlesOverview() {
         </div>
       </section>
 
-      <div className="mx-auto mt-10 hidden w-full max-w-[1440px] px-4 sm:px-6 md:block">
+      <div className="mt-10 hidden md:block">
         <Link
           className="block overflow-hidden rounded-xl border border-border"
           to={'/tanobora' as any}
@@ -103,7 +101,7 @@ function ArticlesOverview() {
       </div>
 
       {/* Editorial — Match Recaps | Features, then Stats | Socials */}
-      <section className="mx-auto mt-10 w-full max-w-[1440px] px-4 sm:px-6">
+      <section className="mt-10">
         <div className="grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-12">
           <CategoryColumn
             category="Match Recaps"

@@ -213,18 +213,17 @@ function DefinitionList({
 
 function PrivacyPolicyPage() {
   return (
-    <div className="min-h-full flex-1 bg-background text-foreground">
-      <div className="mx-auto max-w-[800px] px-4 pt-24 pb-20 sm:px-6">
-        <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
-          <Link
-            to="/"
-            className="transition-colors hover:text-accent-foreground"
-          >
-            Home
-          </Link>
-          <span className="text-white/20">/</span>
-          <span className="text-accent-foreground">Privacy</span>
-        </nav>
+    <div className="page-shell-narrow text-foreground">
+      <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+        <Link
+          to="/"
+          className="transition-colors hover:text-accent-foreground"
+        >
+          Home
+        </Link>
+        <span className="text-white/20">/</span>
+        <span className="text-accent-foreground">Privacy</span>
+      </nav>
 
         <p className="font-mono text-xs tracking-[0.2em] text-emerald-400/80 uppercase">
           Legal
@@ -428,7 +427,6 @@ function PrivacyPolicyPage() {
             Back home
           </Link>
         </div>
-      </div>
     </div>
   )
 }

@@ -18,9 +18,8 @@ export default function ArticleDetail({ article }: { article: Article }) {
   const bodyHtml = article.content ? sanitizeArticleHtml(article.content) : ''
 
   return (
-    <article className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-[800px] px-4 pt-24 pb-20 sm:px-6">
-        <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+    <article className="page-shell-narrow text-foreground">
+      <nav className="mb-8 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
           <Link
             to="/articles"
             className="transition-colors hover:text-accent-foreground"
@@ -110,7 +109,6 @@ export default function ArticleDetail({ article }: { article: Article }) {
             ))}
           </ul>
         )}
-      </div>
     </article>
   )
 }

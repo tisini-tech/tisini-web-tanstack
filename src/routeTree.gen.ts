@@ -12,16 +12,25 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
 import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StreamsIndexRouteImport } from './routes/streams/index'
+import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as PrivacyPolicyIndexRouteImport } from './routes/privacy-policy/index'
 import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
 import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
+import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
+import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as StreamsFixTypeRouteRouteImport } from './routes/streams/$fixType/route'
+import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz/$quizId/index'
 import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
 import { Route as GlossaryFixtypeIndexRouteImport } from './routes/glossary/$fixtype/index'
 import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
+import { Route as QuizQuizIdLeaderboardRouteImport } from './routes/quiz/$quizId/leaderboard'
 import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
 import { Route as LivescoresLeaguesLeagueIdRouteRouteImport } from './routes/livescores/leagues/$leagueId/route'
 import { Route as LivescoresFixtureTypeFixtureIdRouteRouteImport } from './routes/livescores/$fixtureType/$fixtureId/route'
@@ -53,6 +62,10 @@ const GlossaryRouteRoute = GlossaryRouteRouteImport.update({
   path: '/glossary',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
 const StreamsIndexRoute = StreamsIndexRouteImport.update({
   id: '/streams/',
   path: '/streams/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizIndexRoute = QuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyPolicyIndexRoute = PrivacyPolicyIndexRouteImport.update({
@@ -83,9 +101,39 @@ const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   path: '/articles/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const StreamsFixTypeRouteRoute = StreamsFixTypeRouteRouteImport.update({
   id: '/streams/$fixType',
   path: '/streams/$fixType',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
+  id: '/quiz/$quizId/',
+  path: '/quiz/$quizId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LivescoresFixtureTypeIndexRoute =
@@ -105,6 +153,11 @@ const ArticlesArticleSlugIndexRoute =
     path: '/articles/$articleSlug/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const QuizQuizIdLeaderboardRoute = QuizQuizIdLeaderboardRouteImport.update({
+  id: '/quiz/$quizId/leaderboard',
+  path: '/quiz/$quizId/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArticlesCategoriesCategorySlugRoute =
   ArticlesCategoriesCategorySlugRouteImport.update({
     id: '/articles/categories/$categorySlug',
@@ -202,17 +255,25 @@ export interface FileRoutesByFullPath {
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/login': typeof AuthLoginRoute
+  '/register': typeof AuthRegisterRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/verify': typeof AuthVerifyRoute
   '/articles/': typeof ArticlesIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
   '/privacy-policy/': typeof PrivacyPolicyIndexRoute
+  '/quiz/': typeof QuizIndexRoute
   '/streams/': typeof StreamsIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
+  '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
   '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
+  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
@@ -230,15 +291,23 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/login': typeof AuthLoginRoute
+  '/register': typeof AuthRegisterRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/verify': typeof AuthVerifyRoute
   '/articles': typeof ArticlesIndexRoute
   '/glossary': typeof GlossaryIndexRoute
   '/livescores': typeof LivescoresIndexRoute
   '/privacy-policy': typeof PrivacyPolicyIndexRoute
+  '/quiz': typeof QuizIndexRoute
   '/streams': typeof StreamsIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
+  '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
   '/glossary/$fixtype': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType': typeof LivescoresFixtureTypeIndexRoute
+  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/scorers': typeof LivescoresLeaguesLeagueIdScorersRoute
@@ -254,21 +323,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteRouteWithChildren
   '/glossary': typeof GlossaryRouteRouteWithChildren
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
+  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/register': typeof AuthRegisterRoute
+  '/_auth/reset-password': typeof AuthResetPasswordRoute
+  '/_auth/verify': typeof AuthVerifyRoute
   '/articles/': typeof ArticlesIndexRoute
   '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
   '/privacy-policy/': typeof PrivacyPolicyIndexRoute
+  '/quiz/': typeof QuizIndexRoute
   '/streams/': typeof StreamsIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
+  '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
   '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
+  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
@@ -290,17 +368,25 @@ export interface FileRouteTypes {
     | '/livescores'
     | '/about'
     | '/streams/$fixType'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/verify'
     | '/articles/'
     | '/glossary/'
     | '/livescores/'
     | '/privacy-policy/'
+    | '/quiz/'
     | '/streams/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
+    | '/quiz/$quizId/leaderboard'
     | '/articles/$articleSlug/'
     | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
+    | '/quiz/$quizId/'
     | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
@@ -318,15 +404,23 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/streams/$fixType'
+    | '/forgot-password'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/verify'
     | '/articles'
     | '/glossary'
     | '/livescores'
     | '/privacy-policy'
+    | '/quiz'
     | '/streams'
     | '/articles/categories/$categorySlug'
+    | '/quiz/$quizId/leaderboard'
     | '/articles/$articleSlug'
     | '/glossary/$fixtype'
     | '/livescores/$fixtureType'
+    | '/quiz/$quizId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/scorers'
@@ -341,21 +435,30 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_auth'
     | '/glossary'
     | '/livescores'
     | '/about'
     | '/streams/$fixType'
+    | '/_auth/forgot-password'
+    | '/_auth/login'
+    | '/_auth/register'
+    | '/_auth/reset-password'
+    | '/_auth/verify'
     | '/articles/'
     | '/glossary/'
     | '/livescores/'
     | '/privacy-policy/'
+    | '/quiz/'
     | '/streams/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
+    | '/quiz/$quizId/leaderboard'
     | '/articles/$articleSlug/'
     | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
+    | '/quiz/$quizId/'
     | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
@@ -372,15 +475,19 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   GlossaryRouteRoute: typeof GlossaryRouteRouteWithChildren
   LivescoresRouteRoute: typeof LivescoresRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   StreamsFixTypeRouteRoute: typeof StreamsFixTypeRouteRouteWithChildren
   ArticlesIndexRoute: typeof ArticlesIndexRoute
   PrivacyPolicyIndexRoute: typeof PrivacyPolicyIndexRoute
+  QuizIndexRoute: typeof QuizIndexRoute
   StreamsIndexRoute: typeof StreamsIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
+  QuizQuizIdLeaderboardRoute: typeof QuizQuizIdLeaderboardRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
+  QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -406,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GlossaryRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -418,6 +532,13 @@ declare module '@tanstack/react-router' {
       path: '/streams'
       fullPath: '/streams/'
       preLoaderRoute: typeof StreamsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/': {
+      id: '/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz/'
+      preLoaderRoute: typeof QuizIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy-policy/': {
@@ -448,11 +569,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/verify': {
+      id: '/_auth/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/register': {
+      id: '/_auth/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/streams/$fixType': {
       id: '/streams/$fixType'
       path: '/streams/$fixType'
       fullPath: '/streams/$fixType'
       preLoaderRoute: typeof StreamsFixTypeRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/$quizId/': {
+      id: '/quiz/$quizId/'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId/'
+      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/livescores/$fixtureType/': {
@@ -474,6 +637,13 @@ declare module '@tanstack/react-router' {
       path: '/articles/$articleSlug'
       fullPath: '/articles/$articleSlug/'
       preLoaderRoute: typeof ArticlesArticleSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/$quizId/leaderboard': {
+      id: '/quiz/$quizId/leaderboard'
+      path: '/quiz/$quizId/leaderboard'
+      fullPath: '/quiz/$quizId/leaderboard'
+      preLoaderRoute: typeof QuizQuizIdLeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/articles/categories/$categorySlug': {
@@ -583,6 +753,26 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthRouteRouteChildren {
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthVerifyRoute: typeof AuthVerifyRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthVerifyRoute: AuthVerifyRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
 
 interface GlossaryRouteRouteChildren {
   GlossaryIndexRoute: typeof GlossaryIndexRoute
@@ -699,15 +889,19 @@ const StreamsFixTypeRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   GlossaryRouteRoute: GlossaryRouteRouteWithChildren,
   LivescoresRouteRoute: LivescoresRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   StreamsFixTypeRouteRoute: StreamsFixTypeRouteRouteWithChildren,
   ArticlesIndexRoute: ArticlesIndexRoute,
   PrivacyPolicyIndexRoute: PrivacyPolicyIndexRoute,
+  QuizIndexRoute: QuizIndexRoute,
   StreamsIndexRoute: StreamsIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
+  QuizQuizIdLeaderboardRoute: QuizQuizIdLeaderboardRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
+  QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

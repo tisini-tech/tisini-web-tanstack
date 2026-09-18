@@ -36,8 +36,7 @@ export default function CategoryPage({
   const totalCount = firstPage?.count ?? articles.length
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-[1440px] px-4 pt-24 pb-16 sm:px-6 lg:px-8">
+    <div className="text-foreground">
         <nav className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
           <Link
             to="/articles"
@@ -105,7 +104,6 @@ export default function CategoryPage({
             )}
           </>
         )}
-      </div>
     </div>
   )
 }

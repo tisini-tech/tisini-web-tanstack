@@ -42,45 +42,43 @@ function GlossaryLayout() {
     : DEFAULT_FIXTURE_TYPE
 
   return (
-    <div className="min-h-full flex-1 bg-background text-foreground">
-      <div className="mx-auto w-full max-w-[1440px] px-4 pt-20 pb-10 sm:px-6">
-        <header className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
-          <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-            Tisini Stats Definitions
-          </h1>
+    <div className="bg-background text-foreground">
+      <header className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+        <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+          Tisini Stats Definitions
+        </h1>
 
-          <nav
-            aria-label="Sport"
-            className="flex flex-wrap items-center gap-0.5 self-start sm:self-auto"
-          >
-            {sports.map((sport) => {
-              const isActive = active === sport.fixtype
-              return (
-                <Link
-                  key={sport.fixtype}
-                  to="/glossary/$fixtype"
-                  params={{ fixtype: sport.fixtype }}
-                  className={cn(
-                    'rounded-md px-2.5 py-1.5 font-mono text-xs tracking-wide uppercase transition-colors sm:px-3',
-                    isActive
-                      ? 'text-accent-foreground'
-                      : 'text-muted-foreground hover:text-foreground',
-                  )}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  <span aria-hidden className="mr-1.5 opacity-80">
-                    {sport.icon}
-                  </span>
-                  {sport.label}
-                </Link>
-              )
-            })}
-          </nav>
-        </header>
+        <nav
+          aria-label="Sport"
+          className="flex flex-wrap items-center gap-0.5 self-start sm:self-auto"
+        >
+          {sports.map((sport) => {
+            const isActive = active === sport.fixtype
+            return (
+              <Link
+                key={sport.fixtype}
+                to="/glossary/$fixtype"
+                params={{ fixtype: sport.fixtype }}
+                className={cn(
+                  'rounded-md px-2.5 py-1.5 font-mono text-xs tracking-wide uppercase transition-colors sm:px-3',
+                  isActive
+                    ? 'text-accent-foreground'
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span aria-hidden className="mr-1.5 opacity-80">
+                  {sport.icon}
+                </span>
+                {sport.label}
+              </Link>
+            )
+          })}
+        </nav>
+      </header>
 
-        <div className="mt-5">
-          <Outlet />
-        </div>
+      <div className="mt-5">
+        <Outlet />
       </div>
     </div>
   )

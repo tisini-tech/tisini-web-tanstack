@@ -1,7 +1,24 @@
 // src/components/site/header.tsx
 import * as React from 'react'
-import { Link, useLocation } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate, useRouter } from '@tanstack/react-router'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { LogOutIcon } from 'lucide-react'
+
 import { ModeToggle } from '#/components/site/mode-toggle'
+import { Avatar, AvatarFallback } from '#/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '#/components/ui/dropdown-menu'
+import {
+  currentUserQueryOptions,
+  logoutFn,
+} from '#/data/auth'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -16,8 +33,16 @@ const navLinks = [
     scrollOnHome: false,
   },
   { id: 'glossary', href: '/glossary', label: 'Glossary', scrollOnHome: false },
-  { id: 'contacts', href: '/contact', label: 'Contact', scrollOnHome: true },
+  { id: 'quiz', href: '/quiz', label: 'Quiz', scrollOnHome: false },
+  { id: 'contacts', href: '/', label: 'Contact', scrollOnHome: true },
 ] as const
+
+function userInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return '?'
+  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase()
+  return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`.toUpperCase()
+}
 
 interface SiteHeaderProps {
   activeSection?: string
@@ -26,12 +51,31 @@ interface SiteHeaderProps {
 
 export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const [loggingOut, setLoggingOut] = React.useState(false)
   const { pathname } = useLocation()
   const isHome = pathname === '/'
+  const navigate = useNavigate()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  const { data: user } = useQuery(currentUserQueryOptions())
 
   React.useEffect(() => {
     setMenuOpen(false)
   }, [pathname])
+
+  const handleLogout = async () => {
+    setLoggingOut(true)
+    try {
+      await logoutFn()
+      await queryClient.invalidateQueries({ queryKey: ['auth', 'currentUser'] })
+      await router.invalidate()
+      await navigate({ to: '/', replace: true })
+    } finally {
+      setLoggingOut(false)
+      setMenuOpen(false)
+    }
+  }
 
   const isLinkActive = (link: (typeof navLinks)[number]) => {
     if (link.id === 'articles') return pathname.startsWith('/articles')
@@ -73,7 +117,10 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
     }
 
     const to = link.href as any
-    const hash = link.id === 'products' && !isHome ? 'products' : undefined
+    const hash =
+      !isHome && (link.id === 'products' || link.id === 'contacts')
+        ? link.id
+        : undefined
 
     return (
       <Link
@@ -88,10 +135,67 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
     )
   }
 
+  const authControls = user ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        aria-label="Account menu"
+      >
+        <Avatar size="default">
+          <AvatarFallback className="bg-emerald-500/15 font-semibold text-emerald-600 dark:text-emerald-400">
+            {userInitials(user.name)}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-48">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-medium text-foreground">
+                {user.name}
+              </span>
+              <span className="truncate text-xs text-muted-foreground">
+                {user.email || user.phone}
+              </span>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            variant="destructive"
+            disabled={loggingOut}
+            onClick={() => {
+              void handleLogout()
+            }}
+          >
+            <LogOutIcon />
+            {loggingOut ? 'Signing out…' : 'Log out'}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : (
+    <>
+      <Link
+        to="/login"
+        className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+      >
+        Sign In
+      </Link>
+      <Link
+        to="/register"
+        className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-foreground"
+      >
+        Sign Up
+      </Link>
+    </>
+  )
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/55 backdrop-blur-md">
       {/* Fixed escapes the parent shell — re-apply the same max-width + padding as main */}
-      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-4 sm:px-6">
+      <div className="page-shell flex h-16 items-center justify-between">
         {isHome && onNavigate ? (
           <button
             onClick={() => onNavigate('hero')}
@@ -124,16 +228,12 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
 
         <div className="hidden items-center gap-2 md:flex">
           <ModeToggle />
-          <Link
-            to={'/login' as any}
-            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-foreground"
-          >
-            Sign In
-          </Link>
+          {authControls}
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
           <ModeToggle />
+          {user ? authControls : null}
           <button
             className="rounded-lg p-2 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             onClick={() => setMenuOpen((open) => !open)}
@@ -180,14 +280,37 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
                 'rounded-lg px-3 py-3 text-left text-sm font-medium',
               ),
             )}
-            <div className="mt-2 border-t border-border pt-3">
-              <Link
-                to={'/login' as any}
-                className="rounded-lg bg-emerald-500 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-emerald-600"
-              >
-                Sign In
-              </Link>
-            </div>
+            {!user && (
+              <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
+                <Link
+                  to="/login"
+                  className="rounded-lg border border-border px-4 py-2 text-center text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="rounded-lg bg-emerald-500 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-emerald-600"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+            {user && (
+              <div className="mt-2 border-t border-border pt-3">
+                <button
+                  type="button"
+                  disabled={loggingOut}
+                  onClick={() => {
+                    void handleLogout()
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-60"
+                >
+                  <LogOutIcon className="size-4" />
+                  {loggingOut ? 'Signing out…' : 'Log out'}
+                </button>
+              </div>
+            )}
           </nav>
         </div>
       )}
