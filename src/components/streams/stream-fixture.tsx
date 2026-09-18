@@ -182,7 +182,7 @@ export const StreamFixture = ({
             >
               Lower 3rd
             </Link>
-            <Link
+            {/* <Link
               to="/streams/$fixType/fixtures/$fixId/insights"
               params={{ fixType: fixtureType, fixId }}
               target="_blank"
@@ -208,7 +208,7 @@ export const StreamFixture = ({
               className={cn(actionBase, actions.top)}
             >
               Top
-            </Link>
+            </Link> */}
             <Link
               to="/streams/$fixType/fixtures/$fixId/lineups"
               params={{ fixType: fixtureType, fixId }}
