@@ -153,8 +153,36 @@ export function isLiveFixtureStatus(status: string) {
   return status === 'started' || status === 'HT'
 }
 
+function normalizeGameMoment(moment?: string) {
+  return (moment ?? '').toLowerCase().replace(/[-_\s]/g, '')
+}
+
+function isPlayingMoment(moment?: string) {
+  const m = normalizeGameMoment(moment)
+  return (
+    m === 'firsthalf' ||
+    m === 'secondhalf' ||
+    m === 'extratime' ||
+    m === 'extratime1' ||
+    m === 'extratime2' ||
+    m === 'extra1' ||
+    m === 'extra2'
+  )
+}
+
+function isHalfTimeMoment(moment?: string) {
+  const m = normalizeGameMoment(moment)
+  return m === 'halftime' || m === 'ht' || m === 'half'
+}
+
+/**
+ * Display label for a fixture clock / status.
+ * Prefer `game_moment` + `minute` when the API leaves `game_status` stuck on HT.
+ */
 export function matchStatusLabel(fixture: MatchStatusInput): string {
   const status = fixture.game_status
+  const moment = normalizeGameMoment(fixture.game_moment)
+  const minute = fixture.minute
 
   switch (status) {
     case 'notstarted':
@@ -168,27 +196,62 @@ export function matchStatusLabel(fixture: MatchStatusInput): string {
     case 'FT':
     case 'ended':
       return 'FT'
-    case 'HT':
-      return 'HT'
-    case 'started': {
-      if (
-        (fixture.minute === 45 || fixture.minute === 46) &&
-        fixture.game_moment === 'secondhalf'
-      ) {
-        return 'HT'
-      }
-      if (fixture.minute) return `${fixture.minute}'`
-      return 'Live'
-    }
-    default:
-      if (fixture.minute) return `${fixture.minute}'`
-      return status || ''
   }
+
+  // Stale HT (or started) while clearly in a playing period → show the clock
+  if (
+    (status === 'HT' || status === 'started') &&
+    isPlayingMoment(fixture.game_moment) &&
+    minute != null &&
+    minute > 0
+  ) {
+    // Brief HT window at the start of the second half
+    if (
+      moment === 'secondhalf' &&
+      (minute === 45 || minute === 46) &&
+      status === 'started'
+    ) {
+      return 'HT'
+    }
+    // Stuck game_status=HT deep into a half — trust minute
+    if (status === 'HT' && moment === 'secondhalf' && minute > 46) {
+      return `${minute}'`
+    }
+    if (status === 'HT' && moment === 'firsthalf') {
+      return `${minute}'`
+    }
+    if (status === 'started') {
+      return `${minute}'`
+    }
+  }
+
+  if (status === 'HT' || isHalfTimeMoment(fixture.game_moment)) {
+    return 'HT'
+  }
+
+  if (status === 'started') {
+    if (minute != null && minute > 0) return `${minute}'`
+    return 'Live'
+  }
+
+  if (minute != null && minute > 0 && isPlayingMoment(fixture.game_moment)) {
+    return `${minute}'`
+  }
+
+  if (minute != null && minute > 0) return `${minute}'`
+  return status || ''
 }
 
-export function matchStatusClassName(status: string) {
+/** True when the label is a live minute clock (e.g. `88'`). */
+export function isLiveMinuteLabel(label: string) {
+  return /^\d+'$/.test(label.trim())
+}
+
+export function matchStatusClassName(status: string, label?: string) {
   if (isInactiveMatchStatus(status)) return 'text-amber-500/90'
-  if (status === 'started') return 'text-emerald-400/90'
+  if (status === 'started' || (label != null && isLiveMinuteLabel(label))) {
+    return 'text-emerald-400/90'
+  }
   return 'text-muted-foreground'
 }
 

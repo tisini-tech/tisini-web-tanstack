@@ -100,7 +100,7 @@ export const StreamFixture = ({
           <span
             className={cn(
               'text-center font-mono text-xs tracking-wide uppercase sm:text-sm',
-              matchStatusClassName(status),
+              matchStatusClassName(status, label),
             )}
           >
             {label}
@@ -120,7 +120,7 @@ export const StreamFixture = ({
               <span
                 className={cn(
                   'mt-1 font-mono text-[10px] tracking-wide uppercase sm:text-xs',
-                  matchStatusClassName(status),
+                  matchStatusClassName(status, label),
                 )}
               >
                 {label}

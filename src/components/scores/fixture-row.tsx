@@ -63,7 +63,7 @@ export default function FixtureRow({ fixture }: FixtureRowProps) {
             <span
               className={cn(
                 'text-center font-mono text-[10px] tracking-wide uppercase sm:text-xs',
-                matchStatusClassName(status),
+                matchStatusClassName(status, label),
               )}
             >
               {label}
@@ -91,7 +91,7 @@ export default function FixtureRow({ fixture }: FixtureRowProps) {
                 <span
                   className={cn(
                     'font-mono text-[10px] tracking-wide uppercase',
-                    matchStatusClassName(status),
+                    matchStatusClassName(status, label),
                   )}
                 >
                   {label}

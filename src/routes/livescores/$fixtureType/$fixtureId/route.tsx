@@ -195,7 +195,7 @@ function RouteComponent() {
                   <span
                     className={cn(
                       'mt-1 font-mono text-[10px] tracking-wide uppercase',
-                      matchStatusClassName(status),
+                      matchStatusClassName(status, label),
                     )}
                   >
                     {label}
