@@ -14,6 +14,7 @@ import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
 import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VotingIndexRouteImport } from './routes/voting/index'
 import { Route as StreamsIndexRouteImport } from './routes/streams/index'
 import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as PrivacyPolicyIndexRouteImport } from './routes/privacy-policy/index'
@@ -26,6 +27,7 @@ import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as StreamsFixTypeRouteRouteImport } from './routes/streams/$fixType/route'
+import { Route as VotingVoteIdIndexRouteImport } from './routes/voting/$voteId/index'
 import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz/$quizId/index'
 import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
 import { Route as GlossaryFixtypeIndexRouteImport } from './routes/glossary/$fixtype/index'
@@ -69,6 +71,11 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VotingIndexRoute = VotingIndexRouteImport.update({
+  id: '/voting/',
+  path: '/voting/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StreamsIndexRoute = StreamsIndexRouteImport.update({
@@ -129,6 +136,11 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
 const StreamsFixTypeRouteRoute = StreamsFixTypeRouteRouteImport.update({
   id: '/streams/$fixType',
   path: '/streams/$fixType',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VotingVoteIdIndexRoute = VotingVoteIdIndexRouteImport.update({
+  id: '/voting/$voteId/',
+  path: '/voting/$voteId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
@@ -266,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/privacy-policy/': typeof PrivacyPolicyIndexRoute
   '/quiz/': typeof QuizIndexRoute
   '/streams/': typeof StreamsIndexRoute
+  '/voting/': typeof VotingIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
@@ -274,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
   '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
+  '/voting/$voteId/': typeof VotingVoteIdIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
@@ -302,12 +316,14 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof PrivacyPolicyIndexRoute
   '/quiz': typeof QuizIndexRoute
   '/streams': typeof StreamsIndexRoute
+  '/voting': typeof VotingIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
   '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
   '/glossary/$fixtype': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType': typeof LivescoresFixtureTypeIndexRoute
   '/quiz/$quizId': typeof QuizQuizIdIndexRoute
+  '/voting/$voteId': typeof VotingVoteIdIndexRoute
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/scorers': typeof LivescoresLeaguesLeagueIdScorersRoute
@@ -339,6 +355,7 @@ export interface FileRoutesById {
   '/privacy-policy/': typeof PrivacyPolicyIndexRoute
   '/quiz/': typeof QuizIndexRoute
   '/streams/': typeof StreamsIndexRoute
+  '/voting/': typeof VotingIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
@@ -347,6 +364,7 @@ export interface FileRoutesById {
   '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
   '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
+  '/voting/$voteId/': typeof VotingVoteIdIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
@@ -379,6 +397,7 @@ export interface FileRouteTypes {
     | '/privacy-policy/'
     | '/quiz/'
     | '/streams/'
+    | '/voting/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
@@ -387,6 +406,7 @@ export interface FileRouteTypes {
     | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
     | '/quiz/$quizId/'
+    | '/voting/$voteId/'
     | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
@@ -415,12 +435,14 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/quiz'
     | '/streams'
+    | '/voting'
     | '/articles/categories/$categorySlug'
     | '/quiz/$quizId/leaderboard'
     | '/articles/$articleSlug'
     | '/glossary/$fixtype'
     | '/livescores/$fixtureType'
     | '/quiz/$quizId'
+    | '/voting/$voteId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/scorers'
@@ -451,6 +473,7 @@ export interface FileRouteTypes {
     | '/privacy-policy/'
     | '/quiz/'
     | '/streams/'
+    | '/voting/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
@@ -459,6 +482,7 @@ export interface FileRouteTypes {
     | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
     | '/quiz/$quizId/'
+    | '/voting/$voteId/'
     | '/streams/$fixType/fixtures/$fixId'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
@@ -484,10 +508,12 @@ export interface RootRouteChildren {
   PrivacyPolicyIndexRoute: typeof PrivacyPolicyIndexRoute
   QuizIndexRoute: typeof QuizIndexRoute
   StreamsIndexRoute: typeof StreamsIndexRoute
+  VotingIndexRoute: typeof VotingIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
   QuizQuizIdLeaderboardRoute: typeof QuizQuizIdLeaderboardRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
   QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
+  VotingVoteIdIndexRoute: typeof VotingVoteIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -525,6 +551,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voting/': {
+      id: '/voting/'
+      path: '/voting'
+      fullPath: '/voting/'
+      preLoaderRoute: typeof VotingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/streams/': {
@@ -609,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/streams/$fixType'
       fullPath: '/streams/$fixType'
       preLoaderRoute: typeof StreamsFixTypeRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voting/$voteId/': {
+      id: '/voting/$voteId/'
+      path: '/voting/$voteId'
+      fullPath: '/voting/$voteId/'
+      preLoaderRoute: typeof VotingVoteIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/quiz/$quizId/': {
@@ -898,10 +938,12 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyPolicyIndexRoute: PrivacyPolicyIndexRoute,
   QuizIndexRoute: QuizIndexRoute,
   StreamsIndexRoute: StreamsIndexRoute,
+  VotingIndexRoute: VotingIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
   QuizQuizIdLeaderboardRoute: QuizQuizIdLeaderboardRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
   QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
+  VotingVoteIdIndexRoute: VotingVoteIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

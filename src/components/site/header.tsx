@@ -1,6 +1,11 @@
 // src/components/site/header.tsx
 import * as React from 'react'
-import { Link, useLocation, useNavigate, useRouter } from '@tanstack/react-router'
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { LogOutIcon } from 'lucide-react'
 
@@ -15,10 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
-import {
-  currentUserQueryOptions,
-  logoutFn,
-} from '#/data/auth'
+import { currentUserQueryOptions, logoutFn } from '#/data/auth'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -32,8 +34,9 @@ const navLinks = [
     label: 'Livescores',
     scrollOnHome: false,
   },
-  { id: 'glossary', href: '/glossary', label: 'Glossary', scrollOnHome: false },
   { id: 'quiz', href: '/quiz', label: 'Quiz', scrollOnHome: false },
+  { id: 'voting', href: '/voting', label: 'Voting', scrollOnHome: false },
+  { id: 'glossary', href: '/glossary', label: 'Glossary', scrollOnHome: false },
   { id: 'contacts', href: '/', label: 'Contact', scrollOnHome: true },
 ] as const
 

@@ -411,3 +411,91 @@ export interface Country {
   name: string
   iso_code2: string
 }
+
+export interface VoteCause {
+  company: number | null
+  date_from: string
+  date_to: string
+  formation: Formation | null
+  id: number
+  image_url: string | null
+  picks_required: number | null
+  reason: string
+  tournament: number | null
+  vote_mode: string
+}
+
+export interface PlayerOfTheWeek {
+  participant_id: number
+  name: string
+  image_url: string | null
+  slot: number
+  picks: number
+  team_name: string
+  team_logo: string
+  player: VotePlayer | null
+}
+
+export interface Slot {
+  slot: number
+  role: string
+  label: string
+  line: string
+  players: PlayerOfTheWeek[]
+}
+
+export interface VoteParticipant {
+  id: number
+  reason: string
+  image_url: string | null
+  tournament: number | null
+  date_from: string
+  date_to: string
+  total_votes: number
+  participants: Participant[]
+  company: number | null
+  formation: Formation | null
+  has_voted: boolean
+  picks_required: number | null
+  vote_mode: string
+  team_of_the_week: PlayerOfTheWeek[]
+  slots: Slot[]
+  ballots_casted: number | null
+}
+
+export interface VotePlayer {
+  current_position: string
+  id: number
+  name: string
+  passportphoto: string | null
+}
+
+export interface Participant {
+  id: number
+  voting_cause: number
+  name: string
+  image_url: string | null
+  description: string | null
+  total_votes: number
+  /** Total votes cast across the poll at the time of this response. */
+  votes_casted?: number
+  team_name: string | null
+  team_logo: string | null
+  player: VotePlayer | null
+  /** Formation slot when assigned (slate polls). */
+  slot: number | null
+}
+
+export interface BallotPick {
+  participant_id: number
+  name: string
+  slot: number | null
+  team_name: string | null
+  team_logo: string | null
+}
+
+export interface BallotResult {
+  id: number
+  voting_cause: number
+  picks: BallotPick[]
+}
