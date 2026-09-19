@@ -108,14 +108,20 @@ export const leagues: LeagueData = {
       name: 'SportPesa League',
       type: 'football',
       series: false,
-      seasons: [{ id: '123', season: '25/26', series: [] }],
+      seasons: [
+        { id: '273', season: '26/27', series: [] },
+        { id: '123', season: '25/26', series: [] },
+      ],
     },
     {
       id: '26',
       name: 'FKF Women Premier League',
       type: 'football',
       series: false,
-      seasons: [{ id: '133', season: '25/26', series: [] }],
+      seasons: [
+        { id: '282', season: '26/27', series: [] },
+        { id: '133', season: '25/26', series: [] },
+      ],
     },
     {
       id: '202',

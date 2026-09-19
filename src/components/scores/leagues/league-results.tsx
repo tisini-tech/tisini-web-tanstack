@@ -1,5 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { groupFixturesByMatchday } from '@/lib/scores'
+import {
+  groupFixturesByMatchday,
+  sortMatchdaysForResults,
+} from '@/lib/scores'
 import FixtureRow from '@/components/scores/fixture-row'
 import { seasonFixturesQueryOptions } from '#/data/scores'
 
@@ -39,11 +42,11 @@ export function LeagueResults({ tournId, season }: LeagueResultsProps) {
     )
   }
 
-  const matches = groupFixturesByMatchday(fixtures)
+  const matches = sortMatchdaysForResults(groupFixturesByMatchday(fixtures))
 
   return (
     <section className="space-y-4">
-      {Object.entries(matches).map(([round, roundFixtures]) => (
+      {matches.map(([round, roundFixtures]) => (
         <div
           key={round}
           className="overflow-hidden rounded-lg border border-border"

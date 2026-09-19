@@ -13,6 +13,15 @@ import {
   useNavigate,
   useRouterState,
 } from '@tanstack/react-router'
+import { CheckIcon, ChevronDownIcon } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '#/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 
 type LeagueSearch = {
@@ -220,43 +229,63 @@ type SeasonSelectProps = {
 
 function SeasonSelect({ league, activeSeason }: SeasonSelectProps) {
   const navigate = useNavigate()
+  const activeLabel = league.series
+    ? (findSeasonEntry(league, activeSeason)?.season ?? activeSeason)
+    : (league.seasons.find((entry) => entry.id === activeSeason)?.season ??
+      activeSeason)
+
+  const selectSeason = (entry: (typeof league.seasons)[number]) => {
+    const nextSeason = league.series
+      ? (entry.series[0]?.id ?? '')
+      : entry.id
+
+    navigate({
+      to: '.',
+      search: { season: nextSeason },
+    })
+  }
 
   return (
-    <div className="relative">
-      <select
-        className="cursor-pointer appearance-none rounded-lg border border-border bg-muted/40 py-2 pr-9 pl-3 font-heading text-sm text-foreground focus:border-emerald-400/40 focus:outline-none"
-        value={
-          league.series
-            ? findSeasonEntry(league, activeSeason)?.season
-            : activeSeason
-        }
-        onChange={(event) => {
-          const selected = league.seasons.find(
-            (entry) =>
-              entry.season === event.target.value ||
-              entry.id === event.target.value,
-          )
-          if (!selected) return
-
-          const nextSeason = league.series
-            ? (selected.series[0]?.id ?? '')
-            : selected.id
-
-          navigate({
-            to: '.',
-            search: { season: nextSeason },
-          })
-        }}
-      >
-        {league.seasons.map((entry) => (
-          <option key={entry.id || entry.season} value={entry.season}>
-            {entry.season}
-          </option>
-        ))}
-      </select>
-      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground">
-        ▾
+    <div className="flex items-center gap-2">
+      <span className="hidden font-mono text-[10px] tracking-[0.14em] text-muted-foreground uppercase sm:inline">
+        Season
       </span>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className={cn(
+            'inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3 font-heading text-sm font-semibold text-foreground shadow-sm transition-colors',
+            'hover:border-emerald-400/40 hover:bg-emerald-500/10 hover:text-accent-foreground',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
+            'data-popup-open:border-emerald-400/50 data-popup-open:bg-emerald-500/10 data-popup-open:text-accent-foreground',
+          )}
+        >
+          <span className="tabular-nums">{activeLabel}</span>
+          <ChevronDownIcon className="size-3.5 text-muted-foreground" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="min-w-36">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Season</DropdownMenuLabel>
+            {league.seasons.map((entry) => {
+              const selected = entry.season === activeLabel
+              return (
+                <DropdownMenuItem
+                  key={entry.id || entry.season}
+                  onClick={() => selectSeason(entry)}
+                  className={cn(
+                    selected &&
+                      'bg-emerald-500/15 text-accent-foreground focus:bg-emerald-500/20 focus:text-accent-foreground',
+                  )}
+                >
+                  <span className="flex-1 tabular-nums">{entry.season}</span>
+                  {selected ? (
+                    <CheckIcon className="size-3.5 text-emerald-400" />
+                  ) : null}
+                </DropdownMenuItem>
+              )
+            })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }

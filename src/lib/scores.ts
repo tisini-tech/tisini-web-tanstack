@@ -267,6 +267,70 @@ export function groupFixturesByMatchday(fixtures: Fixture[]) {
   return grouped
 }
 
+function parseMatchdayNumber(label: string): number {
+  const match = label.match(/(\d+)/)
+  return match ? Number(match[1]) : Number.NaN
+}
+
+function matchdayState(
+  fixtures: Fixture[],
+): 'live' | 'upcoming' | 'played' {
+  if (fixtures.some((f) => isLiveFixtureStatus(f.game_status))) return 'live'
+
+  const finished = (status: string) =>
+    status === 'FT' ||
+    status === 'ended' ||
+    isInactiveMatchStatus(status)
+
+  if (fixtures.length > 0 && fixtures.every((f) => finished(f.game_status))) {
+    return 'played'
+  }
+
+  return 'upcoming'
+}
+
+/**
+ * League results order: active round first, then played (newest → oldest),
+ * then remaining upcoming rounds (soonest → later).
+ *
+ * Active = live round if any, otherwise the lowest-numbered upcoming round.
+ */
+export function sortMatchdaysForResults(
+  grouped: Record<string, Fixture[]>,
+): [string, Fixture[]][] {
+  const items = Object.entries(grouped).map(([label, fixtures]) => ({
+    label,
+    fixtures,
+    num: parseMatchdayNumber(label),
+    state: matchdayState(fixtures),
+  }))
+
+  const byAsc = (a: (typeof items)[number], b: (typeof items)[number]) => {
+    if (Number.isFinite(a.num) && Number.isFinite(b.num)) return a.num - b.num
+    if (Number.isFinite(a.num)) return -1
+    if (Number.isFinite(b.num)) return 1
+    return a.label.localeCompare(b.label)
+  }
+
+  const byDesc = (a: (typeof items)[number], b: (typeof items)[number]) =>
+    -byAsc(a, b)
+
+  const live = items.filter((i) => i.state === 'live').sort(byAsc)
+  const upcoming = items.filter((i) => i.state === 'upcoming').sort(byAsc)
+  const played = items.filter((i) => i.state === 'played').sort(byDesc)
+
+  const active = live[0] ?? upcoming[0] ?? null
+  const restLive = live.filter((i) => i !== active)
+  const restUpcoming = upcoming.filter((i) => i !== active)
+
+  return [
+    ...(active ? [active] : []),
+    ...restLive,
+    ...played,
+    ...restUpcoming,
+  ].map((i) => [i.label, i.fixtures])
+}
+
 export function groupFixtures(fixtures: Fixture[]) {
   const grouped: Record<string, Record<string, Fixture[]>> = {}
 
