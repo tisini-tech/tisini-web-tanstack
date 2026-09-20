@@ -88,6 +88,8 @@ export interface Fixture {
   division_name: string
   stage: string
   stage_name: string
+  category: string
+  category_name: string
   game_status: string
   game_moment: string
   game_date: string

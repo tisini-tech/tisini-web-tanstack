@@ -272,15 +272,11 @@ function parseMatchdayNumber(label: string): number {
   return match ? Number(match[1]) : Number.NaN
 }
 
-function matchdayState(
-  fixtures: Fixture[],
-): 'live' | 'upcoming' | 'played' {
+function matchdayState(fixtures: Fixture[]): 'live' | 'upcoming' | 'played' {
   if (fixtures.some((f) => isLiveFixtureStatus(f.game_status))) return 'live'
 
   const finished = (status: string) =>
-    status === 'FT' ||
-    status === 'ended' ||
-    isInactiveMatchStatus(status)
+    status === 'FT' || status === 'ended' || isInactiveMatchStatus(status)
 
   if (fixtures.length > 0 && fixtures.every((f) => finished(f.game_status))) {
     return 'played'
@@ -338,16 +334,11 @@ export function groupFixtures(fixtures: Fixture[]) {
     const leagueKey = fixture.league_name || fixture.league || 'Unknown League'
 
     const division = (fixture.division_name || fixture.division || '').trim()
+    const category = (fixture.category_name || fixture.category || '').trim()
     const stage = (fixture.stage_name || fixture.stage || '').trim()
 
-    let groupKey = ''
-    if (division && stage) {
-      groupKey = `${division} - ${stage}`
-    } else if (division) {
-      groupKey = division
-    } else if (stage) {
-      groupKey = stage
-    }
+    // e.g. "Men - Senior - Group A" / "Men - Group A" / "Group A"
+    const groupKey = [division, category, stage].filter(Boolean).join(' - ')
 
     grouped[leagueKey] ??= {}
     grouped[leagueKey][groupKey] ??= []
