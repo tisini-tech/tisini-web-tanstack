@@ -12,6 +12,7 @@ import { useEffect } from 'react'
 import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/site/footer'
 import { SiteHeader } from '#/components/site/header'
+import { GoogleAnalytics } from '#/components/site/google-analytics'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '#/providers/theme-provider'
 import { Toaster } from 'sonner'
@@ -101,6 +102,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         className={cn('min-h-screen', lockViewport && 'h-full overflow-hidden')}
       >
         <ThemeProvider defaultTheme="system" storageKey="theme">
+          <GoogleAnalytics />
           <main
             className={cn(
               'flex w-full flex-col',
