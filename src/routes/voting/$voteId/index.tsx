@@ -8,6 +8,7 @@ import { SlateVoting } from '#/components/voting/slate-voting'
 import { SingleVoting } from '#/components/voting/single-voting'
 import { getVoteStatus } from '#/components/voting/voting-causes'
 import { resolveHasVoted } from '#/components/voting/voting-session'
+import { absoluteUrl, resolveOgImage } from '#/lib/seo'
 
 export const Route = createFileRoute('/voting/$voteId/')({
   validateSearch: (search: Record<string, unknown>) => {
@@ -22,6 +23,38 @@ export const Route = createFileRoute('/voting/$voteId/')({
     return { poll }
   },
   component: RouteComponent,
+  head: ({ loaderData, params }) => {
+    const poll = loaderData?.poll
+    const title = poll?.reason?.trim()
+    const pageTitle = title ? `${title} | Voting | Tisini` : 'Voting | Tisini'
+    const description =
+      title != null && title !== ''
+        ? `Cast your vote in "${title}" on Tisini.`
+        : 'Cast your vote on Tisini.'
+    const canonical = absoluteUrl(`/voting/${params.voteId}`)
+    const image = resolveOgImage(poll?.image_url)
+    const ogTitle = title || 'Voting | Tisini'
+
+    return {
+      meta: [
+        { title: pageTitle },
+        { name: 'description', content: description },
+
+        { property: 'og:site_name', content: 'Tisini' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: ogTitle },
+        { property: 'og:description', content: description },
+        { property: 'og:url', content: canonical },
+        { property: 'og:image', content: image },
+
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: ogTitle },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: image },
+      ],
+      links: [{ rel: 'canonical', href: canonical }],
+    }
+  },
 })
 
 function RouteComponent() {

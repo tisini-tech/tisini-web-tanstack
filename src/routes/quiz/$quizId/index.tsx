@@ -1,7 +1,9 @@
-import { QuizPlay } from '#/components/quiz/quiz-play'
-import { getEngagementFn, getEngParticipationFn } from '#/data/quiz'
-import { clearSessionFn, getUserFn } from '#/data/auth'
 import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
+
+import { QuizPlay } from '#/components/quiz/quiz-play'
+import { clearSessionFn, getUserFn } from '#/data/auth'
+import { absoluteUrl, resolveOgImage } from '#/lib/seo'
+import { getEngagementFn, getEngParticipationFn } from '#/data/quiz'
 
 function isAuthError(message: string): boolean {
   return /not authenticated|token not valid|token expired|unauthorized|401/i.test(
@@ -55,6 +57,39 @@ export const Route = createFileRoute('/quiz/$quizId/')({
       }
 
       throw error
+    }
+  },
+  head: ({ loaderData, params }) => {
+    const quiz = loaderData?.engagement
+    const title = quiz?.title?.trim()
+    const pageTitle = title ? `${title} | Quiz | Tisini` : 'Quiz | Tisini'
+    const description =
+      quiz?.description?.trim() ||
+      (title
+        ? `Play "${title}" on Tisini — test your sports knowledge.`
+        : 'Play a quiz and test your knowledge on the latest sports news and events.')
+    const canonical = absoluteUrl(`/quiz/${params.quizId}`)
+    const image = resolveOgImage(quiz?.image_url)
+    const ogTitle = title || 'Quiz | Tisini'
+
+    return {
+      meta: [
+        { title: pageTitle },
+        { name: 'description', content: description },
+
+        { property: 'og:site_name', content: 'Tisini' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: ogTitle },
+        { property: 'og:description', content: description },
+        { property: 'og:url', content: canonical },
+        { property: 'og:image', content: image },
+
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: ogTitle },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: image },
+      ],
+      links: [{ rel: 'canonical', href: canonical }],
     }
   },
   component: RouteComponent,

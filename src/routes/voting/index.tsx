@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { absoluteUrl } from '#/lib/seo'
 import { getVoteCausesFn } from '#/data/voting'
 import { VotingCauses } from '#/components/voting/voting-causes'
 
@@ -10,9 +11,18 @@ export const Route = createFileRoute('/voting/')({
   },
   component: VotingPage,
   head: () => ({
+    title: 'Voting | Tisini',
+    description: 'Vote for the cause you want to support.',
+    links: [
+      {
+        rel: 'canonical',
+        href: absoluteUrl('/voting'),
+      },
+    ],
     meta: [
       {
-        title: 'SportPesa 7s | Voting',
+        name: 'description',
+        content: 'Vote for the cause you want to support.',
       },
     ],
   }),

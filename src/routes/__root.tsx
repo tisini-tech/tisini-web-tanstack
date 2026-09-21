@@ -13,6 +13,7 @@ import appCss from '../styles.css?url'
 import { SiteFooter } from '#/components/site/footer'
 import { SiteHeader } from '#/components/site/header'
 import { GoogleAnalytics } from '#/components/site/google-analytics'
+import { ADSENSE_CLIENT_ID } from '#/lib/adsense'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '#/providers/theme-provider'
 import { Toaster } from 'sonner'
@@ -61,6 +62,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         rel: 'apple-touch-icon',
         href: '/apple-touch-icon.png',
         sizes: '180x180',
+      },
+    ],
+    // AdSense site-ownership snippet (also loads adsbygoogle for later units).
+    scripts: [
+      {
+        async: true,
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`,
+        crossOrigin: 'anonymous',
       },
     ],
   }),
