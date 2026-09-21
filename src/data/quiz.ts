@@ -10,10 +10,13 @@ import { createServerFn } from '@tanstack/react-start'
 
 export const getEngagementsFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const res = await apiService.get<Engagement[]>('/engagements?type=QZ', {
-      target: 'quiz',
-      withApiKey: true,
-    })
+    const res = await apiService.get<Engagement[]>(
+      '/engagements?type=QZ&company_id=1',
+      {
+        target: 'quiz',
+        withApiKey: true,
+      },
+    )
 
     return res
   },
