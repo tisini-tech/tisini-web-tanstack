@@ -1,16 +1,17 @@
 import type { TopPlayer } from '#/lib/types'
 
-type FootballTopScorersProps = {
+type TopPerformersProps = {
   players: TopPlayer[]
+  eventName: string
 }
 
-export function FootballTopScorers({ players }: FootballTopScorersProps) {
-  const scorers = players.filter((p) => p.name.trim() !== 'Own Goal')
+export function TopPerformers({ players, eventName }: TopPerformersProps) {
+  const performers = players.filter((p) => p.name.trim() !== 'Own Goal')
 
-  if (scorers.length === 0) {
+  if (performers.length === 0) {
     return (
       <div className="flex h-48 items-center justify-center font-heading text-sm text-muted-foreground">
-        No scorers data yet.
+        No {eventName} data yet.
       </div>
     )
   }
@@ -26,12 +27,12 @@ export function FootballTopScorers({ players }: FootballTopScorersProps) {
                   Player
                 </th>
                 <th className="px-4 py-3 text-right font-heading text-xs font-semibold tracking-wide text-accent-foreground uppercase sm:px-6">
-                  Goals
+                  {eventName}
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {scorers.map((player) => (
+              {performers.map((player) => (
                 <tr
                   key={player.player_id}
                   className="transition-colors hover:bg-muted/30"

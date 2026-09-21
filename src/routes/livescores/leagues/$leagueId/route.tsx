@@ -85,16 +85,13 @@ export const Route = createFileRoute('/livescores/leagues/$leagueId')({
         } on Tisini.`
 
     return {
-      meta: [
-        { title },
-        { name: 'description', content: description },
-      ],
+      meta: [{ title }, { name: 'description', content: description }],
     }
   },
   component: RouteComponent,
 })
 
-const tabs = [
+const baseTabs = [
   {
     label: 'Results',
     to: '/livescores/leagues/$leagueId' as const,
@@ -115,11 +112,22 @@ const tabs = [
   },
 ] as const
 
+const assistsTab = {
+  label: 'Top assists',
+  to: '/livescores/leagues/$leagueId/assists' as const,
+  isActive: (pathname: string) => pathname.endsWith('/assists'),
+} as const
+
 function RouteComponent() {
   const { leagueId } = Route.useParams()
   const { league, defaultSeason } = Route.useLoaderData()
   const { season: seasonFromSearch } = Route.useSearch()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+
+  const tabs =
+    league?.id === '267' || leagueId === '267'
+      ? [...baseTabs.slice(0, 2), assistsTab, baseTabs[2]]
+      : [...baseTabs]
 
   if (!league) {
     return (
@@ -235,9 +243,7 @@ function SeasonSelect({ league, activeSeason }: SeasonSelectProps) {
       activeSeason)
 
   const selectSeason = (entry: (typeof league.seasons)[number]) => {
-    const nextSeason = league.series
-      ? (entry.series[0]?.id ?? '')
-      : entry.id
+    const nextSeason = league.series ? (entry.series[0]?.id ?? '') : entry.id
 
     navigate({
       to: '.',

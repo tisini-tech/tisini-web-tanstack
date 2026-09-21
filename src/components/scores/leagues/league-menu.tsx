@@ -73,35 +73,35 @@ export type LeagueData = {
 }
 
 export const leagues: LeagueData = {
-  rugby: [
-    {
-      id: '238',
-      name: 'Sportpesa 7s',
-      type: 'rugby7',
-      series: true,
-      seasons: [
-        {
-          id: '',
-          season: '2025',
-          series: [
-            { serie: 'Dala 7s', id: '122' },
-            { serie: 'Kabeberi 7s', id: '121' },
-            { serie: 'Embu 7s', id: '117' },
-            { serie: 'Christie 7s', id: '111' },
-            { serie: 'Prinsloo 7s', id: '104' },
-            { serie: 'Driftwood 7s', id: '103' },
-          ],
-        },
-      ],
-    },
-    {
-      id: '246',
-      name: 'Kenya u18 Trials',
-      type: 'rugby15',
-      series: false,
-      seasons: [{ id: '118', season: '2025', series: [] }],
-    },
-  ],
+  // rugby: [
+  //   {
+  //     id: '238',
+  //     name: 'Sportpesa 7s',
+  //     type: 'rugby7',
+  //     series: true,
+  //     seasons: [
+  //       {
+  //         id: '',
+  //         season: '2025',
+  //         series: [
+  //           { serie: 'Dala 7s', id: '122' },
+  //           { serie: 'Kabeberi 7s', id: '121' },
+  //           { serie: 'Embu 7s', id: '117' },
+  //           { serie: 'Christie 7s', id: '111' },
+  //           { serie: 'Prinsloo 7s', id: '104' },
+  //           { serie: 'Driftwood 7s', id: '103' },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: '246',
+  //     name: 'Kenya u18 Trials',
+  //     type: 'rugby15',
+  //     series: false,
+  //     seasons: [{ id: '118', season: '2025', series: [] }],
+  //   },
+  // ],
   football: [
     {
       id: '205',
