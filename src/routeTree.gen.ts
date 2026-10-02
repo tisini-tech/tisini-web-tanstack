@@ -9,55 +9,60 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
-import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as VotingIndexRouteImport } from './routes/voting/index'
-import { Route as StreamsIndexRouteImport } from './routes/streams/index'
-import { Route as QuizIndexRouteImport } from './routes/quiz/index'
-import { Route as PrivacyPolicyIndexRouteImport } from './routes/privacy-policy/index'
-import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
-import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
-import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
-import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
-import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
-import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
-import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
+import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
+import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
+import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
+import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
+import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
+import { Route as PrivacyPolicyIndexRouteImport } from './routes/privacy-policy/index'
+import { Route as QuizIndexRouteImport } from './routes/quiz/index'
+import { Route as StreamsIndexRouteImport } from './routes/streams/index'
 import { Route as StreamsFixTypeRouteRouteImport } from './routes/streams/$fixType/route'
-import { Route as VotingVoteIdIndexRouteImport } from './routes/voting/$voteId/index'
-import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz/$quizId/index'
-import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
-import { Route as GlossaryFixtypeIndexRouteImport } from './routes/glossary/$fixtype/index'
+import { Route as VotingIndexRouteImport } from './routes/voting/index'
 import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
-import { Route as QuizQuizIdLeaderboardRouteImport } from './routes/quiz/$quizId/leaderboard'
 import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
-import { Route as LivescoresLeaguesLeagueIdRouteRouteImport } from './routes/livescores/leagues/$leagueId/route'
+import { Route as GlossaryFixtypeIndexRouteImport } from './routes/glossary/$fixtype/index'
+import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
 import { Route as LivescoresFixtureTypeFixtureIdRouteRouteImport } from './routes/livescores/$fixtureType/$fixtureId/route'
-import { Route as StreamsFixTypeFixturesIndexRouteImport } from './routes/streams/$fixType/fixtures/index'
-import { Route as LivescoresLeaguesLeagueIdIndexRouteImport } from './routes/livescores/leagues/$leagueId/index'
+import { Route as LivescoresLeaguesLeagueIdRouteRouteImport } from './routes/livescores/leagues/$leagueId/route'
+import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz/$quizId/index'
+import { Route as QuizQuizIdLeaderboardRouteImport } from './routes/quiz/$quizId/leaderboard'
+import { Route as VotingVoteIdIndexRouteImport } from './routes/voting/$voteId/index'
 import { Route as LivescoresFixtureTypeFixtureIdIndexRouteImport } from './routes/livescores/$fixtureType/$fixtureId/index'
-import { Route as LivescoresLeaguesLeagueIdStandingsRouteImport } from './routes/livescores/leagues/$leagueId/standings'
-import { Route as LivescoresLeaguesLeagueIdScorersRouteImport } from './routes/livescores/leagues/$leagueId/scorers'
-import { Route as LivescoresLeaguesLeagueIdAssistsRouteImport } from './routes/livescores/leagues/$leagueId/assists'
-import { Route as LivescoresFixtureTypeFixtureIdOverviewRouteImport } from './routes/livescores/$fixtureType/$fixtureId/overview'
 import { Route as LivescoresFixtureTypeFixtureIdLineupsRouteImport } from './routes/livescores/$fixtureType/$fixtureId/lineups'
+import { Route as LivescoresFixtureTypeFixtureIdOverviewRouteImport } from './routes/livescores/$fixtureType/$fixtureId/overview'
+import { Route as LivescoresLeaguesLeagueIdIndexRouteImport } from './routes/livescores/leagues/$leagueId/index'
+import { Route as LivescoresLeaguesLeagueIdAssistsRouteImport } from './routes/livescores/leagues/$leagueId/assists'
+import { Route as LivescoresLeaguesLeagueIdScorersRouteImport } from './routes/livescores/leagues/$leagueId/scorers'
+import { Route as LivescoresLeaguesLeagueIdStandingsRouteImport } from './routes/livescores/leagues/$leagueId/standings'
+import { Route as StreamsFixTypeFixturesIndexRouteImport } from './routes/streams/$fixType/fixtures/index'
 import { Route as StreamsFixTypeFixturesFixIdRouteRouteImport } from './routes/streams/$fixType/fixtures/$fixId/route'
 import { Route as StreamsFixTypeFixturesFixIdIndexRouteImport } from './routes/streams/$fixType/fixtures/$fixId/index'
-import { Route as StreamsFixTypeFixturesFixIdStatsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/stats'
-import { Route as StreamsFixTypeFixturesFixIdLowerThirdRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lower-third'
 import { Route as StreamsFixTypeFixturesFixIdLineupsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lineups'
+import { Route as StreamsFixTypeFixturesFixIdLowerThirdRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lower-third'
+import { Route as StreamsFixTypeFixturesFixIdScoreBugRouteImport } from './routes/streams/$fixType/fixtures/$fixId/score-bug'
+import { Route as StreamsFixTypeFixturesFixIdStatsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/stats'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LivescoresRouteRoute = LivescoresRouteRouteImport.update({
-  id: '/livescores',
-  path: '/livescores',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GlossaryRouteRoute = GlossaryRouteRouteImport.update({
@@ -65,63 +70,14 @@ const GlossaryRouteRoute = GlossaryRouteRouteImport.update({
   path: '/glossary',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const LivescoresRouteRoute = LivescoresRouteRouteImport.update({
+  id: '/livescores',
+  path: '/livescores',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const VotingIndexRoute = VotingIndexRouteImport.update({
-  id: '/voting/',
-  path: '/voting/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StreamsIndexRoute = StreamsIndexRouteImport.update({
-  id: '/streams/',
-  path: '/streams/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizIndexRoute = QuizIndexRouteImport.update({
-  id: '/quiz/',
-  path: '/quiz/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyPolicyIndexRoute = PrivacyPolicyIndexRouteImport.update({
-  id: '/privacy-policy/',
-  path: '/privacy-policy/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LivescoresIndexRoute = LivescoresIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => LivescoresRouteRoute,
-} as any)
-const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => GlossaryRouteRoute,
-} as any)
-const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
-  id: '/articles/',
-  path: '/articles/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthVerifyRoute = AuthVerifyRouteImport.update({
-  id: '/verify',
-  path: '/verify',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -129,36 +85,60 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossaryIndexRoute = GlossaryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GlossaryRouteRoute,
+} as any)
+const LivescoresIndexRoute = LivescoresIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LivescoresRouteRoute,
+} as any)
+const PrivacyPolicyIndexRoute = PrivacyPolicyIndexRouteImport.update({
+  id: '/privacy-policy/',
+  path: '/privacy-policy/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizIndexRoute = QuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreamsIndexRoute = StreamsIndexRouteImport.update({
+  id: '/streams/',
+  path: '/streams/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StreamsFixTypeRouteRoute = StreamsFixTypeRouteRouteImport.update({
   id: '/streams/$fixType',
   path: '/streams/$fixType',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VotingVoteIdIndexRoute = VotingVoteIdIndexRouteImport.update({
-  id: '/voting/$voteId/',
-  path: '/voting/$voteId/',
+const VotingIndexRoute = VotingIndexRouteImport.update({
+  id: '/voting/',
+  path: '/voting/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
-  id: '/quiz/$quizId/',
-  path: '/quiz/$quizId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LivescoresFixtureTypeIndexRoute =
-  LivescoresFixtureTypeIndexRouteImport.update({
-    id: '/$fixtureType/',
-    path: '/$fixtureType/',
-    getParentRoute: () => LivescoresRouteRoute,
-  } as any)
-const GlossaryFixtypeIndexRoute = GlossaryFixtypeIndexRouteImport.update({
-  id: '/$fixtype/',
-  path: '/$fixtype/',
-  getParentRoute: () => GlossaryRouteRoute,
 } as any)
 const ArticlesArticleSlugIndexRoute =
   ArticlesArticleSlugIndexRouteImport.update({
@@ -166,21 +146,21 @@ const ArticlesArticleSlugIndexRoute =
     path: '/articles/$articleSlug/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const QuizQuizIdLeaderboardRoute = QuizQuizIdLeaderboardRouteImport.update({
-  id: '/quiz/$quizId/leaderboard',
-  path: '/quiz/$quizId/leaderboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ArticlesCategoriesCategorySlugRoute =
   ArticlesCategoriesCategorySlugRouteImport.update({
     id: '/articles/categories/$categorySlug',
     path: '/articles/categories/$categorySlug',
     getParentRoute: () => rootRouteImport,
   } as any)
-const LivescoresLeaguesLeagueIdRouteRoute =
-  LivescoresLeaguesLeagueIdRouteRouteImport.update({
-    id: '/leagues/$leagueId',
-    path: '/leagues/$leagueId',
+const GlossaryFixtypeIndexRoute = GlossaryFixtypeIndexRouteImport.update({
+  id: '/$fixtype/',
+  path: '/$fixtype/',
+  getParentRoute: () => GlossaryRouteRoute,
+} as any)
+const LivescoresFixtureTypeIndexRoute =
+  LivescoresFixtureTypeIndexRouteImport.update({
+    id: '/$fixtureType/',
+    path: '/$fixtureType/',
     getParentRoute: () => LivescoresRouteRoute,
   } as any)
 const LivescoresFixtureTypeFixtureIdRouteRoute =
@@ -189,34 +169,49 @@ const LivescoresFixtureTypeFixtureIdRouteRoute =
     path: '/$fixtureType/$fixtureId',
     getParentRoute: () => LivescoresRouteRoute,
   } as any)
-const StreamsFixTypeFixturesIndexRoute =
-  StreamsFixTypeFixturesIndexRouteImport.update({
-    id: '/fixtures/',
-    path: '/fixtures/',
-    getParentRoute: () => StreamsFixTypeRouteRoute,
+const LivescoresLeaguesLeagueIdRouteRoute =
+  LivescoresLeaguesLeagueIdRouteRouteImport.update({
+    id: '/leagues/$leagueId',
+    path: '/leagues/$leagueId',
+    getParentRoute: () => LivescoresRouteRoute,
   } as any)
-const LivescoresLeaguesLeagueIdIndexRoute =
-  LivescoresLeaguesLeagueIdIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => LivescoresLeaguesLeagueIdRouteRoute,
-  } as any)
+const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
+  id: '/quiz/$quizId/',
+  path: '/quiz/$quizId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizQuizIdLeaderboardRoute = QuizQuizIdLeaderboardRouteImport.update({
+  id: '/quiz/$quizId/leaderboard',
+  path: '/quiz/$quizId/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VotingVoteIdIndexRoute = VotingVoteIdIndexRouteImport.update({
+  id: '/voting/$voteId/',
+  path: '/voting/$voteId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LivescoresFixtureTypeFixtureIdIndexRoute =
   LivescoresFixtureTypeFixtureIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => LivescoresFixtureTypeFixtureIdRouteRoute,
   } as any)
-const LivescoresLeaguesLeagueIdStandingsRoute =
-  LivescoresLeaguesLeagueIdStandingsRouteImport.update({
-    id: '/standings',
-    path: '/standings',
-    getParentRoute: () => LivescoresLeaguesLeagueIdRouteRoute,
+const LivescoresFixtureTypeFixtureIdLineupsRoute =
+  LivescoresFixtureTypeFixtureIdLineupsRouteImport.update({
+    id: '/lineups',
+    path: '/lineups',
+    getParentRoute: () => LivescoresFixtureTypeFixtureIdRouteRoute,
   } as any)
-const LivescoresLeaguesLeagueIdScorersRoute =
-  LivescoresLeaguesLeagueIdScorersRouteImport.update({
-    id: '/scorers',
-    path: '/scorers',
+const LivescoresFixtureTypeFixtureIdOverviewRoute =
+  LivescoresFixtureTypeFixtureIdOverviewRouteImport.update({
+    id: '/overview',
+    path: '/overview',
+    getParentRoute: () => LivescoresFixtureTypeFixtureIdRouteRoute,
+  } as any)
+const LivescoresLeaguesLeagueIdIndexRoute =
+  LivescoresLeaguesLeagueIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => LivescoresLeaguesLeagueIdRouteRoute,
   } as any)
 const LivescoresLeaguesLeagueIdAssistsRoute =
@@ -225,17 +220,23 @@ const LivescoresLeaguesLeagueIdAssistsRoute =
     path: '/assists',
     getParentRoute: () => LivescoresLeaguesLeagueIdRouteRoute,
   } as any)
-const LivescoresFixtureTypeFixtureIdOverviewRoute =
-  LivescoresFixtureTypeFixtureIdOverviewRouteImport.update({
-    id: '/overview',
-    path: '/overview',
-    getParentRoute: () => LivescoresFixtureTypeFixtureIdRouteRoute,
+const LivescoresLeaguesLeagueIdScorersRoute =
+  LivescoresLeaguesLeagueIdScorersRouteImport.update({
+    id: '/scorers',
+    path: '/scorers',
+    getParentRoute: () => LivescoresLeaguesLeagueIdRouteRoute,
   } as any)
-const LivescoresFixtureTypeFixtureIdLineupsRoute =
-  LivescoresFixtureTypeFixtureIdLineupsRouteImport.update({
-    id: '/lineups',
-    path: '/lineups',
-    getParentRoute: () => LivescoresFixtureTypeFixtureIdRouteRoute,
+const LivescoresLeaguesLeagueIdStandingsRoute =
+  LivescoresLeaguesLeagueIdStandingsRouteImport.update({
+    id: '/standings',
+    path: '/standings',
+    getParentRoute: () => LivescoresLeaguesLeagueIdRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesIndexRoute =
+  StreamsFixTypeFixturesIndexRouteImport.update({
+    id: '/fixtures/',
+    path: '/fixtures/',
+    getParentRoute: () => StreamsFixTypeRouteRoute,
   } as any)
 const StreamsFixTypeFixturesFixIdRouteRoute =
   StreamsFixTypeFixturesFixIdRouteRouteImport.update({
@@ -249,10 +250,10 @@ const StreamsFixTypeFixturesFixIdIndexRoute =
     path: '/',
     getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
   } as any)
-const StreamsFixTypeFixturesFixIdStatsRoute =
-  StreamsFixTypeFixturesFixIdStatsRouteImport.update({
-    id: '/stats',
-    path: '/stats',
+const StreamsFixTypeFixturesFixIdLineupsRoute =
+  StreamsFixTypeFixturesFixIdLineupsRouteImport.update({
+    id: '/lineups',
+    path: '/lineups',
     getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
   } as any)
 const StreamsFixTypeFixturesFixIdLowerThirdRoute =
@@ -261,10 +262,16 @@ const StreamsFixTypeFixturesFixIdLowerThirdRoute =
     path: '/lower-third',
     getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
   } as any)
-const StreamsFixTypeFixturesFixIdLineupsRoute =
-  StreamsFixTypeFixturesFixIdLineupsRouteImport.update({
-    id: '/lineups',
-    path: '/lineups',
+const StreamsFixTypeFixturesFixIdScoreBugRoute =
+  StreamsFixTypeFixturesFixIdScoreBugRouteImport.update({
+    id: '/score-bug',
+    path: '/score-bug',
+    getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
+  } as any)
+const StreamsFixTypeFixturesFixIdStatsRoute =
+  StreamsFixTypeFixturesFixIdStatsRouteImport.update({
+    id: '/stats',
+    path: '/stats',
     getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
   } as any)
 
@@ -306,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
   '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
   '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/score-bug': typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
   '/streams/$fixType/fixtures/$fixId/': typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
@@ -342,6 +350,7 @@ export interface FileRoutesByTo {
   '/streams/$fixType/fixtures': typeof StreamsFixTypeFixturesIndexRoute
   '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
   '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/score-bug': typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
@@ -385,6 +394,7 @@ export interface FileRoutesById {
   '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
   '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
   '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/score-bug': typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
   '/streams/$fixType/fixtures/$fixId/': typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
@@ -428,6 +438,7 @@ export interface FileRouteTypes {
     | '/streams/$fixType/fixtures/'
     | '/streams/$fixType/fixtures/$fixId/lineups'
     | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/score-bug'
     | '/streams/$fixType/fixtures/$fixId/stats'
     | '/streams/$fixType/fixtures/$fixId/'
   fileRoutesByTo: FileRoutesByTo
@@ -464,6 +475,7 @@ export interface FileRouteTypes {
     | '/streams/$fixType/fixtures'
     | '/streams/$fixType/fixtures/$fixId/lineups'
     | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/score-bug'
     | '/streams/$fixType/fixtures/$fixId/stats'
     | '/streams/$fixType/fixtures/$fixId'
   id:
@@ -506,6 +518,7 @@ export interface FileRouteTypes {
     | '/streams/$fixType/fixtures/'
     | '/streams/$fixType/fixtures/$fixId/lineups'
     | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/score-bug'
     | '/streams/$fixType/fixtures/$fixId/stats'
     | '/streams/$fixType/fixtures/$fixId/'
   fileRoutesById: FileRoutesById
@@ -531,25 +544,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/livescores': {
-      id: '/livescores'
-      path: '/livescores'
-      fullPath: '/livescores'
-      preLoaderRoute: typeof LivescoresRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/glossary': {
-      id: '/glossary'
-      path: '/glossary'
-      fullPath: '/glossary'
-      preLoaderRoute: typeof GlossaryRouteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -559,81 +558,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/voting/': {
-      id: '/voting/'
-      path: '/voting'
-      fullPath: '/voting/'
-      preLoaderRoute: typeof VotingIndexRouteImport
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/streams/': {
-      id: '/streams/'
-      path: '/streams'
-      fullPath: '/streams/'
-      preLoaderRoute: typeof StreamsIndexRouteImport
+    '/livescores': {
+      id: '/livescores'
+      path: '/livescores'
+      fullPath: '/livescores'
+      preLoaderRoute: typeof LivescoresRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/': {
-      id: '/quiz/'
-      path: '/quiz'
-      fullPath: '/quiz/'
-      preLoaderRoute: typeof QuizIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy-policy/': {
-      id: '/privacy-policy/'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy/'
-      preLoaderRoute: typeof PrivacyPolicyIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/livescores/': {
-      id: '/livescores/'
-      path: '/'
-      fullPath: '/livescores/'
-      preLoaderRoute: typeof LivescoresIndexRouteImport
-      parentRoute: typeof LivescoresRouteRoute
-    }
-    '/glossary/': {
-      id: '/glossary/'
-      path: '/'
-      fullPath: '/glossary/'
-      preLoaderRoute: typeof GlossaryIndexRouteImport
-      parentRoute: typeof GlossaryRouteRoute
-    }
-    '/articles/': {
-      id: '/articles/'
-      path: '/articles'
-      fullPath: '/articles/'
-      preLoaderRoute: typeof ArticlesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/verify': {
-      id: '/_auth/verify'
-      path: '/verify'
-      fullPath: '/verify'
-      preLoaderRoute: typeof AuthVerifyRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/reset-password': {
-      id: '/_auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/register': {
-      id: '/_auth/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_auth/login': {
@@ -643,12 +593,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/forgot-password': {
-      id: '/_auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+    '/_auth/register': {
+      id: '/_auth/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/verify': {
+      id: '/_auth/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary/': {
+      id: '/glossary/'
+      path: '/'
+      fullPath: '/glossary/'
+      preLoaderRoute: typeof GlossaryIndexRouteImport
+      parentRoute: typeof GlossaryRouteRoute
+    }
+    '/livescores/': {
+      id: '/livescores/'
+      path: '/'
+      fullPath: '/livescores/'
+      preLoaderRoute: typeof LivescoresIndexRouteImport
+      parentRoute: typeof LivescoresRouteRoute
+    }
+    '/privacy-policy/': {
+      id: '/privacy-policy/'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy/'
+      preLoaderRoute: typeof PrivacyPolicyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/': {
+      id: '/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz/'
+      preLoaderRoute: typeof QuizIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streams/': {
+      id: '/streams/'
+      path: '/streams'
+      fullPath: '/streams/'
+      preLoaderRoute: typeof StreamsIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/streams/$fixType': {
       id: '/streams/$fixType'
@@ -657,46 +663,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StreamsFixTypeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/voting/$voteId/': {
-      id: '/voting/$voteId/'
-      path: '/voting/$voteId'
-      fullPath: '/voting/$voteId/'
-      preLoaderRoute: typeof VotingVoteIdIndexRouteImport
+    '/voting/': {
+      id: '/voting/'
+      path: '/voting'
+      fullPath: '/voting/'
+      preLoaderRoute: typeof VotingIndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$quizId/': {
-      id: '/quiz/$quizId/'
-      path: '/quiz/$quizId'
-      fullPath: '/quiz/$quizId/'
-      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/livescores/$fixtureType/': {
-      id: '/livescores/$fixtureType/'
-      path: '/$fixtureType'
-      fullPath: '/livescores/$fixtureType/'
-      preLoaderRoute: typeof LivescoresFixtureTypeIndexRouteImport
-      parentRoute: typeof LivescoresRouteRoute
-    }
-    '/glossary/$fixtype/': {
-      id: '/glossary/$fixtype/'
-      path: '/$fixtype'
-      fullPath: '/glossary/$fixtype/'
-      preLoaderRoute: typeof GlossaryFixtypeIndexRouteImport
-      parentRoute: typeof GlossaryRouteRoute
     }
     '/articles/$articleSlug/': {
       id: '/articles/$articleSlug/'
       path: '/articles/$articleSlug'
       fullPath: '/articles/$articleSlug/'
       preLoaderRoute: typeof ArticlesArticleSlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$quizId/leaderboard': {
-      id: '/quiz/$quizId/leaderboard'
-      path: '/quiz/$quizId/leaderboard'
-      fullPath: '/quiz/$quizId/leaderboard'
-      preLoaderRoute: typeof QuizQuizIdLeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/articles/categories/$categorySlug': {
@@ -706,11 +684,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesCategoriesCategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/livescores/leagues/$leagueId': {
-      id: '/livescores/leagues/$leagueId'
-      path: '/leagues/$leagueId'
-      fullPath: '/livescores/leagues/$leagueId'
-      preLoaderRoute: typeof LivescoresLeaguesLeagueIdRouteRouteImport
+    '/glossary/$fixtype/': {
+      id: '/glossary/$fixtype/'
+      path: '/$fixtype'
+      fullPath: '/glossary/$fixtype/'
+      preLoaderRoute: typeof GlossaryFixtypeIndexRouteImport
+      parentRoute: typeof GlossaryRouteRoute
+    }
+    '/livescores/$fixtureType/': {
+      id: '/livescores/$fixtureType/'
+      path: '/$fixtureType'
+      fullPath: '/livescores/$fixtureType/'
+      preLoaderRoute: typeof LivescoresFixtureTypeIndexRouteImport
       parentRoute: typeof LivescoresRouteRoute
     }
     '/livescores/$fixtureType/$fixtureId': {
@@ -720,19 +705,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdRouteRouteImport
       parentRoute: typeof LivescoresRouteRoute
     }
-    '/streams/$fixType/fixtures/': {
-      id: '/streams/$fixType/fixtures/'
-      path: '/fixtures'
-      fullPath: '/streams/$fixType/fixtures/'
-      preLoaderRoute: typeof StreamsFixTypeFixturesIndexRouteImport
-      parentRoute: typeof StreamsFixTypeRouteRoute
+    '/livescores/leagues/$leagueId': {
+      id: '/livescores/leagues/$leagueId'
+      path: '/leagues/$leagueId'
+      fullPath: '/livescores/leagues/$leagueId'
+      preLoaderRoute: typeof LivescoresLeaguesLeagueIdRouteRouteImport
+      parentRoute: typeof LivescoresRouteRoute
     }
-    '/livescores/leagues/$leagueId/': {
-      id: '/livescores/leagues/$leagueId/'
-      path: '/'
-      fullPath: '/livescores/leagues/$leagueId/'
-      preLoaderRoute: typeof LivescoresLeaguesLeagueIdIndexRouteImport
-      parentRoute: typeof LivescoresLeaguesLeagueIdRouteRoute
+    '/quiz/$quizId/': {
+      id: '/quiz/$quizId/'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId/'
+      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/$quizId/leaderboard': {
+      id: '/quiz/$quizId/leaderboard'
+      path: '/quiz/$quizId/leaderboard'
+      fullPath: '/quiz/$quizId/leaderboard'
+      preLoaderRoute: typeof QuizQuizIdLeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voting/$voteId/': {
+      id: '/voting/$voteId/'
+      path: '/voting/$voteId'
+      fullPath: '/voting/$voteId/'
+      preLoaderRoute: typeof VotingVoteIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/livescores/$fixtureType/$fixtureId/': {
       id: '/livescores/$fixtureType/$fixtureId/'
@@ -741,18 +740,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdIndexRouteImport
       parentRoute: typeof LivescoresFixtureTypeFixtureIdRouteRoute
     }
-    '/livescores/leagues/$leagueId/standings': {
-      id: '/livescores/leagues/$leagueId/standings'
-      path: '/standings'
-      fullPath: '/livescores/leagues/$leagueId/standings'
-      preLoaderRoute: typeof LivescoresLeaguesLeagueIdStandingsRouteImport
-      parentRoute: typeof LivescoresLeaguesLeagueIdRouteRoute
+    '/livescores/$fixtureType/$fixtureId/lineups': {
+      id: '/livescores/$fixtureType/$fixtureId/lineups'
+      path: '/lineups'
+      fullPath: '/livescores/$fixtureType/$fixtureId/lineups'
+      preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdLineupsRouteImport
+      parentRoute: typeof LivescoresFixtureTypeFixtureIdRouteRoute
     }
-    '/livescores/leagues/$leagueId/scorers': {
-      id: '/livescores/leagues/$leagueId/scorers'
-      path: '/scorers'
-      fullPath: '/livescores/leagues/$leagueId/scorers'
-      preLoaderRoute: typeof LivescoresLeaguesLeagueIdScorersRouteImport
+    '/livescores/$fixtureType/$fixtureId/overview': {
+      id: '/livescores/$fixtureType/$fixtureId/overview'
+      path: '/overview'
+      fullPath: '/livescores/$fixtureType/$fixtureId/overview'
+      preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdOverviewRouteImport
+      parentRoute: typeof LivescoresFixtureTypeFixtureIdRouteRoute
+    }
+    '/livescores/leagues/$leagueId/': {
+      id: '/livescores/leagues/$leagueId/'
+      path: '/'
+      fullPath: '/livescores/leagues/$leagueId/'
+      preLoaderRoute: typeof LivescoresLeaguesLeagueIdIndexRouteImport
       parentRoute: typeof LivescoresLeaguesLeagueIdRouteRoute
     }
     '/livescores/leagues/$leagueId/assists': {
@@ -762,19 +768,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivescoresLeaguesLeagueIdAssistsRouteImport
       parentRoute: typeof LivescoresLeaguesLeagueIdRouteRoute
     }
-    '/livescores/$fixtureType/$fixtureId/overview': {
-      id: '/livescores/$fixtureType/$fixtureId/overview'
-      path: '/overview'
-      fullPath: '/livescores/$fixtureType/$fixtureId/overview'
-      preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdOverviewRouteImport
-      parentRoute: typeof LivescoresFixtureTypeFixtureIdRouteRoute
+    '/livescores/leagues/$leagueId/scorers': {
+      id: '/livescores/leagues/$leagueId/scorers'
+      path: '/scorers'
+      fullPath: '/livescores/leagues/$leagueId/scorers'
+      preLoaderRoute: typeof LivescoresLeaguesLeagueIdScorersRouteImport
+      parentRoute: typeof LivescoresLeaguesLeagueIdRouteRoute
     }
-    '/livescores/$fixtureType/$fixtureId/lineups': {
-      id: '/livescores/$fixtureType/$fixtureId/lineups'
-      path: '/lineups'
-      fullPath: '/livescores/$fixtureType/$fixtureId/lineups'
-      preLoaderRoute: typeof LivescoresFixtureTypeFixtureIdLineupsRouteImport
-      parentRoute: typeof LivescoresFixtureTypeFixtureIdRouteRoute
+    '/livescores/leagues/$leagueId/standings': {
+      id: '/livescores/leagues/$leagueId/standings'
+      path: '/standings'
+      fullPath: '/livescores/leagues/$leagueId/standings'
+      preLoaderRoute: typeof LivescoresLeaguesLeagueIdStandingsRouteImport
+      parentRoute: typeof LivescoresLeaguesLeagueIdRouteRoute
+    }
+    '/streams/$fixType/fixtures/': {
+      id: '/streams/$fixType/fixtures/'
+      path: '/fixtures'
+      fullPath: '/streams/$fixType/fixtures/'
+      preLoaderRoute: typeof StreamsFixTypeFixturesIndexRouteImport
+      parentRoute: typeof StreamsFixTypeRouteRoute
     }
     '/streams/$fixType/fixtures/$fixId': {
       id: '/streams/$fixType/fixtures/$fixId'
@@ -790,11 +803,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StreamsFixTypeFixturesFixIdIndexRouteImport
       parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
     }
-    '/streams/$fixType/fixtures/$fixId/stats': {
-      id: '/streams/$fixType/fixtures/$fixId/stats'
-      path: '/stats'
-      fullPath: '/streams/$fixType/fixtures/$fixId/stats'
-      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdStatsRouteImport
+    '/streams/$fixType/fixtures/$fixId/lineups': {
+      id: '/streams/$fixType/fixtures/$fixId/lineups'
+      path: '/lineups'
+      fullPath: '/streams/$fixType/fixtures/$fixId/lineups'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdLineupsRouteImport
       parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
     }
     '/streams/$fixType/fixtures/$fixId/lower-third': {
@@ -804,11 +817,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StreamsFixTypeFixturesFixIdLowerThirdRouteImport
       parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
     }
-    '/streams/$fixType/fixtures/$fixId/lineups': {
-      id: '/streams/$fixType/fixtures/$fixId/lineups'
-      path: '/lineups'
-      fullPath: '/streams/$fixType/fixtures/$fixId/lineups'
-      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdLineupsRouteImport
+    '/streams/$fixType/fixtures/$fixId/score-bug': {
+      id: '/streams/$fixType/fixtures/$fixId/score-bug'
+      path: '/score-bug'
+      fullPath: '/streams/$fixType/fixtures/$fixId/score-bug'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdScoreBugRouteImport
+      parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
+    }
+    '/streams/$fixType/fixtures/$fixId/stats': {
+      id: '/streams/$fixType/fixtures/$fixId/stats'
+      path: '/stats'
+      fullPath: '/streams/$fixType/fixtures/$fixId/stats'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdStatsRouteImport
       parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
     }
   }
@@ -915,6 +935,7 @@ const LivescoresRouteRouteWithChildren = LivescoresRouteRoute._addFileChildren(
 interface StreamsFixTypeFixturesFixIdRouteRouteChildren {
   StreamsFixTypeFixturesFixIdLineupsRoute: typeof StreamsFixTypeFixturesFixIdLineupsRoute
   StreamsFixTypeFixturesFixIdLowerThirdRoute: typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  StreamsFixTypeFixturesFixIdScoreBugRoute: typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   StreamsFixTypeFixturesFixIdStatsRoute: typeof StreamsFixTypeFixturesFixIdStatsRoute
   StreamsFixTypeFixturesFixIdIndexRoute: typeof StreamsFixTypeFixturesFixIdIndexRoute
 }
@@ -925,6 +946,8 @@ const StreamsFixTypeFixturesFixIdRouteRouteChildren: StreamsFixTypeFixturesFixId
       StreamsFixTypeFixturesFixIdLineupsRoute,
     StreamsFixTypeFixturesFixIdLowerThirdRoute:
       StreamsFixTypeFixturesFixIdLowerThirdRoute,
+    StreamsFixTypeFixturesFixIdScoreBugRoute:
+      StreamsFixTypeFixturesFixIdScoreBugRoute,
     StreamsFixTypeFixturesFixIdStatsRoute:
       StreamsFixTypeFixturesFixIdStatsRoute,
     StreamsFixTypeFixturesFixIdIndexRoute:

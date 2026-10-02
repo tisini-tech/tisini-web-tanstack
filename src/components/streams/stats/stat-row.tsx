@@ -33,20 +33,3 @@ export const StatRow = ({
     </div>
   )
 }
-
-export function StreamInsightsBy() {
-  return (
-    <div className="mt-6 flex flex-col items-center justify-center gap-1.5">
-      <span className="text-lg font-semibold text-zinc-900 italic">
-        Insights by:
-      </span>
-      <img
-        src="/tisini-logo.png"
-        alt="Tisini"
-        width={220}
-        height={72}
-        className="h-14 w-auto object-contain sm:h-16"
-      />
-    </div>
-  )
-}

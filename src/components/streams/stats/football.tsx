@@ -1,4 +1,4 @@
-import { StatRow, StreamInsightsBy } from './stat-row'
+import { StatRow } from './stat-row'
 import { getEvent, getSubEvent } from '#/lib/scores'
 import type { FixtureEvent, FixtureStats } from '#/lib/types'
 
@@ -124,8 +124,6 @@ export const FootballStats = ({ data }: { data: FixtureStats }) => {
       {(homeRed >= 1 || awayRed >= 1) && (
         <StatRow hStat={`${homeRed}`} title="Red cards" aStat={`${awayRed}`} />
       )}
-
-      <StreamInsightsBy />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { StatRow, StreamInsightsBy } from './stat-row'
+import { StatRow } from './stat-row'
 import { getEvent, getSubEvent } from '#/lib/scores'
 import type { FixtureEvent, FixtureStats } from '#/lib/types'
 
@@ -281,7 +281,6 @@ export const RugbyStats = ({ data }: { data: FixtureStats }) => {
           title="tackles made"
           aStat={`${getStat(away, "Tackles")} / ${aTackles}`}
           /> */}
-      <StreamInsightsBy />
     </div>
   )
 }

@@ -48,15 +48,26 @@ function RouteComponent() {
           <div className={`w-7 shrink-0 sm:w-8 ${silverCap}`} aria-hidden />
         </div>
 
-        {/* Match statistics title bar */}
         <div
-          className={`mx-auto mt-5 flex h-11 w-[75%] items-stretch overflow-hidden rounded-full sm:h-12 ${scoreBar}`}
+          className={`mx-auto mt-5 flex h-14 w-[85%] items-stretch overflow-hidden rounded-full sm:h-16 ${scoreBar}`}
         >
-          <div className={`w-5 shrink-0 ${silverCap}`} aria-hidden />
-          <div className="flex flex-1 items-center justify-center px-3 text-sm font-bold tracking-[0.18em] text-white uppercase sm:text-base">
-            Match Statistics
+          <div className={`w-5 shrink-0 sm:w-6 ${silverCap}`} aria-hidden />
+          <div className="grid min-w-0 flex-1 grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 sm:gap-4 sm:px-4">
+            <span className="justify-self-end text-right text-sm font-extrabold tracking-[0.18em] text-white uppercase sm:text-base">
+              Match
+            </span>
+            <img
+              src="/tisini-logo.png"
+              alt="Tisini"
+              width={220}
+              height={72}
+              className="h-10 w-auto object-contain sm:h-12"
+            />
+            <span className="justify-self-start text-left text-sm font-extrabold tracking-[0.18em] text-white uppercase sm:text-base">
+              Statistics
+            </span>
           </div>
-          <div className={`w-5 shrink-0 ${silverCap}`} aria-hidden />
+          <div className={`w-5 shrink-0 sm:w-6 ${silverCap}`} aria-hidden />
         </div>
 
         <section className="mt-4">

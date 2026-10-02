@@ -182,6 +182,15 @@ export const StreamFixture = ({
             >
               Lower 3rd
             </Link>
+            <Link
+              to="/streams/$fixType/fixtures/$fixId/score-bug"
+              params={{ fixType: fixtureType, fixId }}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(actionBase, actions.history)}
+            >
+              Scoreboard Bug
+            </Link>
             {/* <Link
               to="/streams/$fixType/fixtures/$fixId/insights"
               params={{ fixType: fixtureType, fixId }}
