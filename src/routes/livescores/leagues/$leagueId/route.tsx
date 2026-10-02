@@ -124,10 +124,11 @@ function RouteComponent() {
   const { season: seasonFromSearch } = Route.useSearch()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
-  const tabs =
-    league?.id === '267' || leagueId === '267'
-      ? [...baseTabs.slice(0, 2), assistsTab, baseTabs[2]]
-      : [...baseTabs]
+  const showAssists = ['267', '26']
+
+  const tabs = showAssists.includes(league?.id ?? '')
+    ? [...baseTabs.slice(0, 2), assistsTab, baseTabs[2]]
+    : [...baseTabs]
 
   if (!league) {
     return (
