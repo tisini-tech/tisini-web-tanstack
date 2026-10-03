@@ -81,6 +81,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const isHome = pathname === '/'
   // Overlay / OBS-style pages — no site chrome
   const isStream = pathname.startsWith('/streams')
+  // Fixed green-screen overlays only (list/hub pages must scroll)
+  const isStreamOverlay =
+    /\/streams\/[^/]+\/fixtures\/[^/]+\/(score-bug|stats|lower-third|lineups)\/?$/.test(
+      pathname,
+    )
   const isAuth =
     pathname === '/login' ||
     pathname === '/register' ||
@@ -88,7 +93,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     pathname === '/reset-password' ||
     pathname === '/verify'
   const hideChrome = isHome || isStream || isAuth
-  const lockViewport = isHome || isStream || isAuth
+  const lockViewport = isHome || isAuth || isStreamOverlay
 
   // Don't set className on <html> via React — that overwrites theme dark/light classes.
   // Toggle layout classes with classList instead.
