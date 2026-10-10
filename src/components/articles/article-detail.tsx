@@ -54,7 +54,7 @@ export default function ArticleDetail({ article }: { article: Article }) {
           </Link>
         )}
 
-        <h1 className="font-heading mt-3 text-3xl leading-tight font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
+        <h1 className="font-heading mt-2 text-xl leading-snug font-semibold tracking-tight text-foreground sm:text-2xl lg:text-3xl lg:leading-tight">
           {article.title}
         </h1>
 
