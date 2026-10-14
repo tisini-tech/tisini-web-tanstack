@@ -1,11 +1,16 @@
+import type { SubAppearance } from '#/lib/substitutions'
+import { SubMark } from '@/components/scores/lineups/HomePlayer'
+
 type AwayPlayerProps = {
   name: string
   jersey: string
+  substitution?: SubAppearance | null
 }
 
-const AwayPlayer = ({ name, jersey }: AwayPlayerProps) => {
+const AwayPlayer = ({ name, jersey, substitution }: AwayPlayerProps) => {
   return (
     <div className="flex items-center justify-end gap-2 py-0.5">
+      <SubMark substitution={substitution} />
       <span className="font-heading text-sm font-bold capitalize text-foreground">
         {name}
       </span>

@@ -248,9 +248,115 @@ export function inferFormationSport(
   return footballHint ? 'football' : 'rugby'
 }
 
+function formationSlot(
+  line: string,
+  role: string,
+  slot: number,
+  label: string,
+): FormationRow {
+  return { line, role, slot, label, number: null }
+}
+
+/** Used when a football side has no formation on the fixture. */
+export const DEFAULT_FOOTBALL_4231: Formation = {
+  id: 0,
+  name: '4-2-3-1',
+  description: '4 backs, 2 holding, 3 attacking midfield, 1 striker',
+  match_type: 5,
+  columns_per_row: [1, 4, 2, 3, 1],
+  rows: [
+    [formationSlot('gk', 'gk', 1, 'GK')],
+    [
+      formationSlot('back', 'rb', 2, 'RB'),
+      formationSlot('back', 'cb', 3, 'RCB'),
+      formationSlot('back', 'cb', 4, 'LCB'),
+      formationSlot('back', 'lb', 5, 'LB'),
+    ],
+    [
+      formationSlot('middle', 'dm', 6, 'RDM'),
+      formationSlot('middle', 'dm', 7, 'LDM'),
+    ],
+    [
+      formationSlot('front', 'am', 8, 'RAM'),
+      formationSlot('front', 'am', 9, 'CAM'),
+      formationSlot('front', 'am', 10, 'LAM'),
+    ],
+    [formationSlot('front_front', 'st', 11, 'ST')],
+  ],
+}
+
+export function footballFormationOrDefault(
+  formation: Formation | null | undefined,
+): Formation {
+  if (formation && getFormationBandRows(formation).length > 0) return formation
+  return DEFAULT_FOOTBALL_4231
+}
+
 export type PitchOrientation = 'portrait' | 'landscape'
 
 export type PitchPoint = { top: string; left: string }
+
+export type HalfPitchSlot = {
+  slot: number
+  left: string
+  top: string
+}
+
+/**
+ * Place formation slots on one half of a head-to-head pitch.
+ * Home attacks toward the centre from the left (desktop) or top (mobile).
+ * Away is mirrored so each side's right flank stays on the same touchline.
+ */
+export function placeFormationOnHalf(
+  formation: Formation,
+  side: 'home' | 'away',
+  portrait: boolean,
+): HalfPitchSlot[] {
+  const bands = getFormationBandRows(formation)
+  const bandCount = bands.length
+  if (bandCount === 0) return []
+
+  const depthStart = 14
+  const depthEnd = 84
+  const widthStart = 12
+  const widthEnd = 88
+  const points: HalfPitchSlot[] = []
+
+  for (let bandIndex = 0; bandIndex < bandCount; bandIndex++) {
+    const band = bands[bandIndex]!
+    const depth = axisPercent(bandIndex, bandCount, depthStart, depthEnd)
+
+    for (let slotIndex = 0; slotIndex < band.length; slotIndex++) {
+      const acrossFromLeft = axisPercent(
+        slotIndex,
+        band.length,
+        widthStart,
+        widthEnd,
+      )
+      const across =
+        side === 'away'
+          ? widthStart + widthEnd - acrossFromLeft
+          : acrossFromLeft
+      const slot = band[slotIndex]!.slot
+
+      if (portrait) {
+        points.push({
+          slot,
+          left: `${across}%`,
+          top: `${side === 'home' ? depth : 100 - depth}%`,
+        })
+      } else {
+        points.push({
+          slot,
+          left: `${side === 'home' ? depth : 100 - depth}%`,
+          top: `${across}%`,
+        })
+      }
+    }
+  }
+
+  return points
+}
 
 function axisPercent(index: number, count: number, start: number, end: number) {
   if (count <= 1) return (start + end) / 2

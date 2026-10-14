@@ -1,61 +1,28 @@
 import { useSyncExternalStore } from 'react'
 
-import type { FixtureLineup, FixtureLineups } from '#/lib/types'
-import AwayPlayer from '@/components/scores/lineups/AwayPlayer'
-import HomePlayer from '@/components/scores/lineups/HomePlayer'
-import LineupsTitle from '@/components/scores/lineups/LineupsTitle'
 import { cn } from '@/lib/utils'
+import AwayPlayer from '@/components/scores/lineups/AwayPlayer'
+import type { FixtureLineup, FixtureLineups } from '#/lib/types'
+import LineupsTitle from '@/components/scores/lineups/LineupsTitle'
+import HomePlayer, { SubMark } from '@/components/scores/lineups/HomePlayer'
+import {
+  allFormationPositions,
+  buildFormationBands,
+  footballFormationOrDefault,
+  getStartersByPosition,
+  placeFormationOnHalf,
+  type HalfPitchSlot,
+} from '#/lib/formation'
+import {
+  substitutionForPlayer,
+  type SubAppearance,
+  type SubIndex,
+} from '#/lib/substitutions'
 
 type LineupsProps = {
   squads: FixtureLineups
-}
-
-/**
- * Formation slots — x = depth (goal → centre), y = across (touchline → touchline).
- * Landscape (desktop): left = x, top = y.
- * Portrait (mobile): remapped so home goal is top / away goal is bottom.
- */
-type FormationSlot = { index: number; x: number; y: number }
-
-const HOME_FORMATION: FormationSlot[] = [
-  { index: 0, x: 12, y: 50 },
-  { index: 1, x: 28, y: 12 },
-  { index: 2, x: 28, y: 35 },
-  { index: 3, x: 28, y: 65 },
-  { index: 4, x: 28, y: 88 },
-  { index: 6, x: 44, y: 35 },
-  { index: 7, x: 44, y: 65 },
-  { index: 5, x: 58, y: 18 },
-  { index: 9, x: 58, y: 50 },
-  { index: 8, x: 58, y: 82 },
-  { index: 10, x: 74, y: 50 },
-]
-
-const AWAY_FORMATION: FormationSlot[] = [
-  { index: 10, x: 26, y: 50 },
-  { index: 8, x: 42, y: 18 },
-  { index: 9, x: 42, y: 50 },
-  { index: 5, x: 42, y: 82 },
-  { index: 7, x: 56, y: 35 },
-  { index: 6, x: 56, y: 65 },
-  { index: 4, x: 72, y: 12 },
-  { index: 3, x: 72, y: 35 },
-  { index: 2, x: 72, y: 65 },
-  { index: 1, x: 72, y: 88 },
-  { index: 0, x: 88, y: 50 },
-]
-
-function getStarters(players: FixtureLineup[]) {
-  const starters = players
-    .filter((p) => p.player_type === 'first11')
-    .sort((a, b) => a.lineupposition - b.lineupposition)
-
-  if (starters.length >= 11) return starters.slice(0, 11)
-
-  return players
-    .filter((p) => p.player_type !== 'sub')
-    .sort((a, b) => a.lineupposition - b.lineupposition)
-    .slice(0, 11)
+  homeSubs?: SubIndex
+  awaySubs?: SubIndex
 }
 
 function subscribeMdUp(onChange: () => void) {
@@ -72,53 +39,30 @@ function useIsMdUp() {
   )
 }
 
-/** Map formation % into a padded band so jerseys/labels stay on the grass. */
-function padPercent(value: number, inset = 6) {
-  return inset + (value / 100) * (100 - inset * 2)
-}
-
-function slotPosition(
-  side: 'home' | 'away',
-  slot: FormationSlot,
-  portrait: boolean,
-): { left: string; top: string } {
-  if (!portrait) {
-    return {
-      left: `${padPercent(slot.x, 4)}%`,
-      top: `${padPercent(slot.y, 8)}%`,
-    }
-  }
-
-  // Portrait stack: home goal at top, away goal at bottom.
-  // Both halves use depth as top% — home GK is low x (top), away GK is high x (bottom).
-  return {
-    left: `${padPercent(slot.y, 8)}%`,
-    top: `${padPercent(slot.x, 5)}%`,
-  }
-}
-
-const FootballLineups = ({ squads }: LineupsProps) => {
+const FootballLineups = ({ squads, homeSubs, awaySubs }: LineupsProps) => {
   const homePlayers = squads?.home ?? []
   const awayPlayers = squads?.away ?? []
-  const homeStarters = getStarters(homePlayers)
-  const awayStarters = getStarters(awayPlayers)
   const isMdUp = useIsMdUp()
   const portrait = !isMdUp
+  const homeFormation = footballFormationOrDefault(squads?.home_formation)
+  const awayFormation = footballFormationOrDefault(squads?.away_formation)
 
   return (
     <div className="flex flex-col space-y-2 p-2">
       <div className="flex flex-col md:flex-row">
         <PitchHalf
           side="home"
-          starters={homeStarters}
-          formation={HOME_FORMATION}
+          players={homePlayers}
+          formation={homeFormation}
           portrait={portrait}
+          subs={homeSubs}
         />
         <PitchHalf
           side="away"
-          starters={awayStarters}
-          formation={AWAY_FORMATION}
+          players={awayPlayers}
+          formation={awayFormation}
           portrait={portrait}
+          subs={awaySubs}
         />
       </div>
 
@@ -133,6 +77,7 @@ const FootballLineups = ({ squads }: LineupsProps) => {
                   key={player.id}
                   name={player.pname}
                   jersey={player.jersey_no.toString()}
+                  substitution={substitutionForPlayer(homeSubs, player)}
                 />
               ) : null,
             )}
@@ -144,6 +89,7 @@ const FootballLineups = ({ squads }: LineupsProps) => {
                   key={player.id}
                   name={player.pname}
                   jersey={player.jersey_no.toString()}
+                  substitution={substitutionForPlayer(awaySubs, player)}
                 />
               ) : null,
             )}
@@ -158,22 +104,32 @@ export default FootballLineups
 
 type PitchHalfProps = {
   side: 'home' | 'away'
-  starters: FixtureLineup[]
-  formation: FormationSlot[]
+  players: FixtureLineup[]
+  formation: ReturnType<typeof footballFormationOrDefault>
   portrait: boolean
+  subs?: SubIndex
 }
 
-function PitchHalf({ side, starters, formation, portrait }: PitchHalfProps) {
-  const hasLineup = starters.length > 1
+function PitchHalf({
+  side,
+  players,
+  formation,
+  portrait,
+  subs,
+}: PitchHalfProps) {
+  const slots: HalfPitchSlot[] = placeFormationOnHalf(formation, side, portrait)
+  const bySlot = getStartersByPosition(
+    players,
+    allFormationPositions(buildFormationBands(formation)),
+  )
+  const hasLineup = bySlot.size > 1
 
   return (
     <div
       className={cn(
         'relative w-full overflow-hidden',
         // Mobile: tall portrait half. Desktop: side-by-side landscape half.
-        portrait
-          ? 'aspect-[3/4] w-full'
-          : 'h-[400px] md:w-1/2',
+        portrait ? 'aspect-[3/4] w-full' : 'h-[400px] md:w-1/2',
         side === 'home'
           ? 'rounded-t-xl md:rounded-l-xl md:rounded-tr-none'
           : 'rounded-b-xl md:rounded-r-xl md:rounded-bl-none',
@@ -199,17 +155,21 @@ function PitchHalf({ side, starters, formation, portrait }: PitchHalfProps) {
       />
 
       {hasLineup
-        ? formation.map((slot) => {
-            const player = starters[slot.index]
+        ? slots.map((slot) => {
+            const player = bySlot.get(slot.slot)
             if (!player) return null
-            const pos = slotPosition(side, slot, portrait)
             return (
               <div
-                key={`${side}-${slot.index}`}
+                key={`${side}-${slot.slot}`}
                 className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
-                style={pos}
+                style={{ left: slot.left, top: slot.top }}
               >
-                <PlayerTile player={player} compact={portrait} />
+                <PlayerTile
+                  player={player}
+                  compact={portrait}
+                  side={side}
+                  substitution={substitutionForPlayer(subs, player)}
+                />
               </div>
             )
           })
@@ -226,16 +186,34 @@ function PitchHalf({ side, starters, formation, portrait }: PitchHalfProps) {
   )
 }
 
+const jerseyTone = {
+  home: {
+    shirt: 'bg-white',
+    number: 'text-zinc-900',
+  },
+  away: {
+    shirt: 'bg-sky-500',
+    number: 'text-white',
+  },
+} as const
+
 export function PlayerTile({
   player,
   compact = false,
+  substitution,
+  side = 'home',
 }: {
   player?: FixtureLineup
   compact?: boolean
+  substitution?: SubAppearance | null
+  side?: 'home' | 'away'
 }) {
   if (!player) return null
 
-  const nameParts = player.pname ? player.pname.trim().split(/\s+/).filter(Boolean) : []
+  const tone = jerseyTone[side]
+  const nameParts = player.pname
+    ? player.pname.trim().split(/\s+/).filter(Boolean)
+    : []
   const displayName =
     nameParts.length > 1
       ? `${nameParts[0]![0]!.toUpperCase()}. ${nameParts[nameParts.length - 1]}`
@@ -249,17 +227,18 @@ export function PlayerTile({
       )}
     >
       <div className="relative shrink-0">
-        <img
-          src="/t-shirt.png"
-          alt=""
+        <div
+          aria-hidden
           className={cn(
-            'drop-shadow-md',
+            'drop-shadow-md [mask-image:url(/t-shirt.png)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-image:url(/t-shirt.png)] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain]',
+            tone.shirt,
             compact ? 'h-7 w-7' : 'h-8 w-8 md:h-11 md:w-11',
           )}
         />
         <div
           className={cn(
-            'absolute inset-0 flex items-center justify-center font-heading font-bold text-zinc-900',
+            'absolute inset-0 flex items-center justify-center font-heading font-bold',
+            tone.number,
             compact ? 'text-[9px]' : 'text-[10px] md:text-xs',
           )}
         >
@@ -275,6 +254,7 @@ export function PlayerTile({
       >
         {displayName}
       </p>
+      {substitution ? <SubMark substitution={substitution} onPitch /> : null}
     </div>
   )
 }

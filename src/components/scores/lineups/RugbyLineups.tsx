@@ -1,3 +1,5 @@
+import type { SubIndex } from '#/lib/substitutions'
+import { substitutionForPlayer } from '#/lib/substitutions'
 import type { FixtureLineups } from '#/lib/types'
 import AwayPlayer from '@/components/scores/lineups/AwayPlayer'
 import HomePlayer from '@/components/scores/lineups/HomePlayer'
@@ -5,9 +7,11 @@ import LineupsTitle from '@/components/scores/lineups/LineupsTitle'
 
 type LineUpsProps = {
   squads: FixtureLineups
+  homeSubs?: SubIndex
+  awaySubs?: SubIndex
 }
 
-const RugbyLineups = ({ squads }: LineUpsProps) => {
+const RugbyLineups = ({ squads, homeSubs, awaySubs }: LineUpsProps) => {
   const homePlayers = squads?.home ?? []
   const awayPlayers = squads?.away ?? []
 
@@ -23,6 +27,7 @@ const RugbyLineups = ({ squads }: LineUpsProps) => {
                 key={player.id}
                 name={player.pname}
                 jersey={player.jersey_no.toString()}
+                substitution={substitutionForPlayer(homeSubs, player)}
               />
             ) : null,
           )}
@@ -35,6 +40,7 @@ const RugbyLineups = ({ squads }: LineUpsProps) => {
                 key={player.id}
                 name={player.pname}
                 jersey={player.jersey_no.toString()}
+                substitution={substitutionForPlayer(awaySubs, player)}
               />
             ) : null,
           )}
@@ -52,6 +58,7 @@ const RugbyLineups = ({ squads }: LineUpsProps) => {
                   key={player.id}
                   name={player.pname}
                   jersey={player.jersey_no.toString()}
+                  substitution={substitutionForPlayer(homeSubs, player)}
                 />
               ) : null,
             )}
@@ -63,6 +70,7 @@ const RugbyLineups = ({ squads }: LineUpsProps) => {
                   key={player.id}
                   name={player.pname}
                   jersey={player.jersey_no.toString()}
+                  substitution={substitutionForPlayer(awaySubs, player)}
                 />
               ) : null,
             )}
