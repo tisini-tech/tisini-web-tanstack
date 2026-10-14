@@ -303,6 +303,34 @@ export type HalfPitchSlot = {
 }
 
 /**
+ * Depth from the own goal, as a % of one half.
+ * Keeps the keeper on the penalty spot, the back line on the edge of the box,
+ * and the forwards short of the centre circle — even spacing pushes 4-4-2 / 4-3-3
+ * onto the halfway line.
+ */
+const BAND_DEPTH: Record<number, number[]> = {
+  3: [22, 48, 70],
+  4: [20, 40, 58, 74],
+  5: [18, 36, 50, 64, 76],
+  6: [16, 30, 42, 54, 66, 76],
+}
+
+/** How wide a line sits. A pair of strikers stays central; a back four spans the box. */
+function lineEdges(count: number): [number, number] {
+  if (count <= 1) return [50, 50]
+  if (count === 2) return [40, 60]
+  if (count === 3) return [30, 70]
+  if (count === 4) return [22, 78]
+  return [16, 84]
+}
+
+function bandDepth(index: number, count: number) {
+  const table = BAND_DEPTH[count]
+  if (table && table[index] != null) return table[index]!
+  return axisPercent(index, count, 18, 76)
+}
+
+/**
  * Place formation slots on one half of a head-to-head pitch.
  * Home attacks toward the centre from the left (desktop) or top (mobile).
  * Away is mirrored so each side's right flank stays on the same touchline.
@@ -316,15 +344,12 @@ export function placeFormationOnHalf(
   const bandCount = bands.length
   if (bandCount === 0) return []
 
-  const depthStart = 14
-  const depthEnd = 84
-  const widthStart = 12
-  const widthEnd = 88
   const points: HalfPitchSlot[] = []
 
   for (let bandIndex = 0; bandIndex < bandCount; bandIndex++) {
     const band = bands[bandIndex]!
-    const depth = axisPercent(bandIndex, bandCount, depthStart, depthEnd)
+    const depth = bandDepth(bandIndex, bandCount)
+    const [widthStart, widthEnd] = lineEdges(band.length)
 
     for (let slotIndex = 0; slotIndex < band.length; slotIndex++) {
       const acrossFromLeft = axisPercent(
@@ -334,9 +359,7 @@ export function placeFormationOnHalf(
         widthEnd,
       )
       const across =
-        side === 'away'
-          ? widthStart + widthEnd - acrossFromLeft
-          : acrossFromLeft
+        side === 'away' ? 100 - acrossFromLeft : acrossFromLeft
       const slot = band[slotIndex]!.slot
 
       if (portrait) {
