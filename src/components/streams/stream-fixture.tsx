@@ -50,6 +50,7 @@ const actions = {
   top: 'bg-violet-600 hover:bg-violet-500',
   homeLineup: 'bg-blue-700 hover:bg-blue-600',
   awayLineup: 'bg-orange-600 hover:bg-orange-500',
+  officials: 'bg-purple-600 hover:bg-purple-500',
 } as const
 
 const scoreboardClass =
@@ -218,6 +219,16 @@ export const StreamFixture = ({
             >
               Top
             </Link> */}
+            <Link
+              to="/streams/$fixType/fixtures/$fixId/officials"
+              params={{ fixType: fixtureType, fixId }}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(actionBase, actions.officials)}
+              title={`Match Officials`}
+            >
+              Match Officials
+            </Link>
             <Link
               to="/streams/$fixType/fixtures/$fixId/lineups"
               params={{ fixType: fixtureType, fixId }}

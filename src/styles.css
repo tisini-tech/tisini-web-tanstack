@@ -259,6 +259,54 @@ body {
   will-change: transform, opacity;
 }
 
+/* Stream match officials: slide in from left, slide out to green */
+@keyframes stream-officials-in {
+  from {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes stream-officials-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+  }
+}
+
+.stream-officials-in {
+  animation: stream-officials-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform, opacity;
+}
+
+.stream-officials-out {
+  animation: stream-officials-out 0.45s ease-in both;
+  will-change: transform, opacity;
+}
+
+@keyframes stream-officials-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stream-officials-row-in {
+  animation: stream-officials-row-in 0.35s ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-motion {
     animation: none !important;
@@ -266,7 +314,10 @@ body {
 
   .score-bug-enter,
   .score-bug-promo-in,
-  .score-bug-promo-out {
+  .score-bug-promo-out,
+  .stream-officials-in,
+  .stream-officials-out,
+  .stream-officials-row-in {
     animation: none !important;
     opacity: 1;
     transform: none;

@@ -83,7 +83,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const isStream = pathname.startsWith('/streams')
   // Fixed green-screen overlays only (list/hub pages must scroll)
   const isStreamOverlay =
-    /\/streams\/[^/]+\/fixtures\/[^/]+\/(score-bug|stats|lower-third|lineups)\/?$/.test(
+    /\/streams\/[^/]+\/fixtures\/[^/]+\/(score-bug|stats|lower-third|lineups|officials)\/?$/.test(
       pathname,
     )
   const isAuth =

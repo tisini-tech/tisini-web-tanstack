@@ -49,6 +49,7 @@ import { Route as StreamsFixTypeFixturesFixIdRouteRouteImport } from './routes/s
 import { Route as StreamsFixTypeFixturesFixIdIndexRouteImport } from './routes/streams/$fixType/fixtures/$fixId/index'
 import { Route as StreamsFixTypeFixturesFixIdLineupsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lineups'
 import { Route as StreamsFixTypeFixturesFixIdLowerThirdRouteImport } from './routes/streams/$fixType/fixtures/$fixId/lower-third'
+import { Route as StreamsFixTypeFixturesFixIdOfficialsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/officials'
 import { Route as StreamsFixTypeFixturesFixIdScoreBugRouteImport } from './routes/streams/$fixType/fixtures/$fixId/score-bug'
 import { Route as StreamsFixTypeFixturesFixIdStatsRouteImport } from './routes/streams/$fixType/fixtures/$fixId/stats'
 
@@ -268,6 +269,12 @@ const StreamsFixTypeFixturesFixIdLowerThirdRoute =
     path: '/lower-third',
     getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
   } as any)
+const StreamsFixTypeFixturesFixIdOfficialsRoute =
+  StreamsFixTypeFixturesFixIdOfficialsRouteImport.update({
+    id: '/officials',
+    path: '/officials',
+    getParentRoute: () => StreamsFixTypeFixturesFixIdRouteRoute,
+  } as any)
 const StreamsFixTypeFixturesFixIdScoreBugRoute =
   StreamsFixTypeFixturesFixIdScoreBugRouteImport.update({
     id: '/score-bug',
@@ -320,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
   '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
   '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/officials': typeof StreamsFixTypeFixturesFixIdOfficialsRoute
   '/streams/$fixType/fixtures/$fixId/score-bug': typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
   '/streams/$fixType/fixtures/$fixId/': typeof StreamsFixTypeFixturesFixIdIndexRoute
@@ -358,6 +366,7 @@ export interface FileRoutesByTo {
   '/streams/$fixType/fixtures': typeof StreamsFixTypeFixturesIndexRoute
   '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
   '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/officials': typeof StreamsFixTypeFixturesFixIdOfficialsRoute
   '/streams/$fixType/fixtures/$fixId/score-bug': typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdIndexRoute
@@ -403,6 +412,7 @@ export interface FileRoutesById {
   '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
   '/streams/$fixType/fixtures/$fixId/lineups': typeof StreamsFixTypeFixturesFixIdLineupsRoute
   '/streams/$fixType/fixtures/$fixId/lower-third': typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  '/streams/$fixType/fixtures/$fixId/officials': typeof StreamsFixTypeFixturesFixIdOfficialsRoute
   '/streams/$fixType/fixtures/$fixId/score-bug': typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   '/streams/$fixType/fixtures/$fixId/stats': typeof StreamsFixTypeFixturesFixIdStatsRoute
   '/streams/$fixType/fixtures/$fixId/': typeof StreamsFixTypeFixturesFixIdIndexRoute
@@ -448,6 +458,7 @@ export interface FileRouteTypes {
     | '/streams/$fixType/fixtures/'
     | '/streams/$fixType/fixtures/$fixId/lineups'
     | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/officials'
     | '/streams/$fixType/fixtures/$fixId/score-bug'
     | '/streams/$fixType/fixtures/$fixId/stats'
     | '/streams/$fixType/fixtures/$fixId/'
@@ -486,6 +497,7 @@ export interface FileRouteTypes {
     | '/streams/$fixType/fixtures'
     | '/streams/$fixType/fixtures/$fixId/lineups'
     | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/officials'
     | '/streams/$fixType/fixtures/$fixId/score-bug'
     | '/streams/$fixType/fixtures/$fixId/stats'
     | '/streams/$fixType/fixtures/$fixId'
@@ -530,6 +542,7 @@ export interface FileRouteTypes {
     | '/streams/$fixType/fixtures/'
     | '/streams/$fixType/fixtures/$fixId/lineups'
     | '/streams/$fixType/fixtures/$fixId/lower-third'
+    | '/streams/$fixType/fixtures/$fixId/officials'
     | '/streams/$fixType/fixtures/$fixId/score-bug'
     | '/streams/$fixType/fixtures/$fixId/stats'
     | '/streams/$fixType/fixtures/$fixId/'
@@ -837,6 +850,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StreamsFixTypeFixturesFixIdLowerThirdRouteImport
       parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
     }
+    '/streams/$fixType/fixtures/$fixId/officials': {
+      id: '/streams/$fixType/fixtures/$fixId/officials'
+      path: '/officials'
+      fullPath: '/streams/$fixType/fixtures/$fixId/officials'
+      preLoaderRoute: typeof StreamsFixTypeFixturesFixIdOfficialsRouteImport
+      parentRoute: typeof StreamsFixTypeFixturesFixIdRouteRoute
+    }
     '/streams/$fixType/fixtures/$fixId/score-bug': {
       id: '/streams/$fixType/fixtures/$fixId/score-bug'
       path: '/score-bug'
@@ -955,6 +975,7 @@ const LivescoresRouteRouteWithChildren = LivescoresRouteRoute._addFileChildren(
 interface StreamsFixTypeFixturesFixIdRouteRouteChildren {
   StreamsFixTypeFixturesFixIdLineupsRoute: typeof StreamsFixTypeFixturesFixIdLineupsRoute
   StreamsFixTypeFixturesFixIdLowerThirdRoute: typeof StreamsFixTypeFixturesFixIdLowerThirdRoute
+  StreamsFixTypeFixturesFixIdOfficialsRoute: typeof StreamsFixTypeFixturesFixIdOfficialsRoute
   StreamsFixTypeFixturesFixIdScoreBugRoute: typeof StreamsFixTypeFixturesFixIdScoreBugRoute
   StreamsFixTypeFixturesFixIdStatsRoute: typeof StreamsFixTypeFixturesFixIdStatsRoute
   StreamsFixTypeFixturesFixIdIndexRoute: typeof StreamsFixTypeFixturesFixIdIndexRoute
@@ -966,6 +987,8 @@ const StreamsFixTypeFixturesFixIdRouteRouteChildren: StreamsFixTypeFixturesFixId
       StreamsFixTypeFixturesFixIdLineupsRoute,
     StreamsFixTypeFixturesFixIdLowerThirdRoute:
       StreamsFixTypeFixturesFixIdLowerThirdRoute,
+    StreamsFixTypeFixturesFixIdOfficialsRoute:
+      StreamsFixTypeFixturesFixIdOfficialsRoute,
     StreamsFixTypeFixturesFixIdScoreBugRoute:
       StreamsFixTypeFixturesFixIdScoreBugRoute,
     StreamsFixTypeFixturesFixIdStatsRoute:

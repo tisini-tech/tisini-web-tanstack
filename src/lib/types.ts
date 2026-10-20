@@ -162,6 +162,8 @@ export interface FixtureDetails {
     fixture_type: string
     matchday: string
     league: string
+    league_name: string
+    league_logo: string | null
     series: string
     game_status: string
     game_moment: string

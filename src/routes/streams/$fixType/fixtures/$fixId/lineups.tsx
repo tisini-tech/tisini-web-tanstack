@@ -64,7 +64,7 @@ function RouteComponent() {
         formation={formation}
         sport={fixType}
         // Placeholder until league logo is available from the API
-        leagueLogo={null}
+        leagueLogo={details.fixture.league_logo ?? null}
       />
     </main>
   )
