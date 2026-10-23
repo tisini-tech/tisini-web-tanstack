@@ -42,7 +42,9 @@ export const Route = createFileRoute('/livescores/$fixtureType/$fixtureId')({
     const home = fixture.team1_name.trim()
     const away = fixture.team2_name.trim()
     const league = fixture.league?.trim()
-    const date = formatDate(fixture.game_date.split(' ')[0] || fixture.game_date)
+    const date = formatDate(
+      fixture.game_date.split(' ')[0] || fixture.game_date,
+    )
     const notStarted = fixture.game_status === 'notstarted'
     const inactive = isInactiveMatchStatus(fixture.game_status)
 
@@ -65,10 +67,7 @@ export const Route = createFileRoute('/livescores/$fixtureType/$fixtureId')({
     description += '. Live score, stats and lineups on Tisini.'
 
     return {
-      meta: [
-        { title },
-        { name: 'description', content: description },
-      ],
+      meta: [{ title }, { name: 'description', content: description }],
     }
   },
   component: RouteComponent,
@@ -131,7 +130,7 @@ function RouteComponent() {
             {matchdayLabel}
           </span>
           <span className="truncate px-2 text-center font-heading text-xs font-semibold text-foreground/90 capitalize sm:text-sm">
-            {fixture.league}
+            {fixture.league_name}
           </span>
           <span className="rounded-md border border-border bg-muted/40 px-2 py-1 font-mono text-[10px] tracking-wide text-muted-foreground sm:text-xs">
             {matchDate}

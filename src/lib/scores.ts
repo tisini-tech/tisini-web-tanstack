@@ -272,6 +272,53 @@ function parseMatchdayNumber(label: string): number {
   return match ? Number(match[1]) : Number.NaN
 }
 
+function parseFixtureDay(value: string | undefined): Date | null {
+  const day = value?.trim().slice(0, 10) ?? ''
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null
+  const [year, month, date] = day.split('-').map(Number)
+  if (!year || !month || !date) return null
+  return new Date(year, month - 1, date)
+}
+
+function formatRoundDay(date: Date, includeYear: boolean) {
+  const weekday = date.toLocaleDateString('en-GB', { weekday: 'short' })
+  const day = date.getDate()
+  const month = date.toLocaleDateString('en-GB', { month: 'short' })
+  return includeYear
+    ? `${weekday} ${day} ${month} ${date.getFullYear()}`
+    : `${weekday} ${day} ${month}`
+}
+
+/** Date line for a round header. One day, or a range when kickoffs span days. */
+export function matchdayDateLabel(fixtures: Fixture[]): string {
+  const unique = new Map<number, Date>()
+
+  for (const fixture of fixtures) {
+    const date = parseFixtureDay(fixture.game_date)
+    if (!date) continue
+    unique.set(date.getTime(), date)
+  }
+
+  const dates = [...unique.values()].sort((a, b) => a.getTime() - b.getTime())
+  const first = dates[0]
+  const last = dates[dates.length - 1]
+  if (!first || !last) return ''
+  if (first.getTime() === last.getTime()) return formatRoundDay(first, true)
+
+  const sameMonth =
+    first.getFullYear() === last.getFullYear() &&
+    first.getMonth() === last.getMonth()
+
+  if (sameMonth) {
+    const weekday = first.toLocaleDateString('en-GB', { weekday: 'short' })
+    const endWeekday = last.toLocaleDateString('en-GB', { weekday: 'short' })
+    const month = first.toLocaleDateString('en-GB', { month: 'short' })
+    return `${weekday} ${first.getDate()} – ${endWeekday} ${last.getDate()} ${month} ${first.getFullYear()}`
+  }
+
+  return `${formatRoundDay(first, false)} – ${formatRoundDay(last, true)}`
+}
+
 function matchdayState(fixtures: Fixture[]): 'live' | 'upcoming' | 'played' {
   if (fixtures.some((f) => isLiveFixtureStatus(f.game_status))) return 'live'
 

@@ -1,4 +1,3 @@
-import { HighlightIcon } from '#/components/scores/highlight-icons'
 import type { SubAppearance } from '#/lib/substitutions'
 
 type HomePlayerProps = {
@@ -51,10 +50,7 @@ export function SubMark({
 
   return (
     <span className="inline-flex shrink-0 items-center gap-0.5" title={label}>
-      <HighlightIcon
-        type={cameOn ? 'sub_in' : 'sub_out'}
-        className="size-3.5"
-      />
+      <SubArrow direction={substitution.direction} />
       <span className="font-mono text-[10px] text-muted-foreground">
         {substitution.minute}'
       </span>
@@ -62,20 +58,46 @@ export function SubMark({
   )
 }
 
-function PitchSubArrow({ direction }: { direction: 'in' | 'out' }) {
+/** Up = came on (now in the lineup). Down = came off (now on the bench). */
+function SubArrow({
+  direction,
+  className = 'size-3.5',
+}: {
+  direction: 'in' | 'out'
+  className?: string
+}) {
   const cameOn = direction === 'in'
   return (
-    <svg viewBox="0 0 12 12" className="size-3 shrink-0" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        className={
+          cameOn
+            ? 'fill-emerald-500/15 stroke-emerald-400/70'
+            : 'fill-red-500/15 stroke-red-400/70'
+        }
+        strokeWidth="1.4"
+      />
       <path
-        d={cameOn ? 'M6 1.5v7M3.2 6.2 6 9.2l2.8-3' : 'M6 10.5v-7M3.2 5.8 6 2.8l2.8 3'}
+        d={
+          cameOn
+            ? 'M12 17V9M8.5 11.5 12 8l3.5 3.5'
+            : 'M12 7v8M8.5 12.5 12 16l3.5-3.5'
+        }
         fill="none"
-        className={cameOn ? 'stroke-amber-300' : 'stroke-red-400'}
-        strokeWidth="1.6"
+        className={cameOn ? 'stroke-emerald-400' : 'stroke-red-400'}
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
   )
+}
+
+function PitchSubArrow({ direction }: { direction: 'in' | 'out' }) {
+  return <SubArrow direction={direction} className="size-3" />
 }
 
 export default HomePlayer

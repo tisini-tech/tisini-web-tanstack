@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import {
   groupFixturesByMatchday,
+  matchdayDateLabel,
   sortMatchdaysForResults,
 } from '@/lib/scores'
 import FixtureRow from '@/components/scores/fixture-row'
@@ -46,24 +47,33 @@ export function LeagueResults({ tournId, season }: LeagueResultsProps) {
 
   return (
     <section className="space-y-4">
-      {matches.map(([round, roundFixtures]) => (
-        <div
-          key={round}
-          className="overflow-hidden rounded-lg border border-border"
-        >
-          <div className="border-b border-border bg-muted/40 px-4 py-2">
-            <h3 className="font-heading text-sm font-semibold text-accent-foreground">
-              {round}
-            </h3>
-          </div>
+      {matches.map(([round, roundFixtures]) => {
+        const dateLabel = matchdayDateLabel(roundFixtures)
 
-          <div className="divide-y divide-border">
-            {roundFixtures.map((fixture) => (
-              <FixtureRow key={fixture.id} fixture={fixture} />
-            ))}
+        return (
+          <div
+            key={round}
+            className="overflow-hidden rounded-lg border border-border"
+          >
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-b border-border bg-muted/40 px-4 py-2">
+              <h3 className="font-heading text-sm font-semibold text-accent-foreground">
+                {round}
+              </h3>
+              {dateLabel ? (
+                <p className="font-mono text-xs tracking-wide text-muted-foreground">
+                  {dateLabel}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="divide-y divide-border">
+              {roundFixtures.map((fixture) => (
+                <FixtureRow key={fixture.id} fixture={fixture} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </section>
   )
 }
