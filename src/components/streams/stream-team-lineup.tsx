@@ -579,7 +579,7 @@ function CoachSubsRail({
           <img
             src={coachPhoto}
             alt={coachName}
-            className="h-36 w-36 rounded-2xl object-cover shadow-lg ring-2 ring-white/30 sm:h-40 sm:w-40 lg:h-44 lg:w-44"
+            className="h-36 w-36 rounded-2xl object-cover object-top shadow-lg ring-2 ring-white/30 sm:h-40 sm:w-40 lg:h-44 lg:w-44"
           />
         ) : (
           <div
