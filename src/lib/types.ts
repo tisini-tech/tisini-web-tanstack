@@ -170,6 +170,8 @@ export interface FixtureDetails {
     game_date: string
     minute: number
     second: number
+    started_at: string | null
+    started_second_half_at: string | null
     matchtime: string
     location_id: number
     team1_logo: string

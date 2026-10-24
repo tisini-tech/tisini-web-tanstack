@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
+import { cn } from '#/lib/utils'
 import { ScoreBug } from '#/components/streams/score-bug'
 import { fixtureDetailsQueryOptions } from '#/data/scores'
-import { cn } from '#/lib/utils'
 
 export const Route = createFileRoute(
   '/streams/$fixType/fixtures/$fixId/score-bug',
@@ -39,7 +39,10 @@ function RouteComponent() {
     lastShownMinute.current = minute
     setPromoPhase('in')
 
-    const exitTimer = window.setTimeout(() => setPromoPhase('out'), PROMO_HOLD_MS)
+    const exitTimer = window.setTimeout(
+      () => setPromoPhase('out'),
+      PROMO_HOLD_MS,
+    )
     const idleTimer = window.setTimeout(
       () => setPromoPhase('idle'),
       PROMO_HOLD_MS + PROMO_EXIT_MS,

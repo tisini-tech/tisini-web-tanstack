@@ -261,13 +261,25 @@ export const footballLowerThirdStats = (data: FixtureStats) => {
   const statsList = [
     {
       stat: 'Attempts on target',
-      home: getSubEvent(home, '165', '422'),
-      away: getSubEvent(away, '165', '422'),
+      home:
+        getSubEvent(home, '165', '422') +
+        getSubEvent(home, '238', '606') +
+        getSubEvent(home, '239', '610'),
+      away:
+        getSubEvent(away, '165', '422') +
+        getSubEvent(away, '238', '606') +
+        getSubEvent(away, '239', '610'),
     },
     {
       stat: 'Attempts off target',
-      home: getSubEvent(home, '165', '423'),
-      away: getSubEvent(away, '165', '423'),
+      home:
+        getSubEvent(home, '165', '423') +
+        getSubEvent(home, '238', '607') +
+        getSubEvent(home, '239', '611'),
+      away:
+        getSubEvent(away, '165', '423') +
+        getSubEvent(away, '238', '607') +
+        getSubEvent(away, '239', '611'),
     },
     {
       home: getEvent(home, '203'),

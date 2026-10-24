@@ -1,15 +1,12 @@
+import { useEffect, useState } from 'react'
+
 import {
   isInactiveMatchStatus,
   matchStatusLabel,
+  runningMatchClock,
 } from '#/lib/scores'
 import type { FixtureDetails } from '#/lib/types'
 import { cn, resolveMediaUrl } from '#/lib/utils'
-
-const bar =
-  'bg-[linear-gradient(180deg,#0a4a9e_0%,#023270_55%,#012456_100%)] shadow-[0_4px_16px_rgba(0,0,0,0.45)]'
-
-const clockChip =
-  'bg-[linear-gradient(180deg,#e8ecf1_0%,#c5ccd6_100%)] text-[#023270]'
 
 function teamAbbr(shortName: string | undefined, fullName: string) {
   const short = shortName?.trim()
@@ -27,30 +24,6 @@ function teamAbbr(shortName: string | undefined, fullName: string) {
   return fullName.trim().slice(0, 3).toUpperCase() || '—'
 }
 
-function BugCrest({
-  src,
-  alt,
-  fallbackSrc,
-}: {
-  src?: string | null
-  alt: string
-  fallbackSrc: string
-}) {
-  const resolved = resolveMediaUrl(src) || fallbackSrc
-
-  return (
-    <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-black/10 sm:h-9 sm:w-9">
-      <img
-        src={resolved}
-        alt={alt}
-        referrerPolicy="no-referrer"
-        decoding="async"
-        className="absolute inset-0 h-full w-full object-contain p-0.5"
-      />
-    </div>
-  )
-}
-
 type ScoreBugProps = {
   fixture: FixtureDetails['fixture']
   className?: string
@@ -64,89 +37,159 @@ export function ScoreBug({ fixture, className }: ScoreBugProps) {
   const homeAbbr = teamAbbr(fixture.team1_short_name, fixture.team1_name)
   const awayAbbr = teamAbbr(fixture.team2_short_name, fixture.team2_name)
 
-  const clockText = (() => {
-    if (notStarted) return label || 'KO'
-    if (inactive) return label || '—'
-    return label || 'LIVE'
-  })()
+  const clockActive =
+    fixture.game_status === 'started' &&
+    Boolean(fixture.started_at || fixture.started_second_half_at)
+  const now = useMatchClockNow(clockActive)
+  const running = runningMatchClock(fixture, now)
+
+  const clockText =
+    running ??
+    (notStarted ? label || 'KO' : inactive ? label || '—' : label || 'LIVE')
+
+  const leagueLogo = resolveMediaUrl(fixture.league_logo)
+  const hasLeagueLogo = Boolean(leagueLogo)
+
+  const leagueName = fixture.league_name || 'League'
+
+  const homeScore = notStarted ? '–' : fixture.home_score
+  const awayScore = notStarted ? '–' : fixture.away_score
 
   return (
     <div
       className={cn(
-        'flex w-fit max-w-[min(92vw,34rem)] items-stretch overflow-hidden rounded-md',
-        bar,
+        'flex w-fit flex-col drop-shadow-[0_4px_16px_rgba(0,0,0,0.45)]',
         className,
       )}
     >
-      {/* Clock / phase */}
-      <div
-        className={cn(
-          'flex min-w-[3.25rem] shrink-0 items-center justify-center px-2.5 text-sm font-extrabold tracking-wide tabular-nums uppercase sm:min-w-[3.75rem] sm:text-base',
-          clockChip,
-        )}
-      >
-        {clockText}
-      </div>
+      <div className="grid grid-cols-[6.5rem_minmax(8.5rem,1fr)_auto]">
+        {hasLeagueLogo ? (
+          <div className="relative row-span-2 rounded-tl-md border-t-4 border-l-4 border-[#2a2a2a] bg-[#c8ccd0]">
+            <img
+              src={leagueLogo}
+              alt={leagueName}
+              referrerPolicy="no-referrer"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-contain"
+            />
+          </div>
+        ) : null}
 
-      {/* Home */}
-      <div className="flex shrink-0 items-center gap-1.5 py-2 pl-2.5 pr-1.5 sm:gap-2 sm:pl-3">
-        <BugCrest
-          src={fixture.team1_logo}
-          alt={fixture.team1_name}
-          fallbackSrc="/homeLogo.png"
+        <TeamName
+          abbr={homeAbbr}
+          name={fixture.team1_name}
+          logo={fixture.team1_logo}
+          fallbackLogo="/homeLogo.png"
+          tone="home"
+          className={
+            hasLeagueLogo
+              ? 'border-t-4 border-[#2a2a2a]'
+              : 'col-span-2 rounded-tl-md border-t-4 border-l-4 border-[#2a2a2a]'
+          }
         />
-        <span
-          className="max-w-[4.5rem] truncate text-sm font-extrabold tracking-wide text-white uppercase sm:max-w-[5.5rem] sm:text-base"
-          title={fixture.team1_name}
-        >
-          {homeAbbr}
-        </span>
-      </div>
-
-      {/* Score */}
-      <div className="flex shrink-0 items-center gap-1.5 px-1 font-heading text-xl font-bold tabular-nums text-white sm:gap-2 sm:text-2xl">
-        {notStarted ? (
-          <span className="px-1 text-base font-extrabold tracking-wide text-white/80 uppercase sm:text-lg">
-            vs
-          </span>
-        ) : (
-          <>
-            <span className="min-w-[1.25rem] text-center">
-              {fixture.home_score}
-            </span>
-            <span className="text-white/50">–</span>
-            <span className="min-w-[1.25rem] text-center">
-              {fixture.away_score}
-            </span>
-          </>
-        )}
-      </div>
-
-      {/* Away */}
-      <div className="flex shrink-0 items-center gap-1.5 py-2 pr-2.5 pl-1.5 sm:gap-2 sm:pr-3">
-        <span
-          className="max-w-[4.5rem] truncate text-right text-sm font-extrabold tracking-wide text-white uppercase sm:max-w-[5.5rem] sm:text-base"
-          title={fixture.team2_name}
-        >
-          {awayAbbr}
-        </span>
-        <BugCrest
-          src={fixture.team2_logo}
-          alt={fixture.team2_name}
-          fallbackSrc="/awayLogo.png"
+        <ScoreCell
+          value={homeScore}
+          className="rounded-tr-md border-t-4 border-r-4 border-b-2 border-[#2a2a2a]"
         />
-      </div>
 
-      {/* Brand end-cap */}
-      <div className="flex shrink-0 items-center border-l border-white/15 bg-white px-2 py-1.5 sm:px-2.5">
-        <img
-          src="/tisini-logo.png"
-          alt="Tisini"
-          width={120}
-          height={40}
-          className="h-7 w-auto object-contain sm:h-8"
+        <TeamName
+          abbr={awayAbbr}
+          name={fixture.team2_name}
+          logo={fixture.team2_logo}
+          fallbackLogo="/awayLogo.png"
+          tone="away"
+          className={hasLeagueLogo ? undefined : 'col-span-2 border-l-4 border-[#2a2a2a]'}
         />
+        <ScoreCell
+          value={awayScore}
+          className="border-r-4 border-[#2a2a2a]"
+        />
+
+        <div className="flex items-center justify-center rounded-bl-md border-b-4 border-l-4 border-[#2a2a2a] bg-[#2f6fad] px-1 py-1">
+          <img
+            src="/tisini-logo.png"
+            alt="Tisini"
+            width={120}
+            height={40}
+            className="h-7 w-full object-contain"
+          />
+        </div>
+        <div className="col-span-2 flex items-center justify-center rounded-br-md border-r-4 border-b-4 border-[#2a2a2a] bg-[#023270] px-3 text-base font-extrabold tracking-wide text-white tabular-nums uppercase">
+          {clockText}
+        </div>
       </div>
     </div>
+  )
+}
+
+function useMatchClockNow(active: boolean) {
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (!active) return
+    setNow(Date.now())
+    const id = window.setInterval(() => setNow(Date.now()), 250)
+    return () => window.clearInterval(id)
+  }, [active])
+
+  return now
+}
+
+function TeamName({
+  abbr,
+  name,
+  logo,
+  fallbackLogo,
+  tone,
+  className,
+}: {
+  abbr: string
+  name: string
+  logo?: string | null
+  fallbackLogo: string
+  tone: 'home' | 'away'
+  className?: string
+}) {
+  const crest = resolveMediaUrl(logo) || fallbackLogo
+  const away = tone === 'away'
+
+  return (
+    <span
+      className={cn(
+        'flex min-h-12 items-center gap-2 px-2',
+        away ? 'bg-[#f5c518]' : 'bg-[#0c7a34]',
+        className,
+      )}
+      title={name}
+    >
+      <img
+        src={crest}
+        alt=""
+        referrerPolicy="no-referrer"
+        decoding="async"
+        className="h-7 w-8 shrink-0 object-contain"
+      />
+      <span
+        className={cn(
+          'text-lg font-extrabold tracking-wide uppercase',
+          away ? 'text-[#1a1400]' : 'text-white',
+        )}
+      >
+        {abbr}
+      </span>
+    </span>
+  )
+}
+
+function ScoreCell({ value, className }: { value: string; className?: string }) {
+  return (
+    <span
+      className={cn(
+        'flex min-w-12 items-center justify-center bg-white px-2 font-heading text-3xl font-bold text-[#111] tabular-nums',
+        className,
+      )}
+    >
+      {value}
+    </span>
   )
 }

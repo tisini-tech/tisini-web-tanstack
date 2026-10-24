@@ -242,6 +242,73 @@ export function matchStatusLabel(fixture: MatchStatusInput): string {
   return status || ''
 }
 
+function regulationHalfSeconds(fixtureType?: string) {
+  const type = (fixtureType ?? '').toLowerCase()
+  if (type === 'basketball') return null
+  if (type === 'rugby7') return 7 * 60
+  if (type === 'rugby10') return 10 * 60
+  if (isRugbyFixtureType(type)) return 40 * 60
+  return 45 * 60
+}
+
+function parseMatchInstant(value: string | null | undefined) {
+  const raw = value?.trim()
+  if (!raw) return null
+  const normalized = raw.includes('T') ? raw : raw.replace(' ', 'T')
+  const ms = Date.parse(normalized)
+  return Number.isFinite(ms) ? ms : null
+}
+
+function isExtraTimeMoment(moment?: string) {
+  return normalizeGameMoment(moment).startsWith('extra')
+}
+
+/** `m:ss`, counting up. Seconds are always two digits. */
+export function formatMatchClock(totalSeconds: number) {
+  const safe = Math.max(0, Math.floor(totalSeconds))
+  const minutes = Math.floor(safe / 60)
+  const seconds = safe % 60
+  return `${minutes}:${String(seconds).padStart(2, '0')}`
+}
+
+export type RunningClockInput = MatchStatusInput & {
+  fixture_type?: string
+  started_at?: string | null
+  started_second_half_at?: string | null
+}
+
+/**
+ * Live `m:ss` from kickoff timestamps.
+ * First half counts from `started_at`. Second half counts from
+ * `started_second_half_at` added to the regulation half.
+ * Returns null when the clock should stay a status label (HT, FT, kickoff).
+ */
+export function runningMatchClock(
+  fixture: RunningClockInput,
+  nowMs: number,
+): string | null {
+  if (fixture.game_status !== 'started') return null
+  if (isHalfTimeMoment(fixture.game_moment)) return null
+  if (isExtraTimeMoment(fixture.game_moment)) return null
+
+  const halfSeconds = regulationHalfSeconds(fixture.fixture_type)
+  if (halfSeconds == null) return null
+
+  const moment = normalizeGameMoment(fixture.game_moment)
+  const secondStart = parseMatchInstant(fixture.started_second_half_at)
+  const firstStart = parseMatchInstant(fixture.started_at)
+  const inSecondHalf = moment === 'secondhalf' || (secondStart != null && moment !== 'firsthalf')
+
+  if (inSecondHalf) {
+    if (secondStart == null) return null
+    const elapsed = (nowMs - secondStart) / 1000
+    return formatMatchClock(halfSeconds + elapsed)
+  }
+
+  if (firstStart == null) return null
+  return formatMatchClock((nowMs - firstStart) / 1000)
+}
+
 /** True when the label is a live minute clock (e.g. `88'`). */
 export function isLiveMinuteLabel(label: string) {
   return /^\d+'$/.test(label.trim())
