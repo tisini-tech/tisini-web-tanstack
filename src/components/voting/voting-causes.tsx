@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   CalendarDaysIcon,
   ChevronRightIcon,
-  ClockIcon,
   ImageIcon,
 } from 'lucide-react'
 
@@ -41,20 +39,6 @@ function formatVoteDateRange(cause: VoteCause): string {
     }).format(date)
 
   return `${format(from)} – ${format(to)}`
-}
-
-function getCountdownParts(msRemaining: number) {
-  const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000))
-  const days = Math.floor(totalSeconds / 86_400)
-  const hours = Math.floor((totalSeconds % 86_400) / 3_600)
-  const minutes = Math.floor((totalSeconds % 3_600) / 60)
-  const seconds = totalSeconds % 60
-
-  return { days, hours, minutes, seconds }
-}
-
-function pad(value: number) {
-  return value.toString().padStart(2, '0')
 }
 
 function statusLabel(status: VoteStatus): string {
@@ -108,47 +92,31 @@ export function VotingCauses({ causes }: { causes: VoteCause[] }) {
 }
 
 function VoteCauseCard({ cause }: { cause: VoteCause }) {
-  const [now, setNow] = useState(() => new Date())
-  const status = getVoteStatus(cause, now)
-  const startsAt = parseVoteDate(cause.date_from)
-  const isActionable = status === 'open' || status === 'ended'
-  const ctaLabel = status === 'ended' ? 'Results' : 'Vote'
-
-  useEffect(() => {
-    if (status !== 'upcoming') return
-
-    const timer = window.setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => window.clearInterval(timer)
-  }, [status])
-
-  const countdown = getCountdownParts(startsAt.getTime() - now.getTime())
+  const status = getVoteStatus(cause)
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-border bg-muted/40">
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
-          aria-hidden
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
-          {cause.image_url ? (
-            <img
-              src={cause.image_url}
-              alt={cause.reason}
-              className="size-full object-cover"
+      <div className="relative flex aspect-[16/9] items-center justify-center overflow-hidden border-b border-border bg-[#120818]">
+        {cause.image_url ? (
+          <img
+            src={cause.image_url}
+            alt=""
+            className="size-full object-contain"
+          />
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
+              aria-hidden
             />
-          ) : (
-            <>
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
               <ImageIcon className="size-8 opacity-60" aria-hidden />
               <span className="text-[0.65rem] font-bold tracking-[0.14em] uppercase">
                 No image
               </span>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
 
         <span
           className={cn(
@@ -178,69 +146,37 @@ function VoteCauseCard({ cause }: { cause: VoteCause }) {
           </p>
         </div>
 
-        {isActionable ? (
+        {status === 'open' ? (
           <Link
-            to={status === 'ended' ? '/voting/$voteId/vote' : '/voting/$voteId'}
+            to="/voting/$voteId/vote"
             params={{ voteId: cause.id.toString() }}
-            className={cn(
-              'inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-bold tracking-[0.08em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50',
-              status === 'open'
-                ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                : 'border border-border bg-background text-foreground hover:bg-muted',
-            )}
+            search={{ view: undefined }}
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-emerald-600"
           >
-            {ctaLabel}
+            Vote
+            <ChevronRightIcon className="size-4" aria-hidden />
+          </Link>
+        ) : status === 'ended' ? (
+          <Link
+            to="/voting/$voteId/vote"
+            params={{ voteId: cause.id.toString() }}
+            search={{ view: undefined }}
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/40 px-4 text-sm font-bold tracking-wide text-muted-foreground uppercase transition-colors hover:bg-muted hover:text-foreground"
+          >
+            Results
             <ChevronRightIcon className="size-4" aria-hidden />
           </Link>
         ) : (
-          <div
-            className="flex h-10 items-center justify-between gap-3 rounded-xl border border-border bg-muted/20 px-3"
-            aria-live="polite"
-            aria-label={`Starts in ${countdown.days} days ${countdown.hours} hours ${countdown.minutes} minutes ${countdown.seconds} seconds`}
+          <Link
+            to="/voting/$voteId"
+            params={{ voteId: cause.id.toString() }}
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-4 text-sm font-bold tracking-wide text-foreground uppercase transition-colors hover:bg-muted"
           >
-            <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold tracking-[0.1em] text-primary uppercase">
-              <ClockIcon className="size-3.5 shrink-0" aria-hidden />
-              Starts in
-            </span>
-            {countdown.days === 0 &&
-            countdown.hours === 0 &&
-            countdown.minutes === 0 &&
-            countdown.seconds === 0 ? (
-              <span className="text-sm font-bold text-primary">
-                Opening soon
-              </span>
-            ) : (
-              <div className="flex items-center gap-1.5 tabular-nums text-primary">
-                {countdown.days > 0 ? (
-                  <CountdownUnit value={countdown.days} label="d" />
-                ) : null}
-                <CountdownUnit value={pad(countdown.hours)} label="h" />
-                <CountdownUnit value={pad(countdown.minutes)} label="m" />
-                {countdown.days === 0 ? (
-                  <CountdownUnit value={pad(countdown.seconds)} label="s" />
-                ) : null}
-              </div>
-            )}
-          </div>
+            View
+            <ChevronRightIcon className="size-4" aria-hidden />
+          </Link>
         )}
       </div>
     </article>
-  )
-}
-
-function CountdownUnit({
-  value,
-  label,
-}: {
-  value: number | string
-  label: string
-}) {
-  return (
-    <span className="inline-flex items-baseline gap-0.5">
-      <span className="text-sm font-bold">{value}</span>
-      <span className="text-[0.6rem] font-semibold tracking-wider uppercase opacity-80">
-        {label}
-      </span>
-    </span>
   )
 }

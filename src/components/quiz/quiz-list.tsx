@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   CalendarDaysIcon,
   ChevronRightIcon,
-  ClockIcon,
   ImageIcon,
   PlayIcon,
   TrophyIcon,
@@ -50,20 +48,6 @@ function formatQuizDateRange(quiz: Engagement): string {
     }).format(date)
 
   return `${format(from)} – ${format(to)}`
-}
-
-function getCountdownParts(msRemaining: number) {
-  const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000))
-  const days = Math.floor(totalSeconds / 86_400)
-  const hours = Math.floor((totalSeconds % 86_400) / 3_600)
-  const minutes = Math.floor((totalSeconds % 3_600) / 60)
-  const seconds = totalSeconds % 60
-
-  return { days, hours, minutes, seconds }
-}
-
-function pad(value: number) {
-  return value.toString().padStart(2, '0')
 }
 
 function actionLabel(action: QuizAction): string {
@@ -118,27 +102,17 @@ export function QuizList({ quizzes }: { quizzes: Engagement[] }) {
 }
 
 function QuizCard({ quiz }: { quiz: Engagement }) {
-  const [now, setNow] = useState(() => new Date())
-  const action = getQuizAction(quiz, now)
-  const startsAt = parseQuizDate(quiz.starts_at)
-
-  useEffect(() => {
-    if (action !== 'upcoming') return
-
-    const timer = window.setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => window.clearInterval(timer)
-  }, [action])
-
-  const countdown = getCountdownParts(startsAt.getTime() - now.getTime())
+  const action = getQuizAction(quiz)
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-border bg-muted/40">
+      <div className="relative flex aspect-[16/9] items-center justify-center overflow-hidden border-b border-border bg-[#120818]">
         {quiz.image_url ? (
-          <img src={quiz.image_url} alt="" className="size-full object-cover" />
+          <img
+            src={quiz.image_url}
+            alt=""
+            className="size-full object-contain"
+          />
         ) : (
           <>
             <div
@@ -194,7 +168,7 @@ function QuizCard({ quiz }: { quiz: Engagement }) {
 
         {action === 'play' ? (
           <Link
-            to="/quiz/$quizId"
+            to="/quiz/$quizId/play"
             params={{ quizId: quiz.id.toString() }}
             className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-emerald-600"
           >
@@ -213,54 +187,16 @@ function QuizCard({ quiz }: { quiz: Engagement }) {
             <ChevronRightIcon className="size-4" aria-hidden />
           </Link>
         ) : (
-          <div
-            className="flex h-10 items-center justify-between gap-3 rounded-xl border border-border bg-muted/20 px-3"
-            aria-live="polite"
-            aria-label={`Starts in ${countdown.days} days ${countdown.hours} hours ${countdown.minutes} minutes ${countdown.seconds} seconds`}
+          <Link
+            to="/quiz/$quizId"
+            params={{ quizId: quiz.id.toString() }}
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-4 text-sm font-bold tracking-wide text-foreground uppercase transition-colors hover:bg-muted"
           >
-            <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold tracking-[0.1em] text-primary uppercase">
-              <ClockIcon className="size-3.5 shrink-0" aria-hidden />
-              Starts in
-            </span>
-            {countdown.days === 0 &&
-            countdown.hours === 0 &&
-            countdown.minutes === 0 &&
-            countdown.seconds === 0 ? (
-              <span className="text-sm font-bold text-primary">
-                Opening soon
-              </span>
-            ) : (
-              <div className="flex items-center gap-1.5 tabular-nums text-primary">
-                {countdown.days > 0 ? (
-                  <CountdownUnit value={countdown.days} label="d" />
-                ) : null}
-                <CountdownUnit value={pad(countdown.hours)} label="h" />
-                <CountdownUnit value={pad(countdown.minutes)} label="m" />
-                {countdown.days === 0 ? (
-                  <CountdownUnit value={pad(countdown.seconds)} label="s" />
-                ) : null}
-              </div>
-            )}
-          </div>
+            View
+            <ChevronRightIcon className="size-4" aria-hidden />
+          </Link>
         )}
       </div>
     </article>
-  )
-}
-
-function CountdownUnit({
-  value,
-  label,
-}: {
-  value: number | string
-  label: string
-}) {
-  return (
-    <span className="inline-flex items-baseline gap-0.5">
-      <span className="text-sm font-bold">{value}</span>
-      <span className="text-[0.6rem] font-semibold tracking-wider uppercase opacity-80">
-        {label}
-      </span>
-    </span>
   )
 }

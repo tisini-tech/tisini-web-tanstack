@@ -103,11 +103,14 @@ function RouteComponent() {
     return () => window.clearInterval(timer)
   }, [action])
 
-  const msRemaining = startsAt.getTime() - now.getTime()
-  const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000))
-  const days = Math.floor(totalSeconds / 86_400)
-  const hours = Math.floor((totalSeconds % 86_400) / 3_600)
-  const minutes = Math.floor((totalSeconds % 3_600) / 60)
+  const msRemaining = Math.max(0, startsAt.getTime() - now.getTime())
+  const totalSeconds = Math.floor(msRemaining / 1000)
+  const countdown = {
+    days: Math.floor(totalSeconds / 86_400),
+    hours: Math.floor((totalSeconds % 86_400) / 3_600),
+    minutes: Math.floor((totalSeconds % 3_600) / 60),
+    seconds: totalSeconds % 60,
+  }
 
   return (
     <div className="py-6">
@@ -120,16 +123,16 @@ function RouteComponent() {
       </Link>
 
       <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <div className="relative aspect-[16/9] overflow-hidden border-b border-border bg-muted/40 sm:aspect-[21/9]">
+        <div className="flex items-center justify-center border-b border-border bg-[#120818]">
           {image ? (
             <img
               src={image}
               alt=""
-              className="size-full object-cover"
+              className="max-h-[32rem] w-full object-contain"
             />
           ) : (
             <div
-              className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
+              className="aspect-[16/9] w-full bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
               aria-hidden
             />
           )}
@@ -190,11 +193,7 @@ function RouteComponent() {
             quiz={quiz}
             action={hasPlayed ? 'leaderboard' : action}
             hasPlayed={hasPlayed}
-            countdown={
-              days > 0
-                ? `${days}d ${hours}h`
-                : `${hours}h ${minutes.toString().padStart(2, '0')}m`
-            }
+            countdown={countdown}
           />
         </div>
       </article>
@@ -211,7 +210,12 @@ function QuizAction({
   quiz: Engagement
   action: ReturnType<typeof getQuizAction>
   hasPlayed: boolean
-  countdown: string
+  countdown: {
+    days: number
+    hours: number
+    minutes: number
+    seconds: number
+  }
 }) {
   if (action === 'play') {
     return (
@@ -251,10 +255,38 @@ function QuizAction({
     )
   }
 
+  const units = [
+    countdown.days > 0 ? { value: countdown.days, label: 'Days' } : null,
+    { value: countdown.hours, label: 'Hours' },
+    { value: countdown.minutes, label: 'Min' },
+    { value: countdown.seconds, label: 'Sec' },
+  ].filter((unit) => unit != null)
+
   return (
-    <div className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-muted/20 px-4 text-sm font-semibold text-primary">
-      <ClockIcon className="size-4" aria-hidden />
-      Starts in {countdown}
+    <div
+      className="flex flex-col gap-3 sm:flex-row sm:items-center"
+      aria-live="polite"
+      aria-label={`Starts in ${countdown.days} days ${countdown.hours} hours ${countdown.minutes} minutes ${countdown.seconds} seconds`}
+    >
+      <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.14em] text-primary uppercase">
+        <ClockIcon className="size-4" aria-hidden />
+        Starts in
+      </span>
+      <div className="flex gap-2">
+        {units.map((unit) => (
+          <div
+            key={unit.label}
+            className="flex min-w-16 flex-col items-center rounded-xl border border-border bg-muted/30 px-3 py-2"
+          >
+            <span className="font-heading text-2xl font-bold tabular-nums text-foreground">
+              {String(unit.value).padStart(2, '0')}
+            </span>
+            <span className="text-[0.6rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+              {unit.label}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
