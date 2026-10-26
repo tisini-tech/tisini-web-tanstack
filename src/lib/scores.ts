@@ -297,7 +297,8 @@ export function runningMatchClock(
   const moment = normalizeGameMoment(fixture.game_moment)
   const secondStart = parseMatchInstant(fixture.started_second_half_at)
   const firstStart = parseMatchInstant(fixture.started_at)
-  const inSecondHalf = moment === 'secondhalf' || (secondStart != null && moment !== 'firsthalf')
+  const inSecondHalf =
+    moment === 'secondhalf' || (secondStart != null && moment !== 'firsthalf')
 
   if (inSecondHalf) {
     if (secondStart == null) return null

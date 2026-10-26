@@ -98,12 +98,11 @@ export function ScoreBug({ fixture, className }: ScoreBugProps) {
           logo={fixture.team2_logo}
           fallbackLogo="/awayLogo.png"
           tone="away"
-          className={hasLeagueLogo ? undefined : 'col-span-2 border-l-4 border-[#2a2a2a]'}
+          className={
+            hasLeagueLogo ? undefined : 'col-span-2 border-l-4 border-[#2a2a2a]'
+          }
         />
-        <ScoreCell
-          value={awayScore}
-          className="border-r-4 border-[#2a2a2a]"
-        />
+        <ScoreCell value={awayScore} className="border-r-4 border-[#2a2a2a]" />
 
         <div className="flex items-center justify-center rounded-bl-md border-b-4 border-l-4 border-[#2a2a2a] bg-[#2f6fad] px-1 py-1">
           <img
@@ -181,7 +180,13 @@ function TeamName({
   )
 }
 
-function ScoreCell({ value, className }: { value: string; className?: string }) {
+function ScoreCell({
+  value,
+  className,
+}: {
+  value: string
+  className?: string
+}) {
   return (
     <span
       className={cn(

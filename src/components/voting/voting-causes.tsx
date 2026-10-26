@@ -164,7 +164,13 @@ function VoteCauseCard({ cause }: { cause: VoteCause }) {
       <div className="flex flex-1 flex-col gap-4 p-4 sm:p-5">
         <div className="min-w-0 flex-1">
           <h2 className="font-heading text-lg font-bold tracking-tight text-foreground">
-            {cause.reason}
+            <Link
+              to="/voting/$voteId"
+              params={{ voteId: cause.id.toString() }}
+              className="hover:text-primary"
+            >
+              {cause.reason}
+            </Link>
           </h2>
           <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <CalendarDaysIcon className="size-3.5 shrink-0" aria-hidden />
@@ -174,9 +180,8 @@ function VoteCauseCard({ cause }: { cause: VoteCause }) {
 
         {isActionable ? (
           <Link
-            to="/voting/$voteId"
+            to={status === 'ended' ? '/voting/$voteId/vote' : '/voting/$voteId'}
             params={{ voteId: cause.id.toString() }}
-            search={{ view: status === 'ended' ? 'results' : undefined }}
             className={cn(
               'inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-bold tracking-[0.08em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50',
               status === 'open'

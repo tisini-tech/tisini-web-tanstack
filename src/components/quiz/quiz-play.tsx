@@ -291,7 +291,8 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
 
             <DialogFooter className="gap-2 sm:justify-between">
               <Link
-                to="/quiz"
+                to="/quiz/$quizId"
+                params={{ quizId: String(quiz.id) }}
                 className={cn(
                   'inline-flex h-11 items-center justify-center rounded-2xl border border-border bg-background px-4 text-xs font-bold tracking-[0.08em] uppercase transition-colors',
                   'hover:bg-muted hover:text-foreground',

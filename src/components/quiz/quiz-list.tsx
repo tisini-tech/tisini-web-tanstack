@@ -168,7 +168,13 @@ function QuizCard({ quiz }: { quiz: Engagement }) {
       <div className="flex flex-1 flex-col gap-4 p-4 sm:p-5">
         <div className="min-w-0 flex-1">
           <h2 className="font-heading text-lg font-bold tracking-tight text-foreground">
-            {quiz.title}
+            <Link
+              to="/quiz/$quizId"
+              params={{ quizId: quiz.id.toString() }}
+              className="hover:text-primary"
+            >
+              {quiz.title}
+            </Link>
           </h2>
           {quiz.description ? (
             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
