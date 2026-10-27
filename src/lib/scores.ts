@@ -148,6 +148,22 @@ export function isInactiveMatchStatus(status: string) {
   )
 }
 
+/** Shootout totals, or null when the match did not go to penalties. */
+export function parsePenaltyScore(
+  home: string | number | null | undefined,
+  away: string | number | null | undefined,
+): { home: number; away: number } | null {
+  if (home == null || away == null) return null
+  const homeText = String(home).trim()
+  const awayText = String(away).trim()
+  if (!homeText || !awayText) return null
+  const homeN = Number(homeText)
+  const awayN = Number(awayText)
+  if (!Number.isFinite(homeN) || !Number.isFinite(awayN)) return null
+  if (homeN <= 0 && awayN <= 0) return null
+  return { home: homeN, away: awayN }
+}
+
 /** Match is in progress (incl. HT) — suitable for live refetch. */
 export function isLiveFixtureStatus(status: string) {
   return status === 'started' || status === 'HT'

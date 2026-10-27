@@ -6,6 +6,7 @@ import {
   matchStatusLabel,
 } from '#/lib/scores'
 import { cn } from '#/lib/utils'
+import { PenaltyScoreLine } from './penalty-score'
 import { TeamLogo } from './team-logo'
 
 type FixtureRowProps = {
@@ -87,6 +88,11 @@ export default function FixtureRow({ fixture }: FixtureRowProps) {
                   {fixture.away_score}
                 </span>
               </div>
+              <PenaltyScoreLine
+                home={fixture.home_penalties}
+                away={fixture.away_penalties}
+                className="mt-0.5"
+              />
               {label ? (
                 <span
                   className={cn(

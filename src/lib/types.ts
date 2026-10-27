@@ -159,6 +159,8 @@ export interface FixtureDetails {
     team2_short_name: string
     home_score: string
     away_score: string
+    home_penalties: string
+    away_penalties: string
     fixture_type: string
     matchday: string
     league: string

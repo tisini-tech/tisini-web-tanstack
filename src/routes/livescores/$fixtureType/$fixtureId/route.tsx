@@ -1,8 +1,10 @@
 import { getFixtureDetails, getFixtureLineups } from '#/data/scores'
+import { PenaltyScoreLine } from '#/components/scores/penalty-score'
 import {
   isInactiveMatchStatus,
   matchStatusClassName,
   matchStatusLabel,
+  parsePenaltyScore,
 } from '#/lib/scores'
 import {
   createFileRoute,
@@ -48,10 +50,17 @@ export const Route = createFileRoute('/livescores/$fixtureType/$fixtureId')({
     const notStarted = fixture.game_status === 'notstarted'
     const inactive = isInactiveMatchStatus(fixture.game_status)
 
+    const pens = parsePenaltyScore(
+      fixture.home_penalties,
+      fixture.away_penalties,
+    )
+    const scoreLine = pens
+      ? `${fixture.home_score}–${fixture.away_score} (${pens.home}–${pens.away})`
+      : `${fixture.home_score}–${fixture.away_score}`
     const matchTitle =
       notStarted || inactive
         ? `${home} vs ${away}`
-        : `${home} ${fixture.home_score}–${fixture.away_score} ${away}`
+        : `${home} ${scoreLine} ${away}`
 
     const title = [matchTitle, league, 'Tisini'].filter(Boolean).join(' | ')
 
@@ -59,9 +68,7 @@ export const Route = createFileRoute('/livescores/$fixtureType/$fixtureId')({
       ? `${home} vs ${away}${date ? ` on ${date}` : ''}${
           fixture.matchtime ? ` at ${fixture.matchtime}` : ''
         }`
-      : `${home} ${fixture.home_score}–${fixture.away_score} ${away}${
-          date ? ` on ${date}` : ''
-        }`
+      : `${home} ${scoreLine} ${away}${date ? ` on ${date}` : ''}`
 
     if (league) description += ` in ${league}`
     description += '. Live score, stats and lineups on Tisini.'
@@ -190,6 +197,11 @@ function RouteComponent() {
                     {fixture.away_score}
                   </span>
                 </div>
+                <PenaltyScoreLine
+                  home={fixture.home_penalties}
+                  away={fixture.away_penalties}
+                  className="mt-1 text-xs"
+                />
                 {label ? (
                   <span
                     className={cn(

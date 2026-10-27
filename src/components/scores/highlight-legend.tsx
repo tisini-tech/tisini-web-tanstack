@@ -50,10 +50,22 @@ function legendForFixtureType(fixtureType: string): LegendItem[] {
 
 type HighlightLegendProps = {
   fixtureType: string
+  showPenaltyShootout?: boolean
 }
 
-export function HighlightLegend({ fixtureType }: HighlightLegendProps) {
+export function HighlightLegend({
+  fixtureType,
+  showPenaltyShootout = false,
+}: HighlightLegendProps) {
   const items = legendForFixtureType(fixtureType)
+  if (showPenaltyShootout) {
+    items.splice(
+      1,
+      0,
+      { type: 'pm_scored', label: 'Penalty scored' },
+      { type: 'pm_missed', label: 'Penalty missed' },
+    )
+  }
 
   return (
     <section

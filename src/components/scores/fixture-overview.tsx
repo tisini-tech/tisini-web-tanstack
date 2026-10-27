@@ -1,4 +1,7 @@
+import { cn } from '@/lib/utils'
+import { footballPenaltyOutcome } from '#/lib/football-highlights'
 import type { FixtureDetails, FixtureHighlight } from '#/lib/types'
+import { HighlightLegend } from '#/components/scores/highlight-legend'
 import {
   isBasketballScoreEvent,
   resolveBasketballScoreKind,
@@ -19,8 +22,6 @@ import {
   scoreKindToIconType,
   type HighlightIconType,
 } from '#/components/scores/highlight-icons'
-import { HighlightLegend } from '#/components/scores/highlight-legend'
-import { cn } from '@/lib/utils'
 
 type FixtureOverviewProps = {
   teams: FixtureDetails['fixture']
@@ -80,7 +81,10 @@ export function FixtureOverview({ teams, highlights }: FixtureOverviewProps) {
         </>
       ) : null}
 
-      <HighlightLegend fixtureType={teams.fixture_type} />
+      <HighlightLegend
+        fixtureType={teams.fixture_type}
+        showPenaltyShootout={penalties.length > 0}
+      />
     </div>
   )
 }
@@ -127,12 +131,18 @@ function HighlightsCard({ highlight, teams }: HighlightsCardProps) {
   }
 
   const minute = `${highlight.game_minute}'`
-  const missed = isMissedRugbyScore(rugbyScoreKind)
+  const penaltyOutcome =
+    highlight.event_name === 'PM Penalties'
+      ? footballPenaltyOutcome(highlight.subevent_id, subeventName)
+      : null
+  const missed =
+    isMissedRugbyScore(rugbyScoreKind) || penaltyOutcome === 'missed'
   const successful =
     Boolean(basketballScoreKind) ||
     isSuccessfulRugbyScore(rugbyScoreKind) ||
     isSuccessfulScore(highlight.event_name, subeventName) ||
-    highlight.event_name === 'Goal'
+    highlight.event_name === 'Goal' ||
+    penaltyOutcome === 'scored'
 
   if (highlight.event_name === 'Substitute') {
     return (
@@ -241,14 +251,16 @@ function getHighlightIconType(
   if (normalizeMetricName(subeventName) === 'red') return 'red_card'
   if (normalizeMetricName(eventName) === 'card') return 'yellow_card'
   if (eventName === 'Assists') return 'assist'
-  if (eventName === 'Goal' || eventName === 'PM Penalties') return 'goal'
+  if (eventName === 'PM Penalties') {
+    const outcome = footballPenaltyOutcome(highlight.subevent_id, subeventName)
+    if (outcome === 'missed') return 'pm_missed'
+    if (outcome === 'scored') return 'pm_scored'
+    return 'goal'
+  }
+  if (eventName === 'Goal') return 'goal'
 
   if (
-    isBasketballScoreEvent(
-      highlight.event_id,
-      eventName,
-      highlight.subevent_id,
-    )
+    isBasketballScoreEvent(highlight.event_id, eventName, highlight.subevent_id)
   ) {
     switch (basketballScoreKind) {
       case 'three_point':
@@ -273,8 +285,7 @@ function getHighlightIconType(
   }
   if (
     eventName === 'Score' &&
-    (subeventName === 'Successful Conversion' ||
-      subeventName === 'Conversion')
+    (subeventName === 'Successful Conversion' || subeventName === 'Conversion')
   ) {
     return 'conversion'
   }
