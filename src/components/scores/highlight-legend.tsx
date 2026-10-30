@@ -9,14 +9,18 @@ type LegendItem = {
   label: string
 }
 
-function legendForFixtureType(fixtureType: string): LegendItem[] {
-  const shared: LegendItem[] = [
-    { type: 'yellow_card', label: 'Yellow card' },
-    { type: 'red_card', label: 'Red card' },
-    { type: 'sub_out', label: 'Player off' },
-    { type: 'sub_in', label: 'Player on' },
-  ]
+const cards: LegendItem[] = [
+  { type: 'yellow_card', label: 'Yellow card' },
+  { type: 'second_yellow', label: 'Second yellow' },
+  { type: 'red_card', label: 'Red card' },
+]
 
+const subs: LegendItem[] = [
+  { type: 'sub_out', label: 'Player off' },
+  { type: 'sub_in', label: 'Player on' },
+]
+
+function legendForFixtureType(fixtureType: string): LegendItem[] {
   if (isRugbyFixtureType(fixtureType)) {
     return [
       { type: 'try', label: 'Try' },
@@ -26,7 +30,8 @@ function legendForFixtureType(fixtureType: string): LegendItem[] {
       { type: 'missed_penalty', label: 'Missed penalty' },
       { type: 'drop', label: 'Drop goal' },
       { type: 'missed_drop', label: 'Missed drop goal' },
-      ...shared,
+      ...cards,
+      ...subs,
     ]
   }
 
@@ -36,7 +41,9 @@ function legendForFixtureType(fixtureType: string): LegendItem[] {
       { type: 'bb_three', label: '3 point' },
       { type: 'bb_ft', label: 'Free throw' },
       { type: 'assist', label: 'Assist' },
-      ...shared,
+      { type: 'yellow_card', label: 'Yellow card' },
+      { type: 'red_card', label: 'Red card' },
+      ...subs,
     ]
   }
 
@@ -44,7 +51,8 @@ function legendForFixtureType(fixtureType: string): LegendItem[] {
   return [
     { type: 'goal', label: 'Goal' },
     { type: 'assist', label: 'Assist' },
-    ...shared,
+    ...cards,
+    ...subs,
   ]
 }
 

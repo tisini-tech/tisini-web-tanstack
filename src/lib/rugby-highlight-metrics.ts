@@ -11,7 +11,7 @@ export type RugbyScoreKind =
   | 'drop'
   | 'missed_drop'
 
-export type RugbyCardKind = 'yellow' | 'red'
+export type RugbyCardKind = 'yellow' | 'second_yellow' | 'red'
 
 /** Score event_ids: rugby7 / rugby15 / rugby10 / live */
 export const RUGBY_SCORE_EVENT_IDS = new Set(['33', '49', '79', '253'])
@@ -79,6 +79,19 @@ export const RUGBY_SCORE_BY_SUBEVENT_NAME: Record<string, RugbyScoreKind> = {
   misseddropgoal: 'missed_drop',
 }
 
+/** Sub-event ids shared by football and rugby card catalogs. */
+export const SECOND_YELLOW_SUBEVENT_IDS = new Set(['695', '826'])
+
+/** Straight red — football `22` plus rugby reds. */
+export const STRAIGHT_RED_SUBEVENT_IDS = new Set([
+  '22',
+  '45',
+  '55',
+  '460',
+  '545',
+  '693',
+])
+
 /** subevent_id → card kind */
 export const RUGBY_CARD_BY_SUBEVENT_ID: Record<string, RugbyCardKind> = {
   // Yellow — rugby15, rugby7, rugby10, live
@@ -86,9 +99,14 @@ export const RUGBY_CARD_BY_SUBEVENT_ID: Record<string, RugbyCardKind> = {
   '54': 'yellow',
   '544': 'yellow',
   '694': 'yellow',
-  // Red — rugby15, rugby7, rugby10, live
+  // Red (second yellow) — football and rugby
+  '695': 'second_yellow',
+  '826': 'second_yellow',
+  // Straight red — football and rugby
+  '22': 'red',
   '45': 'red',
   '55': 'red',
+  '460': 'red',
   '545': 'red',
   '693': 'red',
 }
@@ -134,12 +152,21 @@ export function resolveRugbyCardKind(
   subeventId: string | number | null | undefined,
   subeventName: string | null | undefined,
 ): RugbyCardKind {
-  const id = String(subeventId ?? '')
+  const id = String(subeventId ?? '').trim()
+  if (id && SECOND_YELLOW_SUBEVENT_IDS.has(id)) return 'second_yellow'
+  if (id && STRAIGHT_RED_SUBEVENT_IDS.has(id)) return 'red'
   if (id && RUGBY_CARD_BY_SUBEVENT_ID[id]) {
     return RUGBY_CARD_BY_SUBEVENT_ID[id]
   }
 
   const name = normalizeMetricName(subeventName)
+  if (
+    name.includes('secondyellow') ||
+    name.includes('2ndyellow') ||
+    name.includes('doubleyellow')
+  ) {
+    return 'second_yellow'
+  }
   if (name.includes('red')) return 'red'
   return 'yellow'
 }

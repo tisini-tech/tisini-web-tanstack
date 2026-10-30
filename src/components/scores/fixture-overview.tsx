@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { cardIconsByHighlightId } from '#/lib/card-highlights'
 import { footballPenaltyOutcome } from '#/lib/football-highlights'
 import type { FixtureDetails, FixtureHighlight } from '#/lib/types'
 import { HighlightLegend } from '#/components/scores/highlight-legend'
@@ -9,11 +10,9 @@ import {
 } from '#/lib/basketball-highlight-metrics'
 import {
   isMissedRugbyScore,
-  isRugbyCardEvent,
   isRugbyScoreEvent,
   isSuccessfulRugbyScore,
   normalizeMetricName,
-  resolveRugbyCardKind,
   resolveRugbyScoreKind,
   type RugbyScoreKind,
 } from '#/lib/rugby-highlight-metrics'
@@ -40,6 +39,7 @@ export function FixtureOverview({ teams, highlights }: FixtureOverviewProps) {
   const penalties = highlights.filter(
     (highlight) => highlight.event_name === 'PM Penalties',
   )
+  const cardIcons = cardIconsByHighlightId(highlights)
 
   return (
     <div className="space-y-1">
@@ -51,6 +51,7 @@ export function FixtureOverview({ teams, highlights }: FixtureOverviewProps) {
             key={highlight.id}
             highlight={highlight}
             teams={teams}
+            cardIcon={cardIcons.get(highlight.id)}
           />
         ) : null,
       )}
@@ -64,6 +65,7 @@ export function FixtureOverview({ teams, highlights }: FixtureOverviewProps) {
             key={highlight.id}
             highlight={highlight}
             teams={teams}
+            cardIcon={cardIcons.get(highlight.id)}
           />
         ) : null,
       )}
@@ -100,9 +102,10 @@ function HalfDivider({ label }: { label: string }) {
 type HighlightsCardProps = {
   highlight: FixtureHighlight
   teams: FixtureDetails['fixture']
+  cardIcon?: HighlightIconType
 }
 
-function HighlightsCard({ highlight, teams }: HighlightsCardProps) {
+function HighlightsCard({ highlight, teams, cardIcon }: HighlightsCardProps) {
   const homeId = teams.team1_id
   const isHome = highlight.team === homeId
   const subeventName = highlight.subevent_name ?? ''
@@ -120,11 +123,9 @@ function HighlightsCard({ highlight, teams }: HighlightsCardProps) {
     ? resolveBasketballScoreKind(highlight.subevent_id, subeventName)
     : null
 
-  const iconType = getHighlightIconType(
-    highlight,
-    rugbyScoreKind,
-    basketballScoreKind,
-  )
+  const iconType =
+    cardIcon ??
+    getHighlightIconType(highlight, rugbyScoreKind, basketballScoreKind)
 
   if (highlight.event_name === 'Assists' && !highlight.pname?.trim()) {
     return null
@@ -242,14 +243,11 @@ function getHighlightIconType(
   const eventName = highlight.event_name
   const subeventName = highlight.subevent_name ?? ''
 
-  if (isRugbyCardEvent(highlight.event_id, eventName)) {
-    return resolveRugbyCardKind(highlight.subevent_id, subeventName) === 'red'
+  if (normalizeMetricName(eventName) === 'card') {
+    return normalizeMetricName(subeventName).includes('red')
       ? 'red_card'
       : 'yellow_card'
   }
-
-  if (normalizeMetricName(subeventName) === 'red') return 'red_card'
-  if (normalizeMetricName(eventName) === 'card') return 'yellow_card'
   if (eventName === 'Assists') return 'assist'
   if (eventName === 'PM Penalties') {
     const outcome = footballPenaltyOutcome(highlight.subevent_id, subeventName)

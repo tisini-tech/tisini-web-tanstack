@@ -10,6 +10,7 @@ export type HighlightIconType =
   | 'drop'
   | 'missed_drop'
   | 'yellow_card'
+  | 'second_yellow'
   | 'red_card'
   | 'goal'
   | 'pm_scored'
@@ -68,6 +69,8 @@ function renderIcon(type: HighlightIconType) {
       return <DropGoalIcon missed />
     case 'yellow_card':
       return <CardIcon tone="yellow" />
+    case 'second_yellow':
+      return <CardIcon tone="second" />
     case 'red_card':
       return <CardIcon tone="red" />
     case 'goal':
@@ -240,11 +243,38 @@ function DropGoalIcon({ missed = false }: { missed?: boolean }) {
   )
 }
 
-function CardIcon({ tone }: { tone: 'yellow' | 'red' }) {
+function CardIcon({ tone }: { tone: 'yellow' | 'red' | 'second' }) {
+  if (tone === 'second') {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        className="size-full drop-shadow-[0_1px_2px_rgba(239,68,68,0.4)]"
+        fill="none"
+      >
+        <path
+          d="M8.8 3.5h6.4A1.8 1.8 0 0 1 17 5.3v13.4a1.8 1.8 0 0 1-1.8 1.8H8.8A1.8 1.8 0 0 1 7 18.7V5.3A1.8 1.8 0 0 1 8.8 3.5Z"
+          className="fill-amber-400 stroke-amber-100"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M17 5.3v13.4a1.8 1.8 0 0 1-1.8 1.8H7L17 5.3Z"
+          className="fill-red-500"
+        />
+        <path
+          d="M8.8 3.5h6.4A1.8 1.8 0 0 1 17 5.3v13.4a1.8 1.8 0 0 1-1.8 1.8H8.8A1.8 1.8 0 0 1 7 18.7V5.3A1.8 1.8 0 0 1 8.8 3.5Z"
+          className="stroke-white/80"
+          strokeWidth="1.2"
+        />
+      </svg>
+    )
+  }
+
   const fill = tone === 'yellow' ? 'fill-amber-400' : 'fill-red-500'
   const stroke = tone === 'yellow' ? 'stroke-amber-200' : 'stroke-red-300'
   const shadow =
-    tone === 'yellow' ? 'drop-shadow-[0_1px_2px_rgba(251,191,36,0.45)]' : 'drop-shadow-[0_1px_2px_rgba(239,68,68,0.5)]'
+    tone === 'yellow'
+      ? 'drop-shadow-[0_1px_2px_rgba(251,191,36,0.45)]'
+      : 'drop-shadow-[0_1px_2px_rgba(239,68,68,0.5)]'
 
   return (
     <svg viewBox="0 0 24 24" className={cn('size-full', shadow)} fill="none">
@@ -398,7 +428,7 @@ function SubArrowIcon({ direction }: { direction: 'in' | 'out' }) {
         strokeWidth="1.2"
       />
       <path
-        d={isIn ? 'M12 7v8M8.5 12.5 12 16l3.5-3.5' : 'M12 17V9M8.5 11.5 12 8l3.5 3.5'}
+        d={isIn ? 'M12 17V9M8.5 11.5 12 8l3.5 3.5' : 'M12 7v8M8.5 12.5 12 16l3.5-3.5'}
         className={isIn ? 'stroke-emerald-400' : 'stroke-red-400'}
         strokeWidth="2"
         strokeLinecap="round"

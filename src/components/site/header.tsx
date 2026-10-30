@@ -36,6 +36,7 @@ const navLinks = [
   },
   { id: 'quiz', href: '/quiz', label: 'Quiz', scrollOnHome: false },
   { id: 'voting', href: '/voting', label: 'Voting', scrollOnHome: false },
+  { id: 'tickets', href: '/tickets', label: 'Tickets', scrollOnHome: false },
   { id: 'glossary', href: '/glossary', label: 'Glossary', scrollOnHome: false },
   { id: 'contacts', href: '/', label: 'Contact', scrollOnHome: true },
 ] as const
@@ -83,6 +84,7 @@ export const SiteHeader = ({ activeSection, onNavigate }: SiteHeaderProps) => {
   const isLinkActive = (link: (typeof navLinks)[number]) => {
     if (link.id === 'articles') return pathname.startsWith('/articles')
     if (link.id === 'livescores') return pathname.startsWith('/livescores')
+    if (link.id === 'tickets') return pathname.startsWith('/tickets')
     if (link.id === 'about' && pathname === '/about') return true
     if (isHome && activeSection && link.scrollOnHome) {
       return activeSection === link.id
