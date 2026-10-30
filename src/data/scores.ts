@@ -152,6 +152,17 @@ export const seasonTopAssistsQueryOptions = (
       getSeasonTopPerformers({ data: { tournId, seasonId, eventId: 23 } }),
   })
 
+export const getSeasonCleanSheetsQueryOptions = (
+  tournId: string,
+  seasonId: string,
+) =>
+  queryOptions({
+    queryKey: ['scores', 'season-clean-sheets', tournId, seasonId],
+    enabled: Boolean(tournId && seasonId),
+    queryFn: () =>
+      getSeasonTopPerformers({ data: { tournId, seasonId, eventId: 0 } }),
+  })
+
 export const getSeasonStandings = createServerFn({ method: 'GET' })
   .validator((data: { tournId: string; seasonId: string }) => data)
   .handler(async ({ data }) => {

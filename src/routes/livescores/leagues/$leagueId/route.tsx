@@ -1,10 +1,4 @@
-import {
-  findSeasonEntry,
-  getDefaultSeasonId,
-  getSeriesForSeason,
-  normalizeSeasonId,
-  parseLeagueSlug,
-} from '#/lib/leagues'
+import { CheckIcon, ChevronDownIcon } from 'lucide-react'
 import {
   createFileRoute,
   Link,
@@ -13,7 +7,15 @@ import {
   useNavigate,
   useRouterState,
 } from '@tanstack/react-router'
-import { CheckIcon, ChevronDownIcon } from 'lucide-react'
+
+import { cn } from '@/lib/utils'
+import {
+  findSeasonEntry,
+  getDefaultSeasonId,
+  getSeriesForSeason,
+  normalizeSeasonId,
+  parseLeagueSlug,
+} from '#/lib/leagues'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +24,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
 
 type LeagueSearch = {
   season?: string
@@ -91,7 +92,7 @@ export const Route = createFileRoute('/livescores/leagues/$leagueId')({
   component: RouteComponent,
 })
 
-const baseTabs = [
+const tabs = [
   {
     label: 'Results',
     to: '/livescores/leagues/$leagueId' as const,
@@ -101,9 +102,9 @@ const baseTabs = [
     },
   },
   {
-    label: 'Top scorers',
-    to: '/livescores/leagues/$leagueId/scorers' as const,
-    isActive: (pathname: string) => pathname.endsWith('/scorers'),
+    label: 'Top Players',
+    to: '/livescores/leagues/$leagueId/stats' as const,
+    isActive: (pathname: string) => pathname.endsWith('/stats'),
   },
   {
     label: 'Standings',
@@ -112,23 +113,11 @@ const baseTabs = [
   },
 ] as const
 
-const assistsTab = {
-  label: 'Top assists',
-  to: '/livescores/leagues/$leagueId/assists' as const,
-  isActive: (pathname: string) => pathname.endsWith('/assists'),
-} as const
-
 function RouteComponent() {
   const { leagueId } = Route.useParams()
   const { league, defaultSeason } = Route.useLoaderData()
   const { season: seasonFromSearch } = Route.useSearch()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
-
-  const showAssists = ['267', '26']
-
-  const tabs = showAssists.includes(league?.id ?? '')
-    ? [...baseTabs.slice(0, 2), assistsTab, baseTabs[2]]
-    : [...baseTabs]
 
   if (!league) {
     return (
