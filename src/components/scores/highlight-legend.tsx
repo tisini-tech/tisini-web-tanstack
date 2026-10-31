@@ -11,8 +11,8 @@ type LegendItem = {
 
 const cards: LegendItem[] = [
   { type: 'yellow_card', label: 'Yellow card' },
-  { type: 'second_yellow', label: 'Second yellow' },
-  { type: 'red_card', label: 'Red card' },
+  { type: 'second_yellow', label: 'Red card (second yellow)' },
+  { type: 'red_card', label: 'Red card (straight red)' },
 ]
 
 const subs: LegendItem[] = [

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { cardIconsByHighlightId } from '#/lib/card-highlights'
+import { resolveCardHighlightDisplay } from '#/lib/card-highlights'
 import { footballPenaltyOutcome } from '#/lib/football-highlights'
 import type { FixtureDetails, FixtureHighlight } from '#/lib/types'
 import { HighlightLegend } from '#/components/scores/highlight-legend'
@@ -39,14 +39,16 @@ export function FixtureOverview({ teams, highlights }: FixtureOverviewProps) {
   const penalties = highlights.filter(
     (highlight) => highlight.event_name === 'PM Penalties',
   )
-  const cardIcons = cardIconsByHighlightId(highlights)
+  const { icons: cardIcons, hiddenIds: hiddenCards } =
+    resolveCardHighlightDisplay(highlights)
 
   return (
     <div className="space-y-1">
       <HalfDivider label="First Half" />
       {highlights.map((highlight) =>
         highlight.game_moment === 'firsthalf' &&
-        highlight.event_name !== 'Goal Conceded' ? (
+        highlight.event_name !== 'Goal Conceded' &&
+        !hiddenCards.has(highlight.id) ? (
           <HighlightsCard
             key={highlight.id}
             highlight={highlight}
@@ -60,7 +62,8 @@ export function FixtureOverview({ teams, highlights }: FixtureOverviewProps) {
       {highlights.map((highlight) =>
         highlight.game_moment === 'secondhalf' &&
         highlight.event_name !== 'Goal Conceded' &&
-        highlight.event_name !== 'PM Penalties' ? (
+        highlight.event_name !== 'PM Penalties' &&
+        !hiddenCards.has(highlight.id) ? (
           <HighlightsCard
             key={highlight.id}
             highlight={highlight}

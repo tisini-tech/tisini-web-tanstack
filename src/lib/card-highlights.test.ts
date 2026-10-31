@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { cardIconsByHighlightId } from './card-highlights'
+import {
+  cardIconsByHighlightId,
+  resolveCardHighlightDisplay,
+} from './card-highlights'
 import type { FixtureHighlight } from './types'
 
 function card(
@@ -70,5 +73,85 @@ describe('cardIconsByHighlightId', () => {
 
     expect(icons.get(1)).toBe('yellow_card')
     expect(icons.get(2)).toBe('yellow_card')
+  })
+
+  it('shows a first yellow and one yellow/red when a second yellow also sends the player off', () => {
+    const highlights = [
+      card({
+        id: 1,
+        subevent_id: '60',
+        subevent_name: '1st Yellow',
+        game_minute: '52',
+        game_moment: 'secondhalf',
+        pname: 'Michael Mutinda',
+      }),
+      card({
+        id: 2,
+        subevent_id: '61',
+        subevent_name: 'Second Yellow',
+        game_minute: '57',
+        game_moment: 'secondhalf',
+        pname: 'Michael Mutinda',
+      }),
+      card({
+        id: 3,
+        subevent_id: '22',
+        subevent_name: 'Red',
+        game_minute: '57',
+        game_moment: 'secondhalf',
+        pname: 'Michael Mutinda',
+      }),
+    ]
+    const { icons, hiddenIds } = resolveCardHighlightDisplay(highlights)
+
+    expect(icons.get(1)).toBe('yellow_card')
+    expect(icons.get(2)).toBe('second_yellow')
+    expect(hiddenIds.has(3)).toBe(true)
+    expect(icons.has(3)).toBe(false)
+  })
+
+  it('treats sub-sub event 61 on a yellow as the second yellow and hides the matching red', () => {
+    const { icons, hiddenIds } = resolveCardHighlightDisplay([
+      card({
+        id: 1,
+        subevent_id: '21',
+        subsubevent_id: '60',
+        subevent_name: 'Yellow',
+        game_minute: '52',
+      }),
+      card({
+        id: 2,
+        subevent_id: '21',
+        subsubevent_id: '61',
+        subevent_name: 'Yellow',
+        game_minute: '57',
+      }),
+      card({
+        id: 3,
+        subevent_id: '22',
+        subevent_name: 'Red',
+        game_minute: '57',
+      }),
+    ])
+
+    expect(icons.get(1)).toBe('yellow_card')
+    expect(icons.get(2)).toBe('second_yellow')
+    expect(hiddenIds.has(3)).toBe(true)
+  })
+
+  it('keeps a straight red and an unpaired red', () => {
+    const icons = cardIconsByHighlightId([
+      card({ id: 1, subevent_id: '62', subevent_name: 'Straight Red' }),
+      card({
+        id: 2,
+        subevent_id: '22',
+        subevent_name: 'Red',
+        player_id: 11,
+        pname: 'Other',
+      }),
+    ])
+
+    expect(icons.get(1)).toBe('red_card')
+    expect(icons.get(2)).toBe('red_card')
   })
 })
