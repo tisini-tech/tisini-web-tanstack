@@ -154,4 +154,20 @@ describe('cardIconsByHighlightId', () => {
     expect(icons.get(1)).toBe('red_card')
     expect(icons.get(2)).toBe('red_card')
   })
+
+  it('does not crash when a card highlight has no player name or ids', () => {
+    const { icons, hiddenIds } = resolveCardHighlightDisplay([
+      card({
+        id: 1,
+        subevent_id: '22',
+        subevent_name: 'Red',
+        pname: '',
+        player_id: 0,
+        teamplayer_id: null as unknown as string,
+      }),
+    ])
+
+    expect(hiddenIds.size).toBe(0)
+    expect(icons.get(1)).toBe('red_card')
+  })
 })

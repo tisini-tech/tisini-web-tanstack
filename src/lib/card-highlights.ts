@@ -94,12 +94,12 @@ function footballCardKind(highlight: FixtureHighlight): CardKind {
 }
 
 function cardMomentKey(highlight: FixtureHighlight) {
-  const player = (
+  const player = String(
     highlight.pname ||
-    highlight.player_id ||
-    highlight.teamplayer_id
+      highlight.player_id ||
+      highlight.teamplayer_id ||
+      highlight.id,
   )
-    .toString()
     .trim()
     .toLowerCase()
   return `${highlight.team}:${player}:${highlight.game_moment}:${highlight.game_minute}`
