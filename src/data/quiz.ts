@@ -4,6 +4,7 @@ import type {
   EngLeaderboard,
   EngParticipation,
   EngSubmitResponse,
+  CursorPaginatedResponse,
 } from '#/lib/types'
 
 import { createServerFn } from '@tanstack/react-start'
@@ -68,7 +69,7 @@ export const submitQuizFn = createServerFn({ method: 'POST' })
 export const getQuizLeaderboardFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)
   .handler(async ({ data }) => {
-    return apiService.get<EngLeaderboard[]>(
+    return apiService.get< CursorPaginatedResponse<EngLeaderboard>>(
       `/engagements/${data.quizId}/leaderboard`,
       {
         target: 'quiz',

@@ -6,6 +6,12 @@ export interface PaginatedResponse<T> {
   total_pages: number
 }
 
+export interface CursorPaginatedResponse<T> {
+  results: T[]
+  next: string | null
+  previous: string | null
+}
+
 export interface Article {
   id: number
   title: string
