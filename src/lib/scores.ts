@@ -1,7 +1,7 @@
 import type { Fixture } from './types'
 import type { FixtureEvent } from '#/lib/types'
 
-export const FIXTURE_TYPES = ['football', 'rugby', 'basketball'] as const
+export const FIXTURE_TYPES = ['football', 'rugby', 'basketball', 'hockey', 'handball'] as const
 export type FixtureType = (typeof FIXTURE_TYPES)[number]
 
 export const DEFAULT_FIXTURE_TYPE: FixtureType = 'football'
