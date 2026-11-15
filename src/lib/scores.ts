@@ -458,6 +458,80 @@ export function sortMatchdaysForResults(
   ].map((i) => [i.label, i.fixtures])
 }
 
+/** Later knockout rounds first. Unlisted names sort after these, by stage id. */
+const RUGBY15_KNOCKOUT_RANK: { pattern: RegExp; rank: number }[] = [
+  { pattern: /^finals?$/, rank: 0 },
+  { pattern: /bronze|third place|3rd place/, rank: 1 },
+  { pattern: /semi/, rank: 2 },
+  { pattern: /quarter/, rank: 3 },
+  { pattern: /round of 16|last 16/, rank: 4 },
+  { pattern: /round of 32/, rank: 5 },
+]
+
+function rugby15StageLabel(fixture: Fixture) {
+  return (fixture.stage_name || fixture.stage || '').trim()
+}
+
+function rugby15KnockoutRank(name: string) {
+  const normalized = name.toLowerCase()
+  return (
+    RUGBY15_KNOCKOUT_RANK.find((entry) => entry.pattern.test(normalized))
+      ?.rank ?? 100
+  )
+}
+
+/**
+ * Rugby 15 results: knockout stages (Final, Semi-Finals, Quarter Finals)
+ * stay above the league, which is grouped and ordered by matchday.
+ */
+export function sortRugby15ForResults(
+  fixtures: Fixture[],
+): [string, Fixture[]][] {
+  const knockout = new Map<
+    string,
+    { label: string; rank: number; stageNum: number; fixtures: Fixture[] }
+  >()
+  const league: Fixture[] = []
+
+  for (const fixture of fixtures ?? []) {
+    const label = rugby15StageLabel(fixture)
+
+    if (!label || label.toLowerCase() === 'league') {
+      league.push(fixture)
+      continue
+    }
+
+    const key = label.toLowerCase()
+    const group = knockout.get(key)
+    if (group) {
+      group.fixtures.push(fixture)
+      continue
+    }
+
+    knockout.set(key, {
+      label,
+      rank: rugby15KnockoutRank(label),
+      stageNum: Number(fixture.stage) || 0,
+      fixtures: [fixture],
+    })
+  }
+
+  const knockoutSections = [...knockout.values()].sort((a, b) => {
+    if (a.rank !== b.rank) return a.rank - b.rank
+    if (a.stageNum !== b.stageNum) return b.stageNum - a.stageNum
+    return a.label.localeCompare(b.label)
+  })
+
+  const leagueSections = sortMatchdaysForResults(groupFixturesByMatchday(league))
+
+  return [
+    ...knockoutSections.map(
+      (section) => [section.label, section.fixtures] as [string, Fixture[]],
+    ),
+    ...leagueSections,
+  ]
+}
+
 export function groupFixtures(fixtures: Fixture[]) {
   const grouped: Record<string, Record<string, Fixture[]>> = {}
 

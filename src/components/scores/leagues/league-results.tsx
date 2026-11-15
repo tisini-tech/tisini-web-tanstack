@@ -3,6 +3,7 @@ import {
   groupFixturesByMatchday,
   matchdayDateLabel,
   sortMatchdaysForResults,
+  sortRugby15ForResults,
 } from '@/lib/scores'
 import FixtureRow from '@/components/scores/fixture-row'
 import { seasonFixturesQueryOptions } from '#/data/scores'
@@ -43,7 +44,12 @@ export function LeagueResults({ tournId, season }: LeagueResultsProps) {
     )
   }
 
-  const matches = sortMatchdaysForResults(groupFixturesByMatchday(fixtures))
+  const fixtureType = fixtures[0].fixture_type
+
+  const matches =
+    fixtureType === 'rugby15'
+      ? sortRugby15ForResults(fixtures)
+      : sortMatchdaysForResults(groupFixturesByMatchday(fixtures))
 
   return (
     <section className="space-y-4">
