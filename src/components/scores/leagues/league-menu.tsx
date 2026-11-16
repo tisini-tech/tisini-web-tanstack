@@ -99,7 +99,10 @@ export const leagues: LeagueData = {
       name: 'Kenya Cup',
       type: 'rugby15',
       series: false,
-      seasons: [{ id: '145', season: '25/26', series: [] }],
+      seasons: [
+        { id: '302', season: '26/27', series: [] },
+        { id: '145', season: '25/26', series: [] },
+      ],
     },
   ],
   football: [
