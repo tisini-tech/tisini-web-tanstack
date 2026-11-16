@@ -1,4 +1,3 @@
-
 import type { Metric } from '#/lib/types'
 import { apiService } from '#/lib/api'
 import { createServerFn } from '@tanstack/react-start'
@@ -15,7 +14,8 @@ export const getMetrics = createServerFn({ method: 'GET' })
     const path = `/metrics?${params.toString()}`
 
     return apiService.get<Metric[]>(path, {
-      target: 'main',
+      target: 'quiz',
+      withApiKey: true,
     })
   })
 
