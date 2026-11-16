@@ -7,9 +7,10 @@ import {
 import { cn } from '@/lib/utils'
 import {
   DEFAULT_FIXTURE_TYPE,
-  FIXTURE_TYPES,
-  type FixtureType,
+  FIXTURE_TYPES
+  
 } from '@/lib/scores'
+import type {FixtureType} from '@/lib/scores';
 
 export const Route = createFileRoute('/glossary')({
   head: () => ({
@@ -33,10 +34,12 @@ const sports: {
   { fixtype: 'football', label: 'Football', icon: '⚽' },
   { fixtype: 'rugby', label: 'Rugby', icon: '🏉' },
   { fixtype: 'basketball', label: 'Basketball', icon: '🏀' },
+  { fixtype: 'handball', label: 'Handball', icon: '🤾' },
+  { fixtype: 'hockey', label: 'Hockey', icon: '🏑' },
 ]
 
 function GlossaryLayout() {
-  const params = useParams({ strict: false }) as { fixtype?: string }
+  const params = useParams({ strict: false })
   const active = FIXTURE_TYPES.includes(params.fixtype as FixtureType)
     ? (params.fixtype as FixtureType)
     : DEFAULT_FIXTURE_TYPE

@@ -513,3 +513,51 @@ export interface BallotResult {
   voting_cause: number
   picks: BallotPick[]
 }
+
+export type MetricSubDetail = {
+  id: number
+  name: string
+  description: string
+  image_url: string | null
+  video_url: string | null
+  position: number
+  strength: number | null
+  status: number
+}
+
+export type MetricDetail = {
+  id: number
+  name: string
+  description: string
+  image_url: string | null
+  video_url: string | null
+  metric: number
+  position: number
+  strength: number | null
+  status: number
+  needs_sub_details: number
+}
+
+export type Metric = {
+  id: number
+  name: string
+  description: string
+  image_url: string | null
+  video_url: string | null
+
+  details: MetricDetail[]
+  sub_details: MetricSubDetail[]
+
+  fixture_type: number
+  is_player: number
+  is_timeline: number
+  is_team: number
+  is_active: number
+  gke: number
+  closewindow: number
+  uploaddata: number
+  ref: number
+  order: number
+  metric_category: number
+  strength: number | null
+}

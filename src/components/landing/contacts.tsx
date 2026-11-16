@@ -31,7 +31,7 @@ const contactMethods = [
     value: 'info@tisini.africa',
     href: 'mailto:info@tisini.africa',
   },
-  { label: 'Phone', value: '+254 721 724 572', href: 'tel:+254791047878' },
+  { label: 'Phone', value: '+254 791 047 878', href: 'tel:+254791047878' },
   { label: 'Location', value: 'Nairobi, Kenya', href: undefined },
 ]
 
