@@ -171,6 +171,26 @@ export function resolveRugbyCardKind(
   return 'yellow'
 }
 
+/** Yellow stays separate. Straight red and second yellow both count as red. */
+export function rugbyCardColumnTotals(
+  subEvents:
+    | { sub_event_id: string; sub_event_name: string; total: number }[]
+    | null
+    | undefined,
+) {
+  let yellow = 0
+  let red = 0
+
+  for (const event of subEvents ?? []) {
+    const kind = resolveRugbyCardKind(event.sub_event_id, event.sub_event_name)
+    const total = Number(event.total) || 0
+    if (kind === 'yellow') yellow += total
+    else red += total
+  }
+
+  return { yellow, red }
+}
+
 export function isMissedRugbyScore(kind: RugbyScoreKind | null): boolean {
   return (
     kind === 'missed_conversion' ||

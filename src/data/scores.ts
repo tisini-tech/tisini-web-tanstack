@@ -117,12 +117,30 @@ export const seasonFixturesQueryOptions = (tournId: string, seasonId: string) =>
 
 export const getSeasonTopPerformers = createServerFn({ method: 'GET' })
   .validator(
-    (data: { tournId: string; seasonId: string; eventId: number }) => data,
+    (data: {
+      tournId: string
+      seasonId: string
+      eventId: number
+      subEventId?: number
+      isPoints?: boolean
+    }) => data,
   )
   .handler(async ({ data }) => {
+    const params = new URLSearchParams()
+
+    params.set('page_size', '200')
+
+    if (data.subEventId) {
+      params.set('sub_event_id', data.subEventId.toString())
+    }
+
+    if (data.isPoints) {
+      params.set('is_points', 'true')
+    }
+
     const seasonId = normalizeSeasonId(data.seasonId) ?? data.seasonId
     const res = await apiService.get<TopEventPlayer | TopPlayer[]>(
-      `/competitions/${data.tournId}/seasons/${seasonId}/events/${data.eventId}/top-performers?page_size=200`,
+      `/competitions/${data.tournId}/seasons/${seasonId}/events/${data.eventId}/top-performers?${params.toString()}`,
       { target: 'scores' },
     )
 
@@ -139,6 +157,39 @@ export const seasonTopscorersQueryOptions = (
     enabled: Boolean(tournId && seasonId),
     queryFn: () =>
       getSeasonTopPerformers({ data: { tournId, seasonId, eventId: 19 } }),
+  })
+
+export const seasonTopTrysQueryOptions = (tournId: string, seasonId: string) =>
+  queryOptions({
+    queryKey: ['scores', 'season-top-tries', tournId, seasonId],
+    enabled: Boolean(tournId && seasonId),
+    queryFn: () =>
+      getSeasonTopPerformers({
+        data: { tournId, seasonId, eventId: 253, subEventId: 638 },
+      }),
+  })
+
+export const seasonTopPointsQueryOptions = (
+  tournId: string,
+  seasonId: string,
+) =>
+  queryOptions({
+    queryKey: ['scores', 'season-top-tries', tournId, seasonId],
+    enabled: Boolean(tournId && seasonId),
+    queryFn: () =>
+      getSeasonTopPerformers({
+        data: { tournId, seasonId, eventId: 253, isPoints: true },
+      }),
+  })
+
+export const seasonTopCardsQueryOptions = (tournId: string, seasonId: string) =>
+  queryOptions({
+    queryKey: ['scores', 'season-top-cards', tournId, seasonId],
+    enabled: Boolean(tournId && seasonId),
+    queryFn: () =>
+      getSeasonTopPerformers({
+        data: { tournId, seasonId, eventId: 260 },
+      }),
   })
 
 export const seasonTopAssistsQueryOptions = (

@@ -1,11 +1,23 @@
 import type { TopPlayer } from '#/lib/types'
+import { cn } from '@/lib/utils'
+
+type StatColumn = {
+  label: string
+  value: (player: TopPlayer) => number
+  className?: string
+}
 
 type TopPerformersProps = {
   players: TopPlayer[]
   eventName: string
+  columns?: StatColumn[]
 }
 
-export function TopPerformers({ players, eventName }: TopPerformersProps) {
+export function TopPerformers({
+  players,
+  eventName,
+  columns,
+}: TopPerformersProps) {
   const performers = players.filter((p) => p.name.trim() !== 'Own Goal')
 
   if (performers.length === 0) {
@@ -15,6 +27,10 @@ export function TopPerformers({ players, eventName }: TopPerformersProps) {
       </div>
     )
   }
+
+  const statColumns = columns ?? [
+    { label: eventName, value: (player: TopPlayer) => player.total },
+  ]
 
   return (
     <div className="mx-auto w-full max-w-5xl">
@@ -26,9 +42,14 @@ export function TopPerformers({ players, eventName }: TopPerformersProps) {
                 <th className="px-4 py-3 text-left font-heading text-xs font-semibold tracking-wide text-accent-foreground uppercase sm:px-6">
                   Player
                 </th>
-                <th className="px-4 py-3 text-right font-heading text-xs font-semibold tracking-wide text-accent-foreground uppercase sm:px-6">
-                  {eventName}
-                </th>
+                {statColumns.map((column) => (
+                  <th
+                    key={column.label}
+                    className="px-4 py-3 text-right font-heading text-xs font-semibold tracking-wide text-accent-foreground uppercase sm:px-6"
+                  >
+                    {column.label}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -52,9 +73,17 @@ export function TopPerformers({ players, eventName }: TopPerformersProps) {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right font-heading text-base font-bold text-accent-foreground sm:px-6 sm:py-4">
-                    {player.total}
-                  </td>
+                  {statColumns.map((column) => (
+                    <td
+                      key={column.label}
+                      className={cn(
+                        'px-4 py-3 text-right font-heading text-base font-bold sm:px-6 sm:py-4',
+                        column.className ?? 'text-accent-foreground',
+                      )}
+                    >
+                      {column.value(player)}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
