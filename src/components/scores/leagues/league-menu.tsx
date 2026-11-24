@@ -104,6 +104,23 @@ export const leagues: LeagueData = {
         { id: '145', season: '25/26', series: [] },
       ],
     },
+    {
+      id: '187',
+      name: 'Kenya Cup Women',
+      type: 'rugby15',
+      series: false,
+      seasons: [
+        { id: '304', season: '26/27', series: [] },
+        // { id: '181', season: '25/26', series: [] },
+      ],
+    },
+    {
+      id: '197',
+      name: 'Eric Shirley Shield',
+      type: 'rugby15',
+      series: false,
+      seasons: [{ id: '308', season: '26/27', series: [] }],
+    },
   ],
   football: [
     {
