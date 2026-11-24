@@ -109,10 +109,7 @@ export const leagues: LeagueData = {
       name: 'Kenya Cup Women',
       type: 'rugby15',
       series: false,
-      seasons: [
-        { id: '304', season: '26/27', series: [] },
-        // { id: '181', season: '25/26', series: [] },
-      ],
+      seasons: [{ id: '304', season: '26/27', series: [] }],
     },
     {
       id: '197',
