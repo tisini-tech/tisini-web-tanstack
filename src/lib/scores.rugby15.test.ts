@@ -59,8 +59,8 @@ describe('sortRugby15ForResults', () => {
       'Final',
       'Semi-Finals',
       'Quarter Finals',
-      'Round 11',
-      'Round 2',
+      '2026-01-01 - Round 11',
+      '2026-01-01 - Round 2',
     ])
     expect(sections[3]?.[1].map((item) => item.id)).toEqual([3, 6])
     expect(sections[0]?.[1].map((item) => item.id)).toEqual([4])
@@ -91,8 +91,8 @@ describe('sortRugby15ForResults', () => {
 
     expect(sections.map(([label]) => label)).toEqual([
       'Final',
-      'Round 4',
-      'Round 3',
+      '2026-01-01 - Round 4',
+      '2026-01-01 - Round 3',
     ])
   })
 })

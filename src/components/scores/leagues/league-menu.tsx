@@ -131,7 +131,10 @@ export const leagues: LeagueData = {
       name: 'FKF National Super League',
       type: 'football',
       series: false,
-      seasons: [{ id: '131', season: '25/26', series: [] }],
+      seasons: [
+        { id: '307', season: '26/27', series: [] },
+        { id: '131', season: '25/26', series: [] },
+      ],
     },
     {
       id: '267',
