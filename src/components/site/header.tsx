@@ -40,7 +40,6 @@ const navLinks = [
   { id: 'glossary', href: '/glossary', label: 'Glossary', scrollOnHome: false },
   { id: 'contacts', href: '/', label: 'Contact', scrollOnHome: true },
 ] as const
-
 function userInitials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean)
   if (parts.length === 0) return '?'

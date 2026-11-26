@@ -561,3 +561,50 @@ export type Metric = {
   metric_category: number
   strength: number | null
 }
+
+export type VideoSession = {
+  token: string
+  expires_in: number
+  api_url: string
+  [key: string]: unknown
+}
+
+export type VideoJobStatus =
+  | 'queued'
+  | 'processing'
+  | 'done'
+  | 'failed'
+  | 'cancelled'
+
+export type VideoJob = {
+  id: string
+  status: VideoJobStatus
+  progress: number
+  position?: number
+  error?: {
+    title?: string
+    message?: string
+    hint?: string
+    code?: string
+  }
+}
+
+export type MergeSource =
+  | { upload: string }
+  | { url: string }
+
+export type BasicDownloadOptions = {
+  url: string
+  format: 'MP4' | 'MP3'
+  quality?: string
+}
+
+export type UsageLimit = {
+  left?: number
+  resets_in?: number | string
+}
+
+export type UsageLimits = {
+  merge?: UsageLimit
+  basic?: UsageLimit
+}
