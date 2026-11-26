@@ -11,7 +11,7 @@ const HIDE_DETAILS_FOR = new Set<string | number>([
 
 // Metrics that should not be exposed to the browser.
 const HIDE_METRICS_FOR = new Set<string | number>([
-  277,278,279,280,281,282,283
+  277, 278, 279, 280, 281, 282, 283,
 ])
 
 export const getMetrics = createServerFn({ method: 'GET' })
@@ -25,7 +25,8 @@ export const getMetrics = createServerFn({ method: 'GET' })
     const path = `/metrics?${params.toString()}`
 
     const metrics = await apiService.get<Metric[]>(path, {
-      target: 'main',
+      target: 'quiz',
+      withApiKey: true,
     })
 
     return metrics

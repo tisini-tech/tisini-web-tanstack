@@ -73,35 +73,52 @@ export type LeagueData = {
 }
 
 export const leagues: LeagueData = {
-  // rugby: [
-  //   {
-  //     id: '238',
-  //     name: 'Sportpesa 7s',
-  //     type: 'rugby7',
-  //     series: true,
-  //     seasons: [
-  //       {
-  //         id: '',
-  //         season: '2025',
-  //         series: [
-  //           { serie: 'Dala 7s', id: '122' },
-  //           { serie: 'Kabeberi 7s', id: '121' },
-  //           { serie: 'Embu 7s', id: '117' },
-  //           { serie: 'Christie 7s', id: '111' },
-  //           { serie: 'Prinsloo 7s', id: '104' },
-  //           { serie: 'Driftwood 7s', id: '103' },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: '246',
-  //     name: 'Kenya u18 Trials',
-  //     type: 'rugby15',
-  //     series: false,
-  //     seasons: [{ id: '118', season: '2025', series: [] }],
-  //   },
-  // ],
+  rugby: [
+    // {
+    //   id: '238',
+    //   name: 'Sportpesa 7s',
+    //   type: 'rugby7',
+    //   series: true,
+    //   seasons: [
+    //     {
+    //       id: '',
+    //       season: '2025',
+    //       series: [
+    //         { serie: 'Dala 7s', id: '122' },
+    //         { serie: 'Kabeberi 7s', id: '121' },
+    //         { serie: 'Embu 7s', id: '117' },
+    //         { serie: 'Christie 7s', id: '111' },
+    //         { serie: 'Prinsloo 7s', id: '104' },
+    //         { serie: 'Driftwood 7s', id: '103' },
+    //       ],
+    //     },
+    //   ],
+    // },
+    {
+      id: '196',
+      name: 'Kenya Cup',
+      type: 'rugby15',
+      series: false,
+      seasons: [
+        { id: '302', season: '26/27', series: [] },
+        { id: '145', season: '25/26', series: [] },
+      ],
+    },
+    {
+      id: '187',
+      name: 'Kenya Cup Women',
+      type: 'rugby15',
+      series: false,
+      seasons: [{ id: '304', season: '26/27', series: [] }],
+    },
+    {
+      id: '197',
+      name: 'Eric Shirley Shield',
+      type: 'rugby15',
+      series: false,
+      seasons: [{ id: '308', season: '26/27', series: [] }],
+    },
+  ],
   football: [
     {
       id: '205',
@@ -128,7 +145,10 @@ export const leagues: LeagueData = {
       name: 'FKF National Super League',
       type: 'football',
       series: false,
-      seasons: [{ id: '131', season: '25/26', series: [] }],
+      seasons: [
+        { id: '307', season: '26/27', series: [] },
+        { id: '131', season: '25/26', series: [] },
+      ],
     },
     {
       id: '267',

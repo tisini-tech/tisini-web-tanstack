@@ -1,7 +1,13 @@
 import type { Fixture } from './types'
 import type { FixtureEvent } from '#/lib/types'
 
-export const FIXTURE_TYPES = ['football', 'rugby', 'basketball', 'hockey', 'handball'] as const
+export const FIXTURE_TYPES = [
+  'football',
+  'rugby',
+  'basketball',
+  'hockey',
+  'handball',
+] as const
 export type FixtureType = (typeof FIXTURE_TYPES)[number]
 
 export const DEFAULT_FIXTURE_TYPE: FixtureType = 'football'
@@ -343,17 +349,33 @@ export function groupFixturesByMatchday(fixtures: Fixture[]) {
   const grouped: Record<string, Fixture[]> = {}
 
   for (const fixture of fixtures ?? []) {
+    const date = fixture.game_date ?? ''
     const round = fixture.matchday?.trim() || 'Fixtures'
-    grouped[round] ??= []
-    grouped[round].push(fixture)
+
+    const key = `${date} - ${round}`
+
+    grouped[key] ??= []
+    grouped[key].push(fixture)
   }
 
   return grouped
 }
 
+/** Round portion of a `YYYY-MM-DD - Round N` label, or the label itself. */
+function matchdayRoundLabel(label: string) {
+  const parts = label.split(' - ')
+  return parts.length > 1 ? parts.slice(1).join(' - ') : label
+}
+
 function parseMatchdayNumber(label: string): number {
-  const match = label.match(/(\d+)/)
+  const match = matchdayRoundLabel(label).match(/(\d+)/)
   return match ? Number(match[1]) : Number.NaN
+}
+
+function parseLabelDate(label: string): number {
+  const day = label.split(' - ')[0]?.trim().slice(0, 10) ?? ''
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return Number.NaN
+  return Date.parse(`${day}T00:00:00`)
 }
 
 function parseFixtureDay(value: string | undefined): Date | null {
@@ -403,24 +425,44 @@ export function matchdayDateLabel(fixtures: Fixture[]): string {
   return `${formatRoundDay(first, false)} – ${formatRoundDay(last, true)}`
 }
 
+function isFinishedMatchStatus(status: string) {
+  const value = status.toLowerCase()
+  return (
+    value === 'ft' ||
+    value === 'ended' ||
+    value === 'walkover' ||
+    isInactiveMatchStatus(value)
+  )
+}
+
 function matchdayState(fixtures: Fixture[]): 'live' | 'upcoming' | 'played' {
   if (fixtures.some((f) => isLiveFixtureStatus(f.game_status))) return 'live'
 
-  const finished = (status: string) =>
-    status === 'FT' || status === 'ended' || isInactiveMatchStatus(status)
-
-  if (fixtures.length > 0 && fixtures.every((f) => finished(f.game_status))) {
+  if (
+    fixtures.length > 0 &&
+    fixtures.every((f) => isFinishedMatchStatus(f.game_status))
+  ) {
     return 'played'
   }
 
   return 'upcoming'
 }
 
+function groupHasStarted(fixtures: Fixture[]) {
+  return fixtures.some(
+    (fixture) =>
+      isLiveFixtureStatus(fixture.game_status) ||
+      isFinishedMatchStatus(fixture.game_status),
+  )
+}
+
 /**
- * League results order: active round first, then played (newest → oldest),
- * then remaining upcoming rounds (soonest → later).
+ * League results order for labels like `YYYY-MM-DD - Round N`.
  *
- * Active = live round if any, otherwise the lowest-numbered upcoming round.
+ * The current round is the latest one that already has a result, and every
+ * date of that round stays together at the top. Earlier rounds follow,
+ * newest first. Rounds that have not started come last. The round number is
+ * read after the date, so the year in `2026-11-24` is not the matchday.
  */
 export function sortMatchdaysForResults(
   grouped: Record<string, Fixture[]>,
@@ -429,33 +471,131 @@ export function sortMatchdaysForResults(
     label,
     fixtures,
     num: parseMatchdayNumber(label),
-    state: matchdayState(fixtures),
+    date: parseLabelDate(label),
+    started: groupHasStarted(fixtures),
   }))
 
-  const byAsc = (a: (typeof items)[number], b: (typeof items)[number]) => {
-    if (Number.isFinite(a.num) && Number.isFinite(b.num)) return a.num - b.num
-    if (Number.isFinite(a.num)) return -1
-    if (Number.isFinite(b.num)) return 1
+  const byDateAsc = (a: (typeof items)[number], b: (typeof items)[number]) => {
+    if (Number.isFinite(a.date) && Number.isFinite(b.date) && a.date !== b.date) {
+      return a.date - b.date
+    }
     return a.label.localeCompare(b.label)
   }
 
-  const byDesc = (a: (typeof items)[number], b: (typeof items)[number]) =>
-    -byAsc(a, b)
+  const byRound = (direction: 1 | -1) => (
+    a: (typeof items)[number],
+    b: (typeof items)[number],
+  ) => {
+    if (Number.isFinite(a.num) && Number.isFinite(b.num) && a.num !== b.num) {
+      return (a.num - b.num) * direction
+    }
+    if (Number.isFinite(a.num) !== Number.isFinite(b.num)) {
+      return Number.isFinite(a.num) ? -1 : 1
+    }
+    return byDateAsc(a, b)
+  }
 
-  const live = items.filter((i) => i.state === 'live').sort(byAsc)
-  const upcoming = items.filter((i) => i.state === 'upcoming').sort(byAsc)
-  const played = items.filter((i) => i.state === 'played').sort(byDesc)
+  const startedNums = items
+    .filter((item) => item.started && Number.isFinite(item.num))
+    .map((item) => item.num)
+  const openNums = items
+    .filter((item) => !item.started && Number.isFinite(item.num))
+    .map((item) => item.num)
+  const activeNum =
+    startedNums.length > 0
+      ? Math.max(...startedNums)
+      : openNums.length > 0
+        ? Math.min(...openNums)
+        : Number.NaN
 
-  const active = live[0] ?? upcoming[0] ?? null
-  const restLive = live.filter((i) => i !== active)
-  const restUpcoming = upcoming.filter((i) => i !== active)
+  const isActive = (item: (typeof items)[number]) =>
+    Number.isFinite(activeNum) && item.num === activeNum
 
   return [
-    ...(active ? [active] : []),
-    ...restLive,
-    ...played,
-    ...restUpcoming,
-  ].map((i) => [i.label, i.fixtures])
+    ...items.filter(isActive).sort(byDateAsc),
+    ...items
+      .filter((item) => !isActive(item) && Number.isFinite(item.num) && item.num < activeNum)
+      .sort(byRound(-1)),
+    ...items
+      .filter((item) => !isActive(item) && !(Number.isFinite(item.num) && item.num < activeNum))
+      .sort(byRound(1)),
+  ].map((item) => [item.label, item.fixtures])
+}
+
+/** Later knockout rounds first. Unlisted names sort after these, by stage id. */
+const RUGBY15_KNOCKOUT_RANK: { pattern: RegExp; rank: number }[] = [
+  { pattern: /^finals?$/, rank: 0 },
+  { pattern: /bronze|third place|3rd place/, rank: 1 },
+  { pattern: /semi/, rank: 2 },
+  { pattern: /quarter/, rank: 3 },
+  { pattern: /round of 16|last 16/, rank: 4 },
+  { pattern: /round of 32/, rank: 5 },
+]
+
+function rugby15StageLabel(fixture: Fixture) {
+  return (fixture.stage_name || fixture.stage || '').trim()
+}
+
+function rugby15KnockoutRank(name: string) {
+  const normalized = name.toLowerCase()
+  return (
+    RUGBY15_KNOCKOUT_RANK.find((entry) => entry.pattern.test(normalized))
+      ?.rank ?? 100
+  )
+}
+
+/**
+ * Rugby 15 results: knockout stages (Final, Semi-Finals, Quarter Finals)
+ * stay above the league, which is grouped and ordered by matchday.
+ */
+export function sortRugby15ForResults(
+  fixtures: Fixture[],
+): [string, Fixture[]][] {
+  const knockout = new Map<
+    string,
+    { label: string; rank: number; stageNum: number; fixtures: Fixture[] }
+  >()
+  const league: Fixture[] = []
+
+  for (const fixture of fixtures ?? []) {
+    const label = rugby15StageLabel(fixture)
+
+    if (!label || label.toLowerCase() === 'league') {
+      league.push(fixture)
+      continue
+    }
+
+    const key = label.toLowerCase()
+    const group = knockout.get(key)
+    if (group) {
+      group.fixtures.push(fixture)
+      continue
+    }
+
+    knockout.set(key, {
+      label,
+      rank: rugby15KnockoutRank(label),
+      stageNum: Number(fixture.stage) || 0,
+      fixtures: [fixture],
+    })
+  }
+
+  const knockoutSections = [...knockout.values()].sort((a, b) => {
+    if (a.rank !== b.rank) return a.rank - b.rank
+    if (a.stageNum !== b.stageNum) return b.stageNum - a.stageNum
+    return a.label.localeCompare(b.label)
+  })
+
+  const leagueSections = sortMatchdaysForResults(
+    groupFixturesByMatchday(league),
+  )
+
+  return [
+    ...knockoutSections.map(
+      (section) => [section.label, section.fixtures] as [string, Fixture[]],
+    ),
+    ...leagueSections,
+  ]
 }
 
 export function groupFixtures(fixtures: Fixture[]) {
