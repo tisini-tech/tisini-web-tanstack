@@ -14,6 +14,7 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as GlossaryRouteRouteImport } from './routes/glossary/route'
 import { Route as LivescoresRouteRouteImport } from './routes/livescores/route'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
@@ -77,6 +78,11 @@ const GlossaryRouteRoute = GlossaryRouteRouteImport.update({
 const LivescoresRouteRoute = LivescoresRouteRouteImport.update({
   id: '/livescores',
   path: '/livescores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
@@ -307,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/glossary': typeof GlossaryRouteRouteWithChildren
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/tools': typeof ToolsRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -351,6 +358,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/tools': typeof ToolsRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -396,6 +404,7 @@ export interface FileRoutesById {
   '/glossary': typeof GlossaryRouteRouteWithChildren
   '/livescores': typeof LivescoresRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/tools': typeof ToolsRoute
   '/streams/$fixType': typeof StreamsFixTypeRouteRouteWithChildren
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -444,6 +453,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/livescores'
     | '/about'
+    | '/tools'
     | '/streams/$fixType'
     | '/forgot-password'
     | '/login'
@@ -488,6 +498,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/tools'
     | '/streams/$fixType'
     | '/forgot-password'
     | '/login'
@@ -532,6 +543,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/livescores'
     | '/about'
+    | '/tools'
     | '/streams/$fixType'
     | '/_auth/forgot-password'
     | '/_auth/login'
@@ -580,6 +592,7 @@ export interface RootRouteChildren {
   GlossaryRouteRoute: typeof GlossaryRouteRouteWithChildren
   LivescoresRouteRoute: typeof LivescoresRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  ToolsRoute: typeof ToolsRoute
   StreamsFixTypeRouteRoute: typeof StreamsFixTypeRouteRouteWithChildren
   ArticlesIndexRoute: typeof ArticlesIndexRoute
   PrivacyPolicyIndexRoute: typeof PrivacyPolicyIndexRoute
@@ -632,6 +645,13 @@ declare module '@tanstack/react-router' {
       path: '/livescores'
       fullPath: '/livescores'
       preLoaderRoute: typeof LivescoresRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/forgot-password': {
@@ -1061,6 +1081,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlossaryRouteRoute: GlossaryRouteRouteWithChildren,
   LivescoresRouteRoute: LivescoresRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  ToolsRoute: ToolsRoute,
   StreamsFixTypeRouteRoute: StreamsFixTypeRouteRouteWithChildren,
   ArticlesIndexRoute: ArticlesIndexRoute,
   PrivacyPolicyIndexRoute: PrivacyPolicyIndexRoute,
