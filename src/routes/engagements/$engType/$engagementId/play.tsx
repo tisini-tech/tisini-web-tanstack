@@ -1,10 +1,11 @@
 import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
 
-import { QuizPlay } from '#/components/quiz/quiz-play'
-import { getQuizAction } from '#/components/quiz/quiz-list'
-import { clearSessionFn, getUserFn } from '#/data/auth'
 import { absoluteUrl, resolveOgImage } from '#/lib/seo'
+import { clearSessionFn, getUserFn } from '#/data/auth'
+import { EngagementPlay } from '#/components/engagements/play'
 import { getEngagementFn, getEngParticipationFn } from '#/data/quiz'
+import { getEngagementAction } from '#/components/engagements/action'
+import type { EngagementSection } from '#/components/engagements/engagement-card'
 
 function isAuthError(message: string): boolean {
   return /not authenticated|token not valid|token expired|unauthorized|401/i.test(
@@ -12,7 +13,9 @@ function isAuthError(message: string): boolean {
   )
 }
 
-export const Route = createFileRoute('/quiz/$quizId/play')({
+export const Route = createFileRoute(
+  '/engagements/$engType/$engagementId/play',
+)({
   beforeLoad: async ({ params }) => {
     try {
       const user = await getUserFn()
@@ -21,7 +24,9 @@ export const Route = createFileRoute('/quiz/$quizId/play')({
       if (isRedirect(error)) {
         throw redirect({
           to: '/login',
-          search: { redirect: `/quiz/${params.quizId}/play` },
+          search: {
+            redirect: `/engagements/${params.engType}/${params.engagementId}/play`,
+          },
         })
       }
       throw error
@@ -30,23 +35,29 @@ export const Route = createFileRoute('/quiz/$quizId/play')({
   loader: async ({ params }) => {
     try {
       const [engagement, engParticipation] = await Promise.all([
-        getEngagementFn({ data: { quizId: params.quizId } }),
-        getEngParticipationFn({ data: { quizId: params.quizId } }),
+        getEngagementFn({ data: { quizId: params.engagementId } }),
+        getEngParticipationFn({ data: { quizId: params.engagementId } }),
       ])
 
-      const action = getQuizAction(engagement)
+      const action = getEngagementAction(engagement)
 
       if (engParticipation.has_played || action === 'leaderboard') {
         throw redirect({
-          to: '/quiz/$quizId/leaderboard',
-          params: { quizId: params.quizId },
+          to: '/engagements/$engType/$engagementId/leaderboard',
+          params: {
+            engType: params.engType as EngagementSection,
+            engagementId: params.engagementId,
+          },
         })
       }
 
       if (action === 'upcoming') {
         throw redirect({
-          to: '/quiz/$quizId',
-          params: { quizId: params.quizId },
+          to: '/engagements/$engType/$engagementId',
+          params: {
+            engType: params.engType as EngagementSection,
+            engagementId: params.engagementId,
+          },
         })
       }
 
@@ -56,13 +67,15 @@ export const Route = createFileRoute('/quiz/$quizId/play')({
       if (isRedirect(error)) throw error
 
       const message =
-        error instanceof Error ? error.message : 'Could not load quiz'
+        error instanceof Error ? error.message : 'Could not load engagement'
 
       if (isAuthError(message)) {
         await clearSessionFn()
         throw redirect({
           to: '/login',
-          search: { redirect: `/quiz/${params.quizId}/play` },
+          search: {
+            redirect: `/engagements/${params.engType}/${params.engagementId}/play`,
+          },
         })
       }
 
@@ -70,17 +83,21 @@ export const Route = createFileRoute('/quiz/$quizId/play')({
     }
   },
   head: ({ loaderData, params }) => {
-    const quiz = loaderData?.engagement
-    const title = quiz?.title?.trim()
-    const pageTitle = title ? `Play ${title} | Quiz | Tisini` : 'Play quiz | Tisini'
+    const engagement = loaderData?.engagement
+    const title = engagement?.title?.trim()
+    const pageTitle = title
+      ? `Play ${title} | ${params.engType} | Tisini`
+      : `Play ${params.engType} | Tisini`
     const description =
-      quiz?.description?.trim() ||
+      engagement?.description?.trim() ||
       (title
         ? `Play "${title}" on Tisini — test your sports knowledge.`
         : 'Play a quiz and test your knowledge on the latest sports news and events.')
-    const canonical = absoluteUrl(`/quiz/${params.quizId}`)
-    const image = resolveOgImage(quiz?.image_url)
-    const ogTitle = title || 'Quiz | Tisini'
+    const canonical = absoluteUrl(
+      `/engagements/${params.engType}/${params.engagementId}/play`,
+    )
+    const image = resolveOgImage(engagement?.image_url)
+    const ogTitle = title || `${params.engType} | Tisini`
 
     return {
       meta: [
@@ -109,5 +126,5 @@ export const Route = createFileRoute('/quiz/$quizId/play')({
 function RouteComponent() {
   const { engagement } = Route.useLoaderData()
 
-  return <QuizPlay quiz={engagement} />
+  return <EngagementPlay engagement={engagement} />
 }

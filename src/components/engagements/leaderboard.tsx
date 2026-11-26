@@ -1,8 +1,27 @@
 import { TrophyIcon } from 'lucide-react'
 
-import { QuizHeader } from '#/components/quiz/quiz-play'
 import type { EngLeaderboard } from '#/lib/types'
 import { cn } from '#/lib/utils'
+import type { EngagementSection } from './engagement-card'
+
+function BoardHeader({
+  title,
+  subtitle,
+}: {
+  title: string
+  subtitle?: string
+}) {
+  return (
+    <header className="border-b border-border/60 bg-muted/15 px-4 py-2.5">
+      <h2 className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+        {title}
+      </h2>
+      {subtitle ? (
+        <p className="mt-0.5 text-xs text-muted-foreground/75">{subtitle}</p>
+      ) : null}
+    </header>
+  )
+}
 
 function formatTimeUsed(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return '—'
@@ -20,11 +39,13 @@ function getUsernameInitials(username: string | null | undefined): string {
   return source.slice(0, 2).toUpperCase()
 }
 
-export function QuizLeaderboardTable({
+export function EngagementLeaderboardTable({
   entries,
+  type,
   title = 'Leaderboard',
 }: {
   entries: EngLeaderboard[]
+  type: EngagementSection
   title?: string
 }) {
   const sorted = [...entries].sort((a, b) => {
@@ -35,9 +56,9 @@ export function QuizLeaderboardTable({
   if (sorted.length === 0) {
     return (
       <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <QuizHeader title={title} />
+        <BoardHeader title={title} />
         <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-          No scores yet. Be the first to complete this quiz.
+          No scores yet. Be the first to complete this {type}.
         </p>
       </article>
     )
@@ -45,7 +66,7 @@ export function QuizLeaderboardTable({
 
   return (
     <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <QuizHeader
+      <BoardHeader
         title={title}
         subtitle={`${sorted.length} ${sorted.length === 1 ? 'player' : 'players'}`}
       />

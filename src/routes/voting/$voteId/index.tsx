@@ -122,7 +122,7 @@ function RouteComponent() {
     : 'Choose one'
 
   return (
-    <div className="sp-content-shell py-6">
+    <div className="mx-auto w-full max-w-6xl py-6">
       <Link
         to="/voting"
         className="mb-4 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
@@ -131,67 +131,69 @@ function RouteComponent() {
         All votes
       </Link>
 
-      <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <div className="flex items-center justify-center border-b border-border bg-[#120818]">
+      <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm lg:grid lg:grid-cols-[minmax(18rem,34rem)_minmax(0,1fr)]">
+        <div className="relative aspect-[4/5] border-b border-border bg-[#0b1222] lg:aspect-auto lg:h-full lg:min-h-[40rem] lg:border-r lg:border-b-0">
           {image ? (
             <img
               src={image}
               alt=""
-              className="max-h-[32rem] w-full object-contain"
+              className="absolute inset-0 size-full object-contain"
             />
           ) : (
             <div
-              className="aspect-[16/9] w-full bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
+              className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
               aria-hidden
             />
           )}
         </div>
 
-        <div className="flex flex-col gap-5 p-5 sm:p-6">
+        <div className="flex flex-col justify-center gap-5 p-5 sm:p-6">
           <div>
             <p className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
               Voting
             </p>
-            <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-balance text-foreground">
               {poll.reason}
             </h1>
           </div>
 
-          <dl className="grid gap-3 text-sm sm:grid-cols-2">
-            <div className="flex items-start gap-2 text-muted-foreground">
-              <CalendarDaysIcon className="mt-0.5 size-4 shrink-0" aria-hidden />
-              <div>
-                <dt className="text-[0.65rem] font-semibold tracking-[0.1em] uppercase">
-                  Open
-                </dt>
-                <dd className="text-foreground">
-                  {formatVoteDate(poll.date_from)} – {formatVoteDate(poll.date_to)}
-                </dd>
-              </div>
+          <dl className="grid grid-cols-2 gap-2">
+            <div className="rounded-xl bg-muted/40 px-3.5 py-3">
+              <dt className="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+                <CalendarDaysIcon className="size-3.5" aria-hidden />
+                Open
+              </dt>
+              <dd className="mt-1 text-sm leading-snug font-medium text-foreground">
+                {formatVoteDate(poll.date_from)} – {formatVoteDate(poll.date_to)}
+              </dd>
             </div>
-            <div>
+            <div className="rounded-xl bg-muted/40 px-3.5 py-3">
               <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                 How to vote
               </dt>
-              <dd className="text-foreground">{howToVote}</dd>
+              <dd className="mt-1 text-sm leading-snug font-medium text-foreground">
+                {howToVote}
+              </dd>
             </div>
             {poll.option_count > 0 ? (
-              <div>
+              <div className="rounded-xl bg-muted/40 px-3.5 py-3">
                 <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                   Options
                 </dt>
-                <dd className="text-foreground">
+                <dd className="mt-1 text-sm leading-snug font-medium text-foreground">
                   {poll.option_count}{' '}
                   {poll.option_count === 1 ? 'option' : 'options'}
                 </dd>
               </div>
             ) : null}
             {status === 'ended' && poll.total_votes > 0 ? (
-              <div>
+              <div className="rounded-xl bg-muted/40 px-3.5 py-3">
                 <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                   Votes
                 </dt>
-                <dd className="text-foreground">{formatCount(poll.total_votes)}</dd>
+                <dd className="mt-1 text-sm leading-snug font-medium text-foreground">
+                  {formatCount(poll.total_votes)}
+                </dd>
               </div>
             ) : null}
           </dl>
@@ -201,7 +203,7 @@ function RouteComponent() {
               to="/voting/$voteId/vote"
               params={{ voteId: poll.id.toString() }}
               search={{ view: undefined }}
-              className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-emerald-600 sm:w-fit"
+              className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-emerald-600"
             >
               Vote
               <ChevronRightIcon className="size-4" aria-hidden />
@@ -223,7 +225,7 @@ function RouteComponent() {
                     ? { view: 'results' }
                     : { view: undefined }
                 }
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/40 px-4 text-sm font-bold tracking-wide text-foreground uppercase transition-colors hover:bg-muted"
+                className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/40 px-4 text-sm font-bold tracking-wide text-foreground uppercase transition-colors hover:bg-muted sm:w-auto sm:min-w-40"
               >
                 {status === 'ended' || !isSlate ? 'Results' : 'Your vote'}
                 <ChevronRightIcon className="size-4" aria-hidden />

@@ -23,23 +23,23 @@ import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
 import { Route as GlossaryIndexRouteImport } from './routes/glossary/index'
 import { Route as LivescoresIndexRouteImport } from './routes/livescores/index'
 import { Route as PrivacyPolicyIndexRouteImport } from './routes/privacy-policy/index'
-import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as StreamsIndexRouteImport } from './routes/streams/index'
 import { Route as StreamsFixTypeRouteRouteImport } from './routes/streams/$fixType/route'
 import { Route as TicketsIndexRouteImport } from './routes/tickets/index'
 import { Route as VotingIndexRouteImport } from './routes/voting/index'
 import { Route as ArticlesArticleSlugIndexRouteImport } from './routes/articles/$articleSlug/index'
 import { Route as ArticlesCategoriesCategorySlugRouteImport } from './routes/articles/categories/$categorySlug'
+import { Route as EngagementsEngTypeIndexRouteImport } from './routes/engagements/$engType/index'
 import { Route as GlossaryFixtypeIndexRouteImport } from './routes/glossary/$fixtype/index'
 import { Route as LivescoresFixtureTypeIndexRouteImport } from './routes/livescores/$fixtureType/index'
 import { Route as LivescoresFixtureTypeFixtureIdRouteRouteImport } from './routes/livescores/$fixtureType/$fixtureId/route'
 import { Route as LivescoresLeaguesLeagueIdRouteRouteImport } from './routes/livescores/leagues/$leagueId/route'
-import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz/$quizId/index'
-import { Route as QuizQuizIdLeaderboardRouteImport } from './routes/quiz/$quizId/leaderboard'
-import { Route as QuizQuizIdPlayRouteImport } from './routes/quiz/$quizId/play'
 import { Route as StreamsLeagueIndexRouteImport } from './routes/streams/league/index'
 import { Route as VotingVoteIdIndexRouteImport } from './routes/voting/$voteId/index'
 import { Route as VotingVoteIdVoteRouteImport } from './routes/voting/$voteId/vote'
+import { Route as EngagementsEngTypeEngagementIdIndexRouteImport } from './routes/engagements/$engType/$engagementId/index'
+import { Route as EngagementsEngTypeEngagementIdLeaderboardRouteImport } from './routes/engagements/$engType/$engagementId/leaderboard'
+import { Route as EngagementsEngTypeEngagementIdPlayRouteImport } from './routes/engagements/$engType/$engagementId/play'
 import { Route as LivescoresFixtureTypeFixtureIdIndexRouteImport } from './routes/livescores/$fixtureType/$fixtureId/index'
 import { Route as LivescoresFixtureTypeFixtureIdLineupsRouteImport } from './routes/livescores/$fixtureType/$fixtureId/lineups'
 import { Route as LivescoresFixtureTypeFixtureIdOverviewRouteImport } from './routes/livescores/$fixtureType/$fixtureId/overview'
@@ -124,11 +124,6 @@ const PrivacyPolicyIndexRoute = PrivacyPolicyIndexRouteImport.update({
   path: '/privacy-policy/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizIndexRoute = QuizIndexRouteImport.update({
-  id: '/quiz/',
-  path: '/quiz/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const StreamsIndexRoute = StreamsIndexRouteImport.update({
   id: '/streams/',
   path: '/streams/',
@@ -161,6 +156,11 @@ const ArticlesCategoriesCategorySlugRoute =
     path: '/articles/categories/$categorySlug',
     getParentRoute: () => rootRouteImport,
   } as any)
+const EngagementsEngTypeIndexRoute = EngagementsEngTypeIndexRouteImport.update({
+  id: '/engagements/$engType/',
+  path: '/engagements/$engType/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GlossaryFixtypeIndexRoute = GlossaryFixtypeIndexRouteImport.update({
   id: '/$fixtype/',
   path: '/$fixtype/',
@@ -184,21 +184,6 @@ const LivescoresLeaguesLeagueIdRouteRoute =
     path: '/leagues/$leagueId',
     getParentRoute: () => LivescoresRouteRoute,
   } as any)
-const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
-  id: '/quiz/$quizId/',
-  path: '/quiz/$quizId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizQuizIdLeaderboardRoute = QuizQuizIdLeaderboardRouteImport.update({
-  id: '/quiz/$quizId/leaderboard',
-  path: '/quiz/$quizId/leaderboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizQuizIdPlayRoute = QuizQuizIdPlayRouteImport.update({
-  id: '/quiz/$quizId/play',
-  path: '/quiz/$quizId/play',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const StreamsLeagueIndexRoute = StreamsLeagueIndexRouteImport.update({
   id: '/streams/league/',
   path: '/streams/league/',
@@ -214,6 +199,24 @@ const VotingVoteIdVoteRoute = VotingVoteIdVoteRouteImport.update({
   path: '/voting/$voteId/vote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EngagementsEngTypeEngagementIdIndexRoute =
+  EngagementsEngTypeEngagementIdIndexRouteImport.update({
+    id: '/engagements/$engType/$engagementId/',
+    path: '/engagements/$engType/$engagementId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const EngagementsEngTypeEngagementIdLeaderboardRoute =
+  EngagementsEngTypeEngagementIdLeaderboardRouteImport.update({
+    id: '/engagements/$engType/$engagementId/leaderboard',
+    path: '/engagements/$engType/$engagementId/leaderboard',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const EngagementsEngTypeEngagementIdPlayRoute =
+  EngagementsEngTypeEngagementIdPlayRouteImport.update({
+    id: '/engagements/$engType/$engagementId/play',
+    path: '/engagements/$engType/$engagementId/play',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LivescoresFixtureTypeFixtureIdIndexRoute =
   LivescoresFixtureTypeFixtureIdIndexRouteImport.update({
     id: '/',
@@ -314,27 +317,27 @@ export interface FileRoutesByFullPath {
   '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
   '/privacy-policy/': typeof PrivacyPolicyIndexRoute
-  '/quiz/': typeof QuizIndexRoute
   '/streams/': typeof StreamsIndexRoute
   '/tickets/': typeof TicketsIndexRoute
   '/voting/': typeof VotingIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
-  '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
-  '/quiz/$quizId/play': typeof QuizQuizIdPlayRoute
   '/voting/$voteId/vote': typeof VotingVoteIdVoteRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
+  '/engagements/$engType/': typeof EngagementsEngTypeIndexRoute
   '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
-  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
   '/streams/league/': typeof StreamsLeagueIndexRoute
   '/voting/$voteId/': typeof VotingVoteIdIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
+  '/engagements/$engType/$engagementId/leaderboard': typeof EngagementsEngTypeEngagementIdLeaderboardRoute
+  '/engagements/$engType/$engagementId/play': typeof EngagementsEngTypeEngagementIdPlayRoute
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/standings': typeof LivescoresLeaguesLeagueIdStandingsRoute
   '/livescores/leagues/$leagueId/stats': typeof LivescoresLeaguesLeagueIdStatsRoute
+  '/engagements/$engType/$engagementId/': typeof EngagementsEngTypeEngagementIdIndexRoute
   '/livescores/$fixtureType/$fixtureId/': typeof LivescoresFixtureTypeFixtureIdIndexRoute
   '/livescores/leagues/$leagueId/': typeof LivescoresLeaguesLeagueIdIndexRoute
   '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
@@ -358,24 +361,24 @@ export interface FileRoutesByTo {
   '/glossary': typeof GlossaryIndexRoute
   '/livescores': typeof LivescoresIndexRoute
   '/privacy-policy': typeof PrivacyPolicyIndexRoute
-  '/quiz': typeof QuizIndexRoute
   '/streams': typeof StreamsIndexRoute
   '/tickets': typeof TicketsIndexRoute
   '/voting': typeof VotingIndexRoute
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
-  '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
-  '/quiz/$quizId/play': typeof QuizQuizIdPlayRoute
   '/voting/$voteId/vote': typeof VotingVoteIdVoteRoute
   '/articles/$articleSlug': typeof ArticlesArticleSlugIndexRoute
+  '/engagements/$engType': typeof EngagementsEngTypeIndexRoute
   '/glossary/$fixtype': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType': typeof LivescoresFixtureTypeIndexRoute
-  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
   '/streams/league': typeof StreamsLeagueIndexRoute
   '/voting/$voteId': typeof VotingVoteIdIndexRoute
+  '/engagements/$engType/$engagementId/leaderboard': typeof EngagementsEngTypeEngagementIdLeaderboardRoute
+  '/engagements/$engType/$engagementId/play': typeof EngagementsEngTypeEngagementIdPlayRoute
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/standings': typeof LivescoresLeaguesLeagueIdStandingsRoute
   '/livescores/leagues/$leagueId/stats': typeof LivescoresLeaguesLeagueIdStatsRoute
+  '/engagements/$engType/$engagementId': typeof EngagementsEngTypeEngagementIdIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdIndexRoute
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdIndexRoute
   '/streams/$fixType/fixtures': typeof StreamsFixTypeFixturesIndexRoute
@@ -403,27 +406,27 @@ export interface FileRoutesById {
   '/glossary/': typeof GlossaryIndexRoute
   '/livescores/': typeof LivescoresIndexRoute
   '/privacy-policy/': typeof PrivacyPolicyIndexRoute
-  '/quiz/': typeof QuizIndexRoute
   '/streams/': typeof StreamsIndexRoute
   '/tickets/': typeof TicketsIndexRoute
   '/voting/': typeof VotingIndexRoute
   '/livescores/$fixtureType/$fixtureId': typeof LivescoresFixtureTypeFixtureIdRouteRouteWithChildren
   '/livescores/leagues/$leagueId': typeof LivescoresLeaguesLeagueIdRouteRouteWithChildren
   '/articles/categories/$categorySlug': typeof ArticlesCategoriesCategorySlugRoute
-  '/quiz/$quizId/leaderboard': typeof QuizQuizIdLeaderboardRoute
-  '/quiz/$quizId/play': typeof QuizQuizIdPlayRoute
   '/voting/$voteId/vote': typeof VotingVoteIdVoteRoute
   '/articles/$articleSlug/': typeof ArticlesArticleSlugIndexRoute
+  '/engagements/$engType/': typeof EngagementsEngTypeIndexRoute
   '/glossary/$fixtype/': typeof GlossaryFixtypeIndexRoute
   '/livescores/$fixtureType/': typeof LivescoresFixtureTypeIndexRoute
-  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
   '/streams/league/': typeof StreamsLeagueIndexRoute
   '/voting/$voteId/': typeof VotingVoteIdIndexRoute
   '/streams/$fixType/fixtures/$fixId': typeof StreamsFixTypeFixturesFixIdRouteRouteWithChildren
+  '/engagements/$engType/$engagementId/leaderboard': typeof EngagementsEngTypeEngagementIdLeaderboardRoute
+  '/engagements/$engType/$engagementId/play': typeof EngagementsEngTypeEngagementIdPlayRoute
   '/livescores/$fixtureType/$fixtureId/lineups': typeof LivescoresFixtureTypeFixtureIdLineupsRoute
   '/livescores/$fixtureType/$fixtureId/overview': typeof LivescoresFixtureTypeFixtureIdOverviewRoute
   '/livescores/leagues/$leagueId/standings': typeof LivescoresLeaguesLeagueIdStandingsRoute
   '/livescores/leagues/$leagueId/stats': typeof LivescoresLeaguesLeagueIdStatsRoute
+  '/engagements/$engType/$engagementId/': typeof EngagementsEngTypeEngagementIdIndexRoute
   '/livescores/$fixtureType/$fixtureId/': typeof LivescoresFixtureTypeFixtureIdIndexRoute
   '/livescores/leagues/$leagueId/': typeof LivescoresLeaguesLeagueIdIndexRoute
   '/streams/$fixType/fixtures/': typeof StreamsFixTypeFixturesIndexRoute
@@ -451,27 +454,27 @@ export interface FileRouteTypes {
     | '/glossary/'
     | '/livescores/'
     | '/privacy-policy/'
-    | '/quiz/'
     | '/streams/'
     | '/tickets/'
     | '/voting/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
-    | '/quiz/$quizId/leaderboard'
-    | '/quiz/$quizId/play'
     | '/voting/$voteId/vote'
     | '/articles/$articleSlug/'
+    | '/engagements/$engType/'
     | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
-    | '/quiz/$quizId/'
     | '/streams/league/'
     | '/voting/$voteId/'
     | '/streams/$fixType/fixtures/$fixId'
+    | '/engagements/$engType/$engagementId/leaderboard'
+    | '/engagements/$engType/$engagementId/play'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/standings'
     | '/livescores/leagues/$leagueId/stats'
+    | '/engagements/$engType/$engagementId/'
     | '/livescores/$fixtureType/$fixtureId/'
     | '/livescores/leagues/$leagueId/'
     | '/streams/$fixType/fixtures/'
@@ -495,24 +498,24 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/livescores'
     | '/privacy-policy'
-    | '/quiz'
     | '/streams'
     | '/tickets'
     | '/voting'
     | '/articles/categories/$categorySlug'
-    | '/quiz/$quizId/leaderboard'
-    | '/quiz/$quizId/play'
     | '/voting/$voteId/vote'
     | '/articles/$articleSlug'
+    | '/engagements/$engType'
     | '/glossary/$fixtype'
     | '/livescores/$fixtureType'
-    | '/quiz/$quizId'
     | '/streams/league'
     | '/voting/$voteId'
+    | '/engagements/$engType/$engagementId/leaderboard'
+    | '/engagements/$engType/$engagementId/play'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/standings'
     | '/livescores/leagues/$leagueId/stats'
+    | '/engagements/$engType/$engagementId'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/streams/$fixType/fixtures'
@@ -539,27 +542,27 @@ export interface FileRouteTypes {
     | '/glossary/'
     | '/livescores/'
     | '/privacy-policy/'
-    | '/quiz/'
     | '/streams/'
     | '/tickets/'
     | '/voting/'
     | '/livescores/$fixtureType/$fixtureId'
     | '/livescores/leagues/$leagueId'
     | '/articles/categories/$categorySlug'
-    | '/quiz/$quizId/leaderboard'
-    | '/quiz/$quizId/play'
     | '/voting/$voteId/vote'
     | '/articles/$articleSlug/'
+    | '/engagements/$engType/'
     | '/glossary/$fixtype/'
     | '/livescores/$fixtureType/'
-    | '/quiz/$quizId/'
     | '/streams/league/'
     | '/voting/$voteId/'
     | '/streams/$fixType/fixtures/$fixId'
+    | '/engagements/$engType/$engagementId/leaderboard'
+    | '/engagements/$engType/$engagementId/play'
     | '/livescores/$fixtureType/$fixtureId/lineups'
     | '/livescores/$fixtureType/$fixtureId/overview'
     | '/livescores/leagues/$leagueId/standings'
     | '/livescores/leagues/$leagueId/stats'
+    | '/engagements/$engType/$engagementId/'
     | '/livescores/$fixtureType/$fixtureId/'
     | '/livescores/leagues/$leagueId/'
     | '/streams/$fixType/fixtures/'
@@ -580,18 +583,18 @@ export interface RootRouteChildren {
   StreamsFixTypeRouteRoute: typeof StreamsFixTypeRouteRouteWithChildren
   ArticlesIndexRoute: typeof ArticlesIndexRoute
   PrivacyPolicyIndexRoute: typeof PrivacyPolicyIndexRoute
-  QuizIndexRoute: typeof QuizIndexRoute
   StreamsIndexRoute: typeof StreamsIndexRoute
   TicketsIndexRoute: typeof TicketsIndexRoute
   VotingIndexRoute: typeof VotingIndexRoute
   ArticlesCategoriesCategorySlugRoute: typeof ArticlesCategoriesCategorySlugRoute
-  QuizQuizIdLeaderboardRoute: typeof QuizQuizIdLeaderboardRoute
-  QuizQuizIdPlayRoute: typeof QuizQuizIdPlayRoute
   VotingVoteIdVoteRoute: typeof VotingVoteIdVoteRoute
   ArticlesArticleSlugIndexRoute: typeof ArticlesArticleSlugIndexRoute
-  QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
+  EngagementsEngTypeIndexRoute: typeof EngagementsEngTypeIndexRoute
   StreamsLeagueIndexRoute: typeof StreamsLeagueIndexRoute
   VotingVoteIdIndexRoute: typeof VotingVoteIdIndexRoute
+  EngagementsEngTypeEngagementIdLeaderboardRoute: typeof EngagementsEngTypeEngagementIdLeaderboardRoute
+  EngagementsEngTypeEngagementIdPlayRoute: typeof EngagementsEngTypeEngagementIdPlayRoute
+  EngagementsEngTypeEngagementIdIndexRoute: typeof EngagementsEngTypeEngagementIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -694,13 +697,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/': {
-      id: '/quiz/'
-      path: '/quiz'
-      fullPath: '/quiz/'
-      preLoaderRoute: typeof QuizIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/streams/': {
       id: '/streams/'
       path: '/streams'
@@ -743,6 +739,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesCategoriesCategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/engagements/$engType/': {
+      id: '/engagements/$engType/'
+      path: '/engagements/$engType'
+      fullPath: '/engagements/$engType/'
+      preLoaderRoute: typeof EngagementsEngTypeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/glossary/$fixtype/': {
       id: '/glossary/$fixtype/'
       path: '/$fixtype'
@@ -771,27 +774,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LivescoresLeaguesLeagueIdRouteRouteImport
       parentRoute: typeof LivescoresRouteRoute
     }
-    '/quiz/$quizId/': {
-      id: '/quiz/$quizId/'
-      path: '/quiz/$quizId'
-      fullPath: '/quiz/$quizId/'
-      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$quizId/leaderboard': {
-      id: '/quiz/$quizId/leaderboard'
-      path: '/quiz/$quizId/leaderboard'
-      fullPath: '/quiz/$quizId/leaderboard'
-      preLoaderRoute: typeof QuizQuizIdLeaderboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$quizId/play': {
-      id: '/quiz/$quizId/play'
-      path: '/quiz/$quizId/play'
-      fullPath: '/quiz/$quizId/play'
-      preLoaderRoute: typeof QuizQuizIdPlayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/streams/league/': {
       id: '/streams/league/'
       path: '/streams/league'
@@ -811,6 +793,27 @@ declare module '@tanstack/react-router' {
       path: '/voting/$voteId/vote'
       fullPath: '/voting/$voteId/vote'
       preLoaderRoute: typeof VotingVoteIdVoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/engagements/$engType/$engagementId/': {
+      id: '/engagements/$engType/$engagementId/'
+      path: '/engagements/$engType/$engagementId'
+      fullPath: '/engagements/$engType/$engagementId/'
+      preLoaderRoute: typeof EngagementsEngTypeEngagementIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/engagements/$engType/$engagementId/leaderboard': {
+      id: '/engagements/$engType/$engagementId/leaderboard'
+      path: '/engagements/$engType/$engagementId/leaderboard'
+      fullPath: '/engagements/$engType/$engagementId/leaderboard'
+      preLoaderRoute: typeof EngagementsEngTypeEngagementIdLeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/engagements/$engType/$engagementId/play': {
+      id: '/engagements/$engType/$engagementId/play'
+      path: '/engagements/$engType/$engagementId/play'
+      fullPath: '/engagements/$engType/$engagementId/play'
+      preLoaderRoute: typeof EngagementsEngTypeEngagementIdPlayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/livescores/$fixtureType/$fixtureId/': {
@@ -1061,18 +1064,21 @@ const rootRouteChildren: RootRouteChildren = {
   StreamsFixTypeRouteRoute: StreamsFixTypeRouteRouteWithChildren,
   ArticlesIndexRoute: ArticlesIndexRoute,
   PrivacyPolicyIndexRoute: PrivacyPolicyIndexRoute,
-  QuizIndexRoute: QuizIndexRoute,
   StreamsIndexRoute: StreamsIndexRoute,
   TicketsIndexRoute: TicketsIndexRoute,
   VotingIndexRoute: VotingIndexRoute,
   ArticlesCategoriesCategorySlugRoute: ArticlesCategoriesCategorySlugRoute,
-  QuizQuizIdLeaderboardRoute: QuizQuizIdLeaderboardRoute,
-  QuizQuizIdPlayRoute: QuizQuizIdPlayRoute,
   VotingVoteIdVoteRoute: VotingVoteIdVoteRoute,
   ArticlesArticleSlugIndexRoute: ArticlesArticleSlugIndexRoute,
-  QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
+  EngagementsEngTypeIndexRoute: EngagementsEngTypeIndexRoute,
   StreamsLeagueIndexRoute: StreamsLeagueIndexRoute,
   VotingVoteIdIndexRoute: VotingVoteIdIndexRoute,
+  EngagementsEngTypeEngagementIdLeaderboardRoute:
+    EngagementsEngTypeEngagementIdLeaderboardRoute,
+  EngagementsEngTypeEngagementIdPlayRoute:
+    EngagementsEngTypeEngagementIdPlayRoute,
+  EngagementsEngTypeEngagementIdIndexRoute:
+    EngagementsEngTypeEngagementIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
+  ArrowLeftIcon,
   CheckIcon,
   ChevronRightIcon,
   ClockIcon,
@@ -21,9 +22,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '#/components/ui/dialog'
+import type { EngagementSection } from './engagement-card'
 
-type QuizPlayProps = {
-  quiz: Engagement
+type EngagementPlayProps = {
+  engagement: Engagement
 }
 
 type QuizAnswer = {
@@ -47,7 +49,7 @@ function shuffle<T>(items: T[]): T[] {
   return copy
 }
 
-export function QuizHeader({
+export function EngagementHeader({
   title,
   subtitle,
 }: {
@@ -72,15 +74,15 @@ function formatTimer(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-export function QuizPlay({ quiz }: QuizPlayProps) {
+export function EngagementPlay({ engagement }: EngagementPlayProps) {
   // Shuffle once per play session so order can't be shared across players.
   const questions = useMemo(
     () =>
-      shuffle(quiz.questions ?? []).map((question) => ({
+      shuffle(engagement.questions ?? []).map((question) => ({
         ...question,
         choices: shuffle(question.choices),
       })),
-    [quiz.id],
+    [engagement.id],
   )
 
   const [hasStarted, setHasStarted] = useState(false)
@@ -149,7 +151,7 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
     try {
       await submitQuizFn({
         data: {
-          quizId: String(quiz.id),
+          quizId: String(engagement.id),
           answers,
         },
       })
@@ -201,7 +203,10 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
   if (totalQuestions === 0) {
     return (
       <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <QuizHeader title={quiz.title} subtitle="No questions available" />
+        <EngagementHeader
+          title={engagement.title}
+          subtitle="No questions available"
+        />
 
         <p className="px-4 py-10 text-center text-sm text-muted-foreground">
           This quiz does not have any questions yet. Check back later.
@@ -214,8 +219,8 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
     return (
       <>
         <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-          <QuizHeader
-            title={quiz.title}
+          <EngagementHeader
+            title={engagement.title}
             subtitle={`${totalQuestions} ${totalQuestions === 1 ? 'question' : 'questions'}.`}
           />
           <div className="px-6 py-12 text-center">
@@ -237,7 +242,7 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
                 Ready to play?
               </DialogTitle>
               <DialogDescription>
-                {quiz.description?.trim() ||
+                {engagement.description?.trim() ||
                   'A few things to know before you start this quiz.'}
               </DialogDescription>
             </DialogHeader>
@@ -276,13 +281,13 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
                   answers cannot be changed.
                 </span>
               </li>
-              {quiz.prize_description?.trim() ? (
+              {engagement.prize_description?.trim() ? (
                 <li className="flex gap-2">
                   <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
                   <span>
                     Prize:{' '}
                     <span className="font-semibold text-foreground">
-                      {quiz.prize_description}
+                      {engagement.prize_description}
                     </span>
                   </span>
                 </li>
@@ -291,14 +296,15 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
 
             <DialogFooter className="gap-2 sm:justify-between">
               <Link
-                to="/quiz/$quizId"
-                params={{ quizId: String(quiz.id) }}
-                className={cn(
-                  'inline-flex h-11 items-center justify-center rounded-2xl border border-border bg-background px-4 text-xs font-bold tracking-[0.08em] uppercase transition-colors',
-                  'hover:bg-muted hover:text-foreground',
-                )}
+                to="/engagements/$engType/$engagementId"
+                params={{
+                  engType: engagement.type as EngagementSection,
+                  engagementId: String(engagement.id),
+                }}
+                className="mb-4 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
               >
-                Back
+                <ArrowLeftIcon className="size-3.5" aria-hidden />
+                All quizzes
               </Link>
               <Button
                 type="button"
@@ -307,7 +313,7 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
                 className="h-11 min-w-36 px-5 text-xs font-bold tracking-[0.08em] uppercase"
               >
                 <PlayIcon className="size-4 fill-current" aria-hidden />
-                Play quiz
+                Play {engagement.title}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -324,7 +330,7 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
     if (isSubmitted) {
       return (
         <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-          <QuizHeader
+          <EngagementHeader
             title="Quiz complete"
             subtitle={`${answeredCount} of ${totalQuestions} answered.`}
           />
@@ -338,7 +344,7 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
               Well played
             </h2>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Your answers for {quiz.title} have been submitted.
+              Your answers for {engagement.title} have been submitted.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -346,8 +352,11 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
                 type="button"
                 render={
                   <Link
-                    to="/quiz/$quizId/leaderboard"
-                    params={{ quizId: String(quiz.id) }}
+                    to="/engagements/$engType/$engagementId/leaderboard"
+                    params={{
+                      engType: engagement.type as EngagementSection,
+                      engagementId: String(engagement.id),
+                    }}
                   />
                 }
                 variant="secondary"
@@ -358,12 +367,20 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
               </Button>
               <Button
                 type="button"
-                render={<Link to="/quiz" />}
+                render={
+                  <Link
+                    to="/engagements/$engType/$engagementId"
+                    params={{
+                      engType: engagement.type as EngagementSection,
+                      engagementId: String(engagement.id),
+                    }}
+                  />
+                }
                 variant="outline"
                 size="lg"
                 className="h-11 px-5 text-xs font-bold tracking-[0.08em] uppercase"
               >
-                All quizzes
+                All {engagement.type}
               </Button>
             </div>
           </div>
@@ -373,18 +390,18 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
 
     return (
       <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <QuizHeader
+        <EngagementHeader
           title="Ready to submit"
           subtitle={`${answeredCount} of ${totalQuestions} answered`}
         />
 
         <div className="flex flex-col items-center px-6 py-12 text-center">
           <h2 className="font-heading text-2xl font-black tracking-tight uppercase">
-            Review your quiz
+            Review your {engagement.title}
           </h2>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            You have finished {quiz.title}. Submit your answers when you are
-            ready — this cannot be changed afterwards.
+            You have finished {engagement.title}. Submit your answers when you
+            are ready — this cannot be changed afterwards.
           </p>
 
           {submitError ? (
@@ -418,8 +435,8 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
 
   return (
     <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <QuizHeader
-        title={quiz.title}
+      <EngagementHeader
+        title={engagement.title}
         subtitle={`Question ${currentIndex + 1} of ${totalQuestions}`}
       />
 

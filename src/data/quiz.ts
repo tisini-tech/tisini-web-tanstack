@@ -9,16 +9,19 @@ import type {
 
 import { createServerFn } from '@tanstack/react-start'
 
-export const getEngagementsFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    const res = await apiService.get<Engagement[]>('/engagements?type=QZ', {
-      target: 'quiz',
-      withApiKey: true,
-    })
+export const getEngagementsFn = createServerFn({ method: 'GET' })
+  .validator((data: { type: string }) => data)
+  .handler(async ({ data }) => {
+    const res = await apiService.get<Engagement[]>(
+      `/engagements?type=${data.type}`,
+      {
+        target: 'quiz',
+        withApiKey: true,
+      },
+    )
 
     return res
-  },
-)
+  })
 
 export const getEngagementFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)
@@ -69,7 +72,7 @@ export const submitQuizFn = createServerFn({ method: 'POST' })
 export const getQuizLeaderboardFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)
   .handler(async ({ data }) => {
-    return apiService.get< CursorPaginatedResponse<EngLeaderboard>>(
+    return apiService.get<CursorPaginatedResponse<EngLeaderboard>>(
       `/engagements/${data.quizId}/leaderboard`,
       {
         target: 'quiz',

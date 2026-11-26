@@ -1,8 +1,13 @@
+import { useMemo } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { absoluteUrl } from '#/lib/seo'
 import { getVoteCausesFn } from '#/data/voting'
-import { VotingCauses } from '#/components/voting/voting-causes'
+import FeaturedCauses from '#/components/voting/featured-causes'
+import {
+  sortVoteCauses,
+  VotingCauses,
+} from '#/components/voting/voting-causes'
 
 export const Route = createFileRoute('/voting/')({
   loader: async () => {
@@ -30,23 +35,41 @@ export const Route = createFileRoute('/voting/')({
 
 function VotingPage() {
   const { causes } = Route.useLoaderData()
+  const sorted = useMemo(() => sortVoteCauses(causes), [causes])
+  const featured = sorted.slice(0, 3)
+  const others = sorted.slice(3)
 
   return (
-    <div>
-      <section className="border-b border-border bg-card">
-        <div className="sp-content-shell border-b border-border/60 bg-muted/15 px-4 py-4 sm:px-6 sm:py-5">
-          <h1 className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-            Voting
-          </h1>
-          <p className="mt-1 text-sm text-foreground/90">
-            Vote for the cause you want to support.
+    <section className="py-8">
+      <header className="mb-8 text-center sm:mb-10">
+        <h1 className="font-heading text-[clamp(1.35rem,4.2vw,3rem)] leading-[1.05] font-bold tracking-tight text-foreground">
+          <span className="block whitespace-nowrap">Who gets your vote?</span>
+          <span className="mt-1 block text-emerald-800/80 dark:text-emerald-400/55">
+            Make the call.
+          </span>
+        </h1>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          Vote for the cause you want to support.
+        </p>
+      </header>
+
+      {sorted.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
+          <p className="text-sm font-semibold text-foreground">No votes yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Fan votes will appear here when a poll is published.
           </p>
         </div>
-      </section>
-
-      <section className="sp-content-shell py-8">
-        <VotingCauses causes={causes} />
-      </section>
-    </div>
+      ) : (
+        <>
+          <FeaturedCauses causes={featured} />
+          {others.length > 0 ? (
+            <div className="mt-14 sm:mt-16">
+              <VotingCauses causes={others} />
+            </div>
+          ) : null}
+        </>
+      )}
+    </section>
   )
 }

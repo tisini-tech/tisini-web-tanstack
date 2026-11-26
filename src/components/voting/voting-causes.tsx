@@ -3,10 +3,14 @@ import {
   CalendarDaysIcon,
   ChevronRightIcon,
   ImageIcon,
+  SearchIcon,
 } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 import type { VoteCause } from '#/lib/types'
 import { cn } from '#/lib/utils'
+
+const PAGE_SIZE = 12
 
 type VoteStatus = 'upcoming' | 'open' | 'ended'
 
@@ -27,20 +31,6 @@ export function getVoteStatus(
   return 'open'
 }
 
-function formatVoteDateRange(cause: VoteCause): string {
-  const from = parseVoteDate(cause.date_from)
-  const to = parseVoteDate(cause.date_to)
-
-  const format = (date: Date) =>
-    new Intl.DateTimeFormat('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }).format(date)
-
-  return `${format(from)} – ${format(to)}`
-}
-
 function statusLabel(status: VoteStatus): string {
   if (status === 'open') return 'Open'
   if (status === 'ended') return 'Ended'
@@ -57,8 +47,8 @@ function statusClass(status: VoteStatus): string {
   return 'bg-primary/15 text-primary ring-primary/30'
 }
 
-export function VotingCauses({ causes }: { causes: VoteCause[] }) {
-  const sorted = [...causes].sort((a, b) => {
+export function sortVoteCauses(causes: VoteCause[]): VoteCause[] {
+  return [...causes].sort((a, b) => {
     const statusOrder = { open: 0, upcoming: 1, ended: 2 }
     const statusDiff =
       statusOrder[getVoteStatus(a)] - statusOrder[getVoteStatus(b)]
@@ -68,26 +58,97 @@ export function VotingCauses({ causes }: { causes: VoteCause[] }) {
       parseVoteDate(a.date_from).getTime()
     )
   })
+}
 
-  if (sorted.length === 0) {
-    return (
-      <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
-        <p className="text-sm font-semibold text-foreground">No votes yet</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Fan votes will appear here when a poll is published.
-        </p>
-      </div>
+export function formatVoteDateRange(cause: VoteCause): string {
+  const from = parseVoteDate(cause.date_from)
+  const to = parseVoteDate(cause.date_to)
+
+  const format = (date: Date) =>
+    new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).format(date)
+
+  return `${format(from)} – ${format(to)}`
+}
+
+export function VotingCauses({ causes }: { causes: VoteCause[] }) {
+  const [query, setQuery] = useState('')
+  const [shown, setShown] = useState(PAGE_SIZE)
+  const sorted = useMemo(() => sortVoteCauses(causes), [causes])
+  const visible = useMemo(() => {
+    const needle = query.trim().toLowerCase()
+    if (!needle) return sorted
+    return sorted.filter((cause) =>
+      cause.reason.toLowerCase().includes(needle),
     )
-  }
+  }, [sorted, query])
 
   return (
-    <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {sorted.map((cause) => (
-        <li key={cause.id}>
-          <VoteCauseCard cause={cause} />
-        </li>
-      ))}
-    </ul>
+    <section className="space-y-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="font-heading text-xl font-bold tracking-tight text-foreground">
+            Other votes
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {visible.length} {visible.length === 1 ? 'vote' : 'votes'}
+            {query.trim() ? ' found' : ' available'}
+          </p>
+        </div>
+
+        <label className="relative block w-full sm:max-w-xs">
+          <span className="sr-only">Search votes</span>
+          <SearchIcon
+            aria-hidden
+            className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value)
+              setShown(PAGE_SIZE)
+            }}
+            placeholder="Search votes"
+            className="h-12 w-full rounded-xl border border-border bg-muted/30 pr-3 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-emerald-400/40 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none"
+          />
+        </label>
+      </div>
+
+      {visible.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
+          <p className="text-sm font-semibold text-foreground">
+            {query.trim()
+              ? `No votes match “${query.trim()}”`
+              : 'No other votes right now'}
+          </p>
+        </div>
+      ) : (
+        <>
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {visible.slice(0, shown).map((cause) => (
+              <li key={cause.id} className="min-w-0">
+                <VoteCauseCard cause={cause} />
+              </li>
+            ))}
+          </ul>
+          {shown < visible.length ? (
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShown((count) => count + PAGE_SIZE)}
+                className="inline-flex h-11 items-center rounded-full border border-border bg-card px-6 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+              >
+                More
+              </button>
+            </div>
+          ) : null}
+        </>
+      )}
+    </section>
   )
 }
 
@@ -96,12 +157,12 @@ function VoteCauseCard({ cause }: { cause: VoteCause }) {
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <div className="relative flex aspect-[16/9] items-center justify-center overflow-hidden border-b border-border bg-[#120818]">
+      <div className="relative aspect-square overflow-hidden border-b border-border bg-[#120818]">
         {cause.image_url ? (
           <img
             src={cause.image_url}
             alt=""
-            className="size-full object-contain"
+            className="absolute inset-0 size-full object-cover"
           />
         ) : (
           <>

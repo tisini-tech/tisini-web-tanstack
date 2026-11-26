@@ -5,21 +5,23 @@ import {
   CalendarDaysIcon,
   ChevronRightIcon,
   ClockIcon,
+  ImageIcon,
   PlayIcon,
   TrophyIcon,
 } from 'lucide-react'
 
-import { getQuizAction } from '#/components/quiz/quiz-list'
-import { getCurrentUserFn } from '#/data/auth'
-import { getEngagementFn, getEngParticipationFn } from '#/data/quiz'
-import { absoluteUrl, resolveOgImage } from '#/lib/seo'
 import type { Engagement } from '#/lib/types'
+import { getCurrentUserFn } from '#/data/auth'
 import { cn, resolveMediaUrl } from '#/lib/utils'
+import { absoluteUrl, resolveOgImage } from '#/lib/seo'
+import { getEngagementAction } from '#/components/engagements/action'
+import { getEngagementFn, getEngParticipationFn } from '#/data/quiz'
+import type { EngagementSection } from '#/components/engagements/engagement-card'
 
-export const Route = createFileRoute('/quiz/$quizId/')({
+export const Route = createFileRoute('/engagements/$engType/$engagementId/')({
   loader: async ({ params }) => {
     const engagement = await getEngagementFn({
-      data: { quizId: params.quizId },
+      data: { quizId: params.engagementId },
     })
     const user = await getCurrentUserFn()
     let hasPlayed = false
@@ -27,7 +29,7 @@ export const Route = createFileRoute('/quiz/$quizId/')({
     if (user) {
       try {
         const participation = await getEngParticipationFn({
-          data: { quizId: params.quizId },
+          data: { quizId: params.engagementId },
         })
         hasPlayed = participation.has_played
       } catch {
@@ -36,22 +38,23 @@ export const Route = createFileRoute('/quiz/$quizId/')({
     }
 
     const questionCount = engagement.questions?.length ?? 0
-    const quiz = { ...engagement }
-    delete quiz.questions
+    delete engagement.questions
 
-    return { quiz, questionCount, hasPlayed }
+    return { engagement, questionCount, hasPlayed }
   },
   head: ({ loaderData, params }) => {
-    const quiz = loaderData?.quiz
-    const title = quiz?.title?.trim()
+    const engagement = loaderData?.engagement
+    const title = engagement?.title?.trim()
     const pageTitle = title ? `${title} | Quiz | Tisini` : 'Quiz | Tisini'
     const description =
-      quiz?.description?.trim() ||
+      engagement?.description?.trim() ||
       (title
         ? `Play "${title}" on Tisini — test your sports knowledge.`
         : 'Play a quiz and test your knowledge on the latest sports news and events.')
-    const canonical = absoluteUrl(`/quiz/${params.quizId}`)
-    const image = resolveOgImage(quiz?.image_url)
+    const canonical = absoluteUrl(
+      `/engagements/${params.engType}/${params.engagementId}`,
+    )
+    const image = resolveOgImage(engagement?.image_url)
     const ogTitle = title || 'Quiz | Tisini'
 
     return {
@@ -91,11 +94,12 @@ function formatQuizDate(value: string) {
 }
 
 function RouteComponent() {
-  const { quiz, questionCount, hasPlayed } = Route.useLoaderData()
+  const { engType } = Route.useParams()
+  const { engagement, questionCount, hasPlayed } = Route.useLoaderData()
   const [now, setNow] = useState(() => new Date())
-  const action = getQuizAction(quiz, now)
-  const image = resolveMediaUrl(quiz.image_url)
-  const startsAt = parseQuizDate(quiz.starts_at)
+  const action = getEngagementAction(engagement, now)
+  const image = resolveMediaUrl(engagement.image_url)
+  const startsAt = parseQuizDate(engagement.starts_at)
 
   useEffect(() => {
     if (action !== 'upcoming') return
@@ -113,84 +117,93 @@ function RouteComponent() {
   }
 
   return (
-    <div className="py-6">
+    <div className="mx-auto w-full max-w-6xl py-6">
       <Link
-        to="/quiz"
+        to="/engagements/$engType"
+        params={{ engType: engType as EngagementSection }}
         className="mb-4 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowLeftIcon className="size-3.5" aria-hidden />
-        All quizzes
+        {engType === 'tanobora' ? 'All Tano Bora' : 'All quizzes'}
       </Link>
 
-      <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <div className="flex items-center justify-center border-b border-border bg-[#120818]">
+      <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm lg:grid lg:grid-cols-[minmax(18rem,34rem)_minmax(0,1fr)]">
+        <div className="relative aspect-[4/5] border-b border-border bg-[#0b1222] lg:aspect-auto lg:h-full lg:min-h-[40rem] lg:border-r lg:border-b-0">
           {image ? (
             <img
               src={image}
               alt=""
-              className="max-h-[32rem] w-full object-contain"
+              className="absolute inset-0 size-full object-contain"
             />
           ) : (
-            <div
-              className="aspect-[16/9] w-full bg-[radial-gradient(circle_at_30%_20%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent_55%),radial-gradient(circle_at_80%_80%,color-mix(in_oklch,var(--secondary)_18%,transparent),transparent_50%)]"
-              aria-hidden
-            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/45">
+              <ImageIcon className="size-8" aria-hidden />
+              <span className="text-[0.65rem] font-bold tracking-[0.14em] uppercase">
+                No poster
+              </span>
+            </div>
           )}
         </div>
 
-        <div className="flex flex-col gap-5 p-5 sm:p-6">
+        <div className="flex flex-col justify-center gap-5 p-5 sm:p-6">
           <div>
             <p className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-              Quiz
+              {engType === 'tanobora' ? 'Tano Bora' : 'Quiz'}
             </p>
-            <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              {quiz.title}
+            <h1 className="mt-1 font-heading text-2xl font-bold tracking-tight text-balance text-foreground">
+              {engagement.title}
             </h1>
-            {quiz.description?.trim() ? (
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                {quiz.description}
+            {engagement.description?.trim() ? (
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {engagement.description}
               </p>
             ) : null}
           </div>
 
-          <dl className="grid gap-3 text-sm sm:grid-cols-2">
-            <div className="flex items-start gap-2 text-muted-foreground">
-              <CalendarDaysIcon className="mt-0.5 size-4 shrink-0" aria-hidden />
-              <div>
-                <dt className="text-[0.65rem] font-semibold tracking-[0.1em] uppercase">
-                  Open
-                </dt>
-                <dd className="text-foreground">
-                  {formatQuizDate(quiz.starts_at)} –{' '}
-                  {formatQuizDate(quiz.ends_at)}
-                </dd>
-              </div>
+          <dl className="grid grid-cols-2 gap-2">
+            <div
+              className={cn(
+                'rounded-xl bg-muted/40 px-3.5 py-3',
+                questionCount === 0 &&
+                  !engagement.prize_description?.trim() &&
+                  'col-span-2',
+              )}
+            >
+              <dt className="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+                <CalendarDaysIcon className="size-3.5" aria-hidden />
+                Open
+              </dt>
+              <dd className="mt-1 text-sm leading-snug font-medium text-foreground">
+                {formatQuizDate(engagement.starts_at)} –{' '}
+                {formatQuizDate(engagement.ends_at)}
+              </dd>
             </div>
             {questionCount > 0 ? (
-              <div>
+              <div className="rounded-xl bg-muted/40 px-3.5 py-3">
                 <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                   Questions
                 </dt>
-                <dd className="text-foreground">
+                <dd className="mt-1 text-sm leading-snug font-medium text-foreground">
                   {questionCount}{' '}
                   {questionCount === 1 ? 'question' : 'questions'}
                 </dd>
               </div>
             ) : null}
-            {quiz.prize_description?.trim() ? (
-              <div className="sm:col-span-2">
+            {engagement.prize_description?.trim() ? (
+              <div className="col-span-2 rounded-xl bg-muted/40 px-3.5 py-3">
                 <dt className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
                   Prize
                 </dt>
-                <dd className="font-medium text-secondary">
-                  {quiz.prize_description}
+                <dd className="mt-1 text-sm leading-snug font-medium text-secondary">
+                  {engagement.prize_description}
                 </dd>
               </div>
             ) : null}
           </dl>
 
           <QuizAction
-            quiz={quiz}
+            quiz={engagement}
+            engType={engType as EngagementSection}
             action={hasPlayed ? 'leaderboard' : action}
             hasPlayed={hasPlayed}
             countdown={countdown}
@@ -203,12 +216,14 @@ function RouteComponent() {
 
 function QuizAction({
   quiz,
+  engType,
   action,
   hasPlayed,
   countdown,
 }: {
   quiz: Engagement
-  action: ReturnType<typeof getQuizAction>
+  engType: EngagementSection
+  action: ReturnType<typeof getEngagementAction>
   hasPlayed: boolean
   countdown: {
     days: number
@@ -220,8 +235,8 @@ function QuizAction({
   if (action === 'play') {
     return (
       <Link
-        to="/quiz/$quizId/play"
-        params={{ quizId: quiz.id.toString() }}
+        to="/engagements/$engType/$engagementId/play"
+        params={{ engType, engagementId: quiz.id.toString() }}
         className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-emerald-500 px-4 text-sm font-bold tracking-wide text-white uppercase transition-colors hover:bg-emerald-600 sm:w-fit"
       >
         <PlayIcon className="size-4" aria-hidden />
@@ -240,8 +255,8 @@ function QuizAction({
           </p>
         ) : null}
         <Link
-          to="/quiz/$quizId/leaderboard"
-          params={{ quizId: quiz.id.toString() }}
+          to="/engagements/$engType/$engagementId/leaderboard"
+          params={{ engType, engagementId: quiz.id.toString() }}
           className={cn(
             'inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/40 px-4 text-sm font-bold tracking-wide uppercase transition-colors hover:bg-muted hover:text-foreground',
             hasPlayed ? 'text-foreground' : 'text-muted-foreground',
