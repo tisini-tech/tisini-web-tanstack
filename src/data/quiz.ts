@@ -46,6 +46,7 @@ export const getEngParticipationFn = createServerFn({ method: 'GET' })
 export type QuizSubmitAnswer = {
   questionId: number
   choiceIds: number[]
+  textAnswer: string
   responseMs: number
 }
 
@@ -56,10 +57,10 @@ export const submitQuizFn = createServerFn({ method: 'POST' })
       `/engagements/${data.quizId}/answers`,
       data.answers.map((answer) => ({
         question_id: answer.questionId,
-        choice_id: answer.choiceIds[0] ?? 0,
+        choice_id: answer.choiceIds[0] ?? null,
         selected_choice_ids:
           answer.choiceIds.length > 1 ? answer.choiceIds : [],
-        text_answer: '',
+        text_answer: answer.textAnswer,
         response_ms: answer.responseMs,
       })),
       {

@@ -124,7 +124,9 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
+  const { engType } = Route.useParams()
   const { engagement } = Route.useLoaderData()
+  const type: EngagementSection = engType === 'tanobora' ? 'tanobora' : 'quiz'
 
-  return <EngagementPlay engagement={engagement} />
+  return <EngagementPlay engagement={engagement} type={type} />
 }

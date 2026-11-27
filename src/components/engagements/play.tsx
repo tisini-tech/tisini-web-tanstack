@@ -18,7 +18,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '#/components/ui/dialog'
@@ -26,16 +25,28 @@ import type { EngagementSection } from './engagement-card'
 
 type EngagementPlayProps = {
   engagement: Engagement
+  type: EngagementSection
 }
 
 type QuizAnswer = {
   questionId: number
   choiceIds: number[]
+  textAnswer: string
   responseMs: number
 }
 
 function isMultipleAnswerType(answerType: string): boolean {
   return answerType.toUpperCase() === 'MA'
+}
+
+function isFreeTextQuestion(
+  question: { answer_type: string; choices?: unknown[] } | undefined,
+): boolean {
+  if (!question) return false
+  return (
+    question.answer_type.toUpperCase() === 'FT' ||
+    (question.choices ?? []).length === 0
+  )
 }
 
 function shuffle<T>(items: T[]): T[] {
@@ -74,13 +85,16 @@ function formatTimer(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-export function EngagementPlay({ engagement }: EngagementPlayProps) {
+export function EngagementPlay({ engagement, type }: EngagementPlayProps) {
+  const isPredictor = type === 'tanobora'
+  const sectionLabel = isPredictor ? 'Tano Bora' : 'Quiz'
+  const listLabel = isPredictor ? 'All Tano Bora' : 'All quizzes'
   // Shuffle once per play session so order can't be shared across players.
   const questions = useMemo(
     () =>
       shuffle(engagement.questions ?? []).map((question) => ({
         ...question,
-        choices: shuffle(question.choices),
+        choices: shuffle(question.choices ?? []),
       })),
     [engagement.id],
   )
@@ -89,6 +103,7 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [selectedChoiceIds, setSelectedChoiceIds] = useState<number[]>([])
+  const [selectedText, setSelectedText] = useState('')
   const [isComplete, setIsComplete] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -102,8 +117,17 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
     () => questions.some((question) => question.timer_seconds > 0),
     [questions],
   )
+  const hasFreeText = useMemo(
+    () => questions.some((question) => isFreeTextQuestion(question)),
+    [questions],
+  )
 
   const isMultiple = isMultipleAnswerType(currentQuestion?.answer_type ?? '')
+  const isFreeText = isFreeTextQuestion(currentQuestion)
+  const trimmedAnswer = selectedText.trim()
+  const canContinue = isFreeText
+    ? trimmedAnswer.length > 0
+    : selectedChoiceIds.length > 0
 
   const toggleChoice = useCallback(
     (choiceId: number) => {
@@ -129,7 +153,8 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
       ...prev.filter((answer) => answer.questionId !== currentQuestion.id),
       {
         questionId: currentQuestion.id,
-        choiceIds: selectedChoiceIds,
+        choiceIds: isFreeText ? [] : selectedChoiceIds,
+        textAnswer: isFreeText ? selectedText.trim() : '',
         responseMs,
       },
     ])
@@ -140,7 +165,14 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
     }
 
     setCurrentIndex((index) => index + 1)
-  }, [currentIndex, currentQuestion, selectedChoiceIds, totalQuestions])
+  }, [
+    currentIndex,
+    currentQuestion,
+    isFreeText,
+    selectedChoiceIds,
+    selectedText,
+    totalQuestions,
+  ])
 
   const handleSubmit = async () => {
     if (isSubmitting) return
@@ -198,6 +230,7 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
     if (!hasStarted) return
     questionStartedAtRef.current = Date.now()
     setSelectedChoiceIds([])
+    setSelectedText('')
   }, [hasStarted, currentIndex])
 
   if (totalQuestions === 0) {
@@ -209,7 +242,8 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
         />
 
         <p className="px-4 py-10 text-center text-sm text-muted-foreground">
-          This quiz does not have any questions yet. Check back later.
+          This {isPredictor ? 'predictor' : 'quiz'} does not have any questions
+          yet. Check back later.
         </p>
       </article>
     )
@@ -221,11 +255,21 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
         <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <EngagementHeader
             title={engagement.title}
-            subtitle={`${totalQuestions} ${totalQuestions === 1 ? 'question' : 'questions'}.`}
+            subtitle={`${totalQuestions} ${
+              isPredictor
+                ? totalQuestions === 1
+                  ? 'event'
+                  : 'events'
+                : totalQuestions === 1
+                  ? 'question'
+                  : 'questions'
+            }.`}
           />
           <div className="px-6 py-12 text-center">
             <p className="text-sm text-muted-foreground">
-              Read the instructions, then press Play when you are ready.
+              {isPredictor
+                ? 'Read the instructions, then start when you are ready to call the match.'
+                : 'Read the instructions, then start when you are ready.'}
             </p>
           </div>
         </article>
@@ -236,86 +280,68 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
             if (!open) return
           }}
         >
-          <DialogContent showCloseButton={false} className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="text-lg font-bold tracking-tight">
-                Ready to play?
+          <DialogContent showCloseButton={false} className="gap-5 sm:max-w-md">
+            <DialogHeader className="gap-2">
+              <p className="text-[0.65rem] font-semibold tracking-[0.16em] text-emerald-700 uppercase dark:text-emerald-400">
+                {sectionLabel}
+              </p>
+              <DialogTitle className="font-heading text-2xl font-bold tracking-tight">
+                {isPredictor ? 'Ready to call them?' : 'Ready to play?'}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-sm leading-relaxed">
                 {engagement.description?.trim() ||
-                  'A few things to know before you start this quiz.'}
+                  (isPredictor
+                    ? 'Five events in the match. Call each one before you submit.'
+                    : 'A few things to know before you start this quiz.')}
               </DialogDescription>
             </DialogHeader>
 
-            <ul className="space-y-2.5 text-sm text-muted-foreground">
-              <li className="flex gap-2">
-                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
-                <span>
-                  There {totalQuestions === 1 ? 'is' : 'are'}{' '}
-                  <span className="font-semibold text-foreground">
-                    {totalQuestions}
-                  </span>{' '}
-                  {totalQuestions === 1 ? 'question' : 'questions'}.
-                </span>
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
-                <span>
-                  Some questions are single choice; others may ask you to select
-                  all that apply.
-                </span>
-              </li>
+            <ul className="space-y-2">
+              <Brief
+                text={
+                  isPredictor
+                    ? `${totalQuestions} ${totalQuestions === 1 ? 'event' : 'events'} to call in this match.`
+                    : `${totalQuestions} ${totalQuestions === 1 ? 'question' : 'questions'} in this quiz.`
+                }
+              />
+              <Brief
+                text={
+                  isPredictor
+                    ? 'Pick the outcome you expect. Some events ask for every option that applies.'
+                    : 'Some questions are single choice. Others ask you to select every option that applies.'
+                }
+              />
               {hasTimedQuestions ? (
-                <li className="flex gap-2">
-                  <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
-                  <span>
-                    Timed questions auto-advance when the countdown ends —
-                    answer before time runs out.
-                  </span>
-                </li>
+                <Brief text="When a timer hits zero, that question moves on. Answer before it runs out." />
               ) : null}
-              <li className="flex gap-2">
-                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
-                <span>
-                  After the last question you can review, then submit. Submitted
-                  answers cannot be changed.
-                </span>
-              </li>
+              {hasFreeText ? (
+                <Brief text="Some questions ask you to type the answer instead of picking one." />
+              ) : null}
+              <Brief text="You can review at the end, then submit. Submitted answers cannot be changed." />
               {engagement.prize_description?.trim() ? (
-                <li className="flex gap-2">
-                  <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
-                  <span>
-                    Prize:{' '}
-                    <span className="font-semibold text-foreground">
-                      {engagement.prize_description}
-                    </span>
-                  </span>
-                </li>
+                <Brief text={`Prize: ${engagement.prize_description.trim()}`} />
               ) : null}
             </ul>
 
-            <DialogFooter className="gap-2 sm:justify-between">
-              <Link
-                to="/engagements/$engType/$engagementId"
-                params={{
-                  engType: engagement.type as EngagementSection,
-                  engagementId: String(engagement.id),
-                }}
-                className="mb-4 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <ArrowLeftIcon className="size-3.5" aria-hidden />
-                All quizzes
-              </Link>
+            <div className="flex flex-col gap-3">
               <Button
                 type="button"
                 size="lg"
                 onClick={() => setHasStarted(true)}
-                className="h-11 min-w-36 px-5 text-xs font-bold tracking-[0.08em] uppercase"
+                className="h-11 w-full text-sm font-bold"
               >
                 <PlayIcon className="size-4 fill-current" aria-hidden />
-                Play {engagement.title}
+                {isPredictor ? 'Start predicting' : 'Start quiz'}
               </Button>
-            </DialogFooter>
+              <Link
+                to="/engagements/$engType"
+                params={{ engType: type }}
+                className="inline-flex h-10 items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ArrowLeftIcon className="size-3.5" aria-hidden />
+                {listLabel}
+              </Link>
+            </div>
           </DialogContent>
         </Dialog>
       </>
@@ -324,14 +350,15 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
 
   if (isComplete) {
     const answeredCount = answers.filter(
-      (answer) => answer.choiceIds.length > 0,
+      (answer) =>
+        answer.choiceIds.length > 0 || answer.textAnswer.trim() !== '',
     ).length
 
     if (isSubmitted) {
       return (
         <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <EngagementHeader
-            title="Quiz complete"
+            title={`${sectionLabel} complete`}
             subtitle={`${answeredCount} of ${totalQuestions} answered.`}
           />
 
@@ -354,7 +381,7 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
                   <Link
                     to="/engagements/$engType/$engagementId/leaderboard"
                     params={{
-                      engType: engagement.type as EngagementSection,
+                      engType: type,
                       engagementId: String(engagement.id),
                     }}
                   />
@@ -368,19 +395,13 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
               <Button
                 type="button"
                 render={
-                  <Link
-                    to="/engagements/$engType/$engagementId"
-                    params={{
-                      engType: engagement.type as EngagementSection,
-                      engagementId: String(engagement.id),
-                    }}
-                  />
+                  <Link to="/engagements/$engType" params={{ engType: type }} />
                 }
                 variant="outline"
                 size="lg"
                 className="h-11 px-5 text-xs font-bold tracking-[0.08em] uppercase"
               >
-                All {engagement.type}
+                {listLabel}
               </Button>
             </div>
           </div>
@@ -489,7 +510,15 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
               <p className="text-xs font-medium text-muted-foreground">
                 {currentQuestion.points}{' '}
                 {currentQuestion.points === 1 ? 'point' : 'points'}
-                {isMultiple ? ' · Select all that apply' : null}
+                {isFreeText
+                  ? ' · Type your answer'
+                  : isMultiple
+                    ? ' · Select all that apply'
+                    : null}
+              </p>
+            ) : isFreeText ? (
+              <p className="text-xs font-medium text-muted-foreground">
+                Type your answer
               </p>
             ) : isMultiple ? (
               <p className="text-xs font-medium text-muted-foreground">
@@ -498,34 +527,56 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
             ) : null}
           </div>
 
-          <div className="grid gap-3">
-            {(currentQuestion.choices ?? []).map((choice) => (
-              <ChoiceButton
-                key={choice.id}
-                choice={choice}
-                multiple={isMultiple}
-                selected={selectedChoiceIds.includes(choice.id)}
-                onSelect={() => toggleChoice(choice.id)}
+          {isFreeText ? (
+            <label className="block">
+              <span className="sr-only">Your answer</span>
+              <input
+                type="text"
+                value={selectedText}
+                onChange={(event) => setSelectedText(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && trimmedAnswer) {
+                    event.preventDefault()
+                    goToNextQuestion()
+                  }
+                }}
+                placeholder="Type your answer"
+                autoFocus
+                className="h-12 w-full rounded-xl border border-border bg-muted/30 px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-emerald-400/40 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none"
               />
-            ))}
-          </div>
+            </label>
+          ) : (
+            <div className="grid gap-3">
+              {(currentQuestion.choices ?? []).map((choice) => (
+                <ChoiceButton
+                  key={choice.id}
+                  choice={choice}
+                  multiple={isMultiple}
+                  selected={selectedChoiceIds.includes(choice.id)}
+                  onSelect={() => toggleChoice(choice.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-5">
           <p className="text-xs text-muted-foreground">
-            {selectedChoiceIds.length > 0
+            {canContinue
               ? isMultiple
                 ? `${selectedChoiceIds.length} selected. Tap next to continue.`
                 : 'Tap next to continue.'
-              : isMultiple
-                ? 'Select one or more answers to continue.'
-                : 'Select an answer to continue.'}
+              : isFreeText
+                ? 'Type an answer to continue.'
+                : isMultiple
+                  ? 'Select one or more answers to continue.'
+                  : 'Select an answer to continue.'}
           </p>
 
           <Button
             type="button"
             size="lg"
-            disabled={selectedChoiceIds.length === 0}
+            disabled={!canContinue}
             onClick={goToNextQuestion}
             className="h-11 gap-1.5 px-5 text-xs font-bold tracking-[0.08em] uppercase"
           >
@@ -535,6 +586,15 @@ export function EngagementPlay({ engagement }: EngagementPlayProps) {
         </div>
       </div>
     </article>
+  )
+}
+
+function Brief({ text }: { text: string }) {
+  return (
+    <li className="flex gap-3 rounded-xl bg-muted/40 px-3.5 py-3 text-sm leading-snug text-foreground">
+      <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-emerald-500" />
+      <span>{text}</span>
+    </li>
   )
 }
 
